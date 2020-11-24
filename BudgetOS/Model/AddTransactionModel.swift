@@ -14,10 +14,9 @@ class AddTransactionModel: NSObject {
     var viewController : UIViewController
     private var TransactionStruct_subscriber : AnyCancellable?
     var datasource : ViewTransaction?
-  //  var transactionStatus : TransactionStatus?
-    
-    private lazy var TransactionStruct_publisher = PassthroughSubject<ViewTransaction, Never>()
+    private lazy var TransactionStruct_publisher = PassthroughSubject<ViewTransaction?, Never>()
     lazy var CategoryStruct_publisherAction = TransactionStruct_publisher.eraseToAnyPublisher()
+    
     
     lazy var addTransaction_baseCard: AddTransaction_baseCard = {
         let addTransaction_baseCard = AddTransaction_baseCard(TransactionStruct_publisher, datasource)
@@ -76,18 +75,19 @@ class AddTransactionModel: NSObject {
     func handlePublisherSubscriber(){
         TransactionStruct_subscriber = CategoryStruct_publisherAction
             .sink(receiveValue: { [weak self] (receiveValue) in
-               
-                
-                self?.datasource = receiveValue
-                self?.viewController.navigationItem.rightBarButtonItem?.isEnabled = true
+                if let receivedValue = receiveValue {
+                    self?.datasource = receivedValue
+                    self?.viewController.navigationItem.rightBarButtonItem?.isEnabled = true
+                }else{
+                    self?.viewController.navigationItem.rightBarButtonItem?.isEnabled = false
+                }
             })
     }
-    
-    
+
     
     func saveNewTransaction(){
         if let datasource = datasource {
-            NotificationCenter.default.post(name: .saveCategory_Publisher, object: datasource)
+            NotificationCenter.default.post(name: .saveTransaction_Publisher, object: datasource)
             viewController.dismiss(animated: true, completion: nil)
         }
     }

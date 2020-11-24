@@ -12,7 +12,7 @@ class AddCategory_TableViewCell: UITableViewCell {
     let cellId = "AddCategory_TableViewCell"
     var viewController : UIViewController?
     private var CategoryStruct_subscriber : AnyCancellable?
-    private lazy var CategoryStruct_publisher = PassthroughSubject<CategoryStruct, Never>()
+    private lazy var CategoryStruct_publisher = PassthroughSubject<CategoryStruct?, Never>()
     lazy var CategoryStruct_publisherAction = CategoryStruct_publisher.eraseToAnyPublisher()
     
     
@@ -43,18 +43,16 @@ class AddCategory_TableViewCell: UITableViewCell {
         return addCategory_baseCard
     }()
     
-    //handle publisher envents and set datasource
+    //handle publisher events and send data to AddCategoryModel
     func handlePublisherSubscriber(){
         CategoryStruct_subscriber = CategoryStruct_publisherAction
             .sink(receiveValue: { [weak self] (receiveValue) in
-                
-                
-                if ( receiveValue.category == nil || receiveValue.category == "" ){
-                    self?.viewController?.navigationItem.rightBarButtonItem?.isEnabled = false
-                }else{
+                if let receivedValue = receiveValue{
+                    NotificationCenter.default.post(name: .saveCategory_Publisher, object: receiveValue)
                     self?.viewController?.navigationItem.rightBarButtonItem?.isEnabled = true
+                }else{
+                    self?.viewController?.navigationItem.rightBarButtonItem?.isEnabled = false
                 }
-               // self?.datasource = receiveValue
             })
     }
     

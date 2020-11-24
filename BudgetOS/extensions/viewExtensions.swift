@@ -7,8 +7,8 @@
 
 import UIKit
 extension Notification.Name {
-    static let AddCategory_baseCardPublisher = Notification.Name(rawValue: "AddCategory_baseCardPublisher")
-    static let saveCategory_Publisher = Notification.Name(rawValue: "")
+    static let saveCategory_Publisher = Notification.Name(rawValue: "saveCategory_Publisher")
+    static let saveTransaction_Publisher = Notification.Name(rawValue: "saveTransaction_Publisher")
 }
 
 extension UIView{

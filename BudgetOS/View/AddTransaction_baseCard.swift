@@ -10,7 +10,7 @@ import Combine
 
 class AddTransaction_baseCard: UIView {
     
-    var AddTransactionModel :  PassthroughSubject<ViewTransaction, Never>
+    var AddTransactionModel :  PassthroughSubject<ViewTransaction?, Never>
     var transaction : ViewTransaction?
     var cancellable : Cancellable?
 
@@ -104,14 +104,20 @@ class AddTransaction_baseCard: UIView {
     @objc func textFieldDidChange(_ textField: UITextField) {
         //check if textfield is categoryNameInput or budgetInput , if true , send data to datasource
         if (textField ==  DescriptionInput) || (textField == AmountInput){
-            //todo form validation
-      
-            preparedatasource(transaction, DescriptionInput.text, amount: Money.init(string: AmountInput.text ?? ""), id: nil, date: datepicker.date.timeIntervalSince1970)
+            //todo form validation: make robost
+            FormValidations.shared.ValidateTransaction(Money.init(string: AmountInput.text ?? ""), DescriptionInput.text, invalidAmount: { errorMessage in
+                self.AddTransactionModel.send(nil)
+            }, invalidText: { errorMessage in
+                self.AddTransactionModel.send(nil)
+            }).sink(receiveValue: { [weak self] value in
+                self?.preparedatasource(self?.transaction, value.1, amount: value.0, id: nil, date: self?.datepicker.date.timeIntervalSince1970)
+            })
+           
         }
     }
     
     //MARK : Initialization
-    init(_ AddTransactionModel : PassthroughSubject<ViewTransaction, Never>?,_ datasource : ViewTransaction? ) {
+    init(_ AddTransactionModel : PassthroughSubject<ViewTransaction?, Never>?,_ datasource : ViewTransaction? ) {
         self.AddTransactionModel = AddTransactionModel!
         self.transaction = datasource
         super.init(frame: .zero)
@@ -140,6 +146,7 @@ class AddTransaction_baseCard: UIView {
     
     func preparedatasource ( _ currenttransaction :  ViewTransaction? ,_ description : String?, amount : Money?, id : Double?, date : TimeInterval?){
         //prepare to send data
+        
         if let currenttransaction = currenttransaction{
             transaction = .init(transactionStatus: currenttransaction.transactionStatus, index: currenttransaction.index, transaction: .init(description, amount, id, date))
         }

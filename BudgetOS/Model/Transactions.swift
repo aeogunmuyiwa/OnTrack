@@ -19,5 +19,6 @@ class Transaction: NSObject {
         self.categoryId = categoryId
         self.amount = amount
         self.date = date
+        
     }
 }

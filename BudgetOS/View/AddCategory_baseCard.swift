@@ -14,7 +14,7 @@ struct tester {
 
 class AddCategory_baseCard: UIView {
     // AddCategoryModel publisher
-    var AddCategoryModel :  PassthroughSubject<CategoryStruct, Never>
+    var AddCategoryModel :  PassthroughSubject<CategoryStruct?, Never>
     var data : CategoryStruct = .init("", 0, nil)
     
 
@@ -90,8 +90,14 @@ class AddCategory_baseCard: UIView {
         //check if textfield is categoryNameInput or budgetInput , if true , send data to datasource
         if (textField ==  categoryNameInput) || (textField == budgetInput){
             //todo form validation
-            prepareDatasource(categoryNameInput.text ?? "", Money.init(string: budgetInput.text ?? "") ?? 0 , nil)
-            
+            FormValidations.shared.ValidateTransaction(Money.init(string: budgetInput.text ?? ""), categoryNameInput.text, invalidAmount: {[weak self] _ in
+                self?.AddCategoryModel.send(nil)
+            }, invalidText: {[weak self] _ in
+                self?.AddCategoryModel.send(nil)
+            }).sink(receiveValue: {[weak self] receivedValue in
+                self?.prepareDatasource(receivedValue.1, receivedValue.0, nil)
+
+            })
         }
     }
     
@@ -104,8 +110,8 @@ class AddCategory_baseCard: UIView {
     }
     
     //MARK : Initialization
-    init(AddCategoryModel : PassthroughSubject<CategoryStruct, Never>?) {
-        self.AddCategoryModel = AddCategoryModel!
+    init(AddCategoryModel : PassthroughSubject<CategoryStruct?, Never>) {
+        self.AddCategoryModel = AddCategoryModel
         super.init(frame: .zero)
         setup()
        

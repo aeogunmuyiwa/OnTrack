@@ -9,6 +9,8 @@ import UIKit
 
 class CustomProperties: NSObject {
     
+ 
+    
     static let shared = CustomProperties()
     
     //default text color
@@ -64,6 +66,20 @@ class CustomProperties: NSObject {
                         to: nil, from: nil, for: nil)
     }
     
+    //decimal rounding scale
+    let decimalScale = 2
+    
+    func roundAmount(_ amount : String) -> Money? {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = NumberFormatter.Style.decimal
+        formatter.roundingMode = NumberFormatter.RoundingMode.halfUp
+        formatter.maximumFractionDigits = 3
+    
+        let roundedAmount = formatter.number(from: amount)
+        return roundedAmount?.decimalValue
+    }
+    
+    
    
 }
 enum TransactionStatus {
@@ -75,5 +91,20 @@ struct ViewTransaction{
     let transactionStatus : TransactionStatus
     let index : Int?
     let transaction : Transaction?
+}
+
+enum ErrorMessages  :  LocalizedError{
+    
+    case InvalidAmount
+    case InvalidText
+    
+    var errorDescription: String? {
+        switch self {
+        case .InvalidAmount:
+            return NSLocalizedString("Invalid amount entered", comment: "")
+        case .InvalidText :
+            return NSLocalizedString("Invalid text entered", comment: "")
+        }
+    }
 }
 

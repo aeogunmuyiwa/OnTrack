@@ -10,47 +10,75 @@ import Combine
 
 
 
-enum Validation : Error {
-    case success (value : Any)
-    case failure(message: String)
-    
-    var isSuccess: Bool {
-        if case .success = self {
-            return true
-        }
-        return false
-    }
+enum Validation : LocalizedError {
+    case failure
 }
+
+
     typealias ValidationPublisher = AnyPublisher<Validation, Never>
     typealias ValidationErrorClosure = () -> Validation
 
 class FormValidations {
     
-
-    static func validateAmount( amount : Money?, errorMessage : String ) -> Future < Validation, Never>{
+    static let shared = FormValidations()
+  
+    func ValidateTransaction (_ amount : Money?, _ text : String? , invalidAmount : @escaping( ErrorMessages) -> Void, invalidText : @escaping( ErrorMessages) -> Void) -> Future <(Money, String) , Never>{
+        return Future() { [weak self] promise in
+         
+            let validateAmount_ =  self?.validateAmount(amount: amount, errorMessage: ErrorMessages.InvalidAmount)
+            let validateText_ = self?.validateText(text: text)
+            if let validateText = validateText_ , let validateAmount = validateAmount_ {
+                let  combinedValidator = Publishers.Zip(validateAmount, validateText)
+                combinedValidator.sink(receiveCompletion: { errorMessage in
+                    switch errorMessage {
+                    case .failure(.InvalidAmount): invalidAmount(.InvalidAmount)
+                    case.failure(.InvalidText) : invalidText(.InvalidText)
+                    case .finished : ()
+                    }
+                }, receiveValue: { result in
+                    promise(.success(result))
+                })
+          
+            }
+           
+        }
+        
+    
+        
+        
+    }
+    
+    
+    //Mark : amount validator
+    func validateAmount( amount : Money?, errorMessage : ErrorMessages ) -> Future < Money , ErrorMessages>{
         return Future(){
             promise in
             
-          
-            
-            if amount == nil {
-                promise(.success(.failure(message: errorMessage)))
-            }else{
+            if var amount = amount {
+                var result = Money()
+                NSDecimalRound(&result, &amount, CustomProperties.shared.decimalScale, .plain)
+                promise(.success(result))
+                
+            }
+            //amount is nill
+            promise(.failure(.InvalidAmount))
+        }
+    }
+        
+    //Mark text validator
+        func validateText (text  : String?) -> Future <String , ErrorMessages> {
+            return Future () { promise in
+                if let text = text {
+                    if text.isEmpty {
+                        promise(.failure(.InvalidText))
+                    }
+                    promise(.success(text))
+                }
+                promise(.failure(.InvalidText))
                
-             
-                promise(.success(.success(value: amount)))
             }
         }
-                
-    }
-    
-//        let formatter = NumberFormatter()
-//        formatter.allowsFloats = true // Default is true, be explicit anyways
-//        if formatter.number(from: number) != nil {
-//            print(number)
-//            return true
-//        }
-//        print("false")
-//        return false // couldn't turn string into a valid number
-//      }
 }
+
+
+
