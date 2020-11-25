@@ -87,6 +87,7 @@ class AddTransactionModel: NSObject {
     
     func saveNewTransaction(){
         if let datasource = datasource {
+            dump(datasource)
             NotificationCenter.default.post(name: .saveTransaction_Publisher, object: datasource)
             viewController.dismiss(animated: true, completion: nil)
         }

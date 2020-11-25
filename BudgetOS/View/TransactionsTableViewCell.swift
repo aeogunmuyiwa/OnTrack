@@ -18,7 +18,22 @@ class TransactionsTableViewCell: UITableViewCell {
         return customAccessoryView
     }()
     
-    var data : Transaction? {
+//    var data : Transaction? {
+//        didSet {
+//            //set data
+//            if let data = data{
+//                self.textLabel?.textColor = CustomProperties.shared.textColour
+//                self.detailTextLabel?.textColor = CustomProperties.shared.subtextColor
+//                self.textLabel?.text = data.transactionDescription
+//                if let amount = data.amount{
+//                    self.detailTextLabel?.text = "$\(amount)"
+//                }
+//
+//            }
+//            self.accessoryType = .disclosureIndicator
+//        }
+//    }
+    var data : OnTractTransaction? {
         didSet {
             //set data
             if let data = data{

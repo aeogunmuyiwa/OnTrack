@@ -90,7 +90,7 @@ enum TransactionStatus {
 struct ViewTransaction{
     let transactionStatus : TransactionStatus
     let index : Int?
-    let transaction : Transaction?
+    let transaction : OnTractTransaction?
 }
 
 enum ErrorMessages  :  LocalizedError{

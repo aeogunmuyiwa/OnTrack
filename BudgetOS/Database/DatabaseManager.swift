@@ -62,7 +62,7 @@ class DatabaseManager: NSObject {
         return nil
     }
     
-    func createCategory(_ categoryStruct : CategoryStruct) -> Category {
+     func createCategory(_ categoryStruct : CategoryStruct) -> Category {
         let category = Category.init(context: viewContext)
         category.actual = NSDecimalNumber(decimal: categoryStruct.actual)
         category.budget = categoryStruct.budget as NSDecimalNumber?
@@ -76,5 +76,45 @@ class DatabaseManager: NSObject {
         })
         
         return category
+    }
+    
+    //add transaction to category , update category aftual and difference
+    
+    func AddTransactionToCategory(_ transaction : OnTractTransaction, category : Category){
+        category.addToTransactions(transaction)
+        category.actual =  category.actual?.adding(transaction.amount ?? 0)
+        let temp = category.actual
+        category.difference = category.budget?.subtracting(temp ?? 0)
+    }
+    
+ 
+    //edit transaction
+    func editTransactionToCategory(_ transaction : OnTractTransaction, category : Category, _ index : Int){
+      
+        let t_atPreviousIndex = (category.transactions?.array as! [OnTractTransaction])[index].amount ?? 0
+        
+        let actual_difference = category.actual?.subtracting(t_atPreviousIndex)
+        category.actual = actual_difference?.adding(transaction.amount ?? 0)
+        category.replaceTransactions(at: index, with: transaction)
+        category.difference = category.budget?.subtracting(category.actual ?? 0)
+        dump(category)
+        
+    }
+    
+    
+    func deleteTransaction(_ category : Category, _ index : Int){
+        let transaction = (category.transactions?.array as! [OnTractTransaction])[index]
+        
+        
+        
+        category.actual?.subtracting(transaction.amount ?? 0)
+        category.difference = category.budget
+        category.difference?.subtracting(category.actual ?? 0)
+        category.removeFromTransactions(at: index)
+        dump(category)
+    }
+    
+    func saveCategory(_ category : Category){
+      //  category.difference = category.budget?.subtracting(category.actual ?? 0)
     }
 }

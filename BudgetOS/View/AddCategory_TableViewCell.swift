@@ -57,7 +57,7 @@ class AddCategory_TableViewCell: UITableViewCell {
     }
     
     //Mark:  reference viewController
-    func setup(_ viewController : UIViewController , datasource : CategoryStruct? ){
+    func setup(_ viewController : UIViewController ){
         self.viewController = viewController
     }
     

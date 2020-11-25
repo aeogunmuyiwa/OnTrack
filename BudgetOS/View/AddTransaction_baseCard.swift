@@ -110,7 +110,7 @@ class AddTransaction_baseCard: UIView {
             }, invalidText: { errorMessage in
                 self.AddTransactionModel.send(nil)
             }).sink(receiveValue: { [weak self] value in
-                self?.preparedatasource(self?.transaction, value.1, amount: value.0, id: nil, date: self?.datepicker.date.timeIntervalSince1970)
+                self?.preparedatasource(self?.transaction, value.1, amount: value.0, id: .zero, date: self?.datepicker.date.timeIntervalSince1970)
             })
            
         }
@@ -148,8 +148,10 @@ class AddTransaction_baseCard: UIView {
         //prepare to send data
         
         if let currenttransaction = currenttransaction{
-            transaction = .init(transactionStatus: currenttransaction.transactionStatus, index: currenttransaction.index, transaction: .init(description, amount, id, date))
+            transaction = .init(transactionStatus: currenttransaction.transactionStatus, index: currenttransaction.index, transaction: DatabaseManager.shared.createTransaction(.init(description, amount, id, date)))
+            dump(transaction)
         }
+        dump(transaction)
         if let transaction = transaction {
             AddTransactionModel.send(transaction)
         }

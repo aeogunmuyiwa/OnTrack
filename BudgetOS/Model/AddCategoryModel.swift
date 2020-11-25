@@ -15,8 +15,13 @@ class AddCategoryModel: NSObject {
     var viewController : UIViewController
     private var saveTransactionSubscriber: AnyCancellable?
     private var saveCategorySubscriber : AnyCancellable?
-    var datasource : CategoryStruct = .init(nil, nil)
-    var CategoryDatasoruce = Category(context: DatabaseManager.shared.viewContext)
+  //  var datasource : CategoryStruct = .init(nil, nil)
+   // var CategoryDatasoruce = Category(context: DatabaseManager.shared.viewContext)
+    lazy var CategoryDatasoruce : Category = {
+        let categoryDatasoruce = Category(context: DatabaseManager.shared.viewContext)
+        categoryDatasoruce.id = Date().timeIntervalSince1970
+        return categoryDatasoruce
+    }()
     
     
     lazy var tableView: UITableView = {
@@ -67,8 +72,9 @@ class AddCategoryModel: NSObject {
         let savePublisher = NotificationCenter.Publisher.init(center: .default, name: .saveCategory_Publisher)
         saveCategorySubscriber = savePublisher.sink(receiveValue: { [weak self] result in
             if let data = result.object as? CategoryStruct {
-                self?.datasource.category = data.category
-                self?.datasource.budget = data.budget
+                self?.CategoryDatasoruce.categoryDescription = data.category
+                self?.CategoryDatasoruce.budget = data.budget as NSDecimalNumber?
+                self?.CategoryDatasoruce.difference = self?.CategoryDatasoruce.budget?.subtracting(self?.CategoryDatasoruce.actual ?? 0)
             }
         })
     }
@@ -94,23 +100,24 @@ class AddCategoryModel: NSObject {
     //Mark : save new transaction ()
     
     func saveNewTransaction(_ data : ViewTransaction ){
-        data.transaction?.categoryId = self.datasource.id
-        if let transaction = data.transaction {
-            self.datasource.transactions?.append(transaction)
-            
+        data.transaction?.categoryId = CategoryDatasoruce.id
+        if let transaction = data.transaction{
+            DatabaseManager.shared.AddTransactionToCategory(transaction, category: self.CategoryDatasoruce)
         }
     }
     //Mark : function for updating edited transactions
     func editTransaction(_ data : ViewTransaction){
-        if let index = data.index , let transaction = data.transaction {
-            datasource.transactions?[index] = transaction
+        if let index = data.index , let transaction = data.transaction{
+            DatabaseManager.shared.editTransactionToCategory(transaction, category: CategoryDatasoruce, index)
         }
        
     }
     
     //MARK : SAVE CATEGORY STRUCT "DATASOURCE
     @objc func saveCategory(){
-       dump(datasource)
+        dump(CategoryDatasoruce.transactions?.array)
+        
+        dump(CategoryDatasoruce)
        
     }
     
@@ -127,27 +134,34 @@ extension AddCategoryModel : UITableViewDelegate, UITableViewDataSource {
         if section == 0 {
             return 1
         }else{
-            return datasource.transactions?.count ?? 00
+            //return datasource.transactions?.count ?? 00
+            return CategoryDatasoruce.transactions?.count ?? 0
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: AddCategory, for: indexPath) as! AddCategory_TableViewCell
-            cell.setup(viewController, datasource: datasource)
+            cell.setup(viewController)
             cell.selectionStyle = .none
             return cell
             
         }else{
             let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! TransactionsTableViewCell
-            cell.data = datasource.transactions?[indexPath.row]
+            //cell.data = datasource.transactions?[indexPath.row]
+            let transactions = CategoryDatasoruce.transactions?.array as! [OnTractTransaction]
+            cell.data = transactions[indexPath.row]
             return cell
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        Viewtransaction(datasource: .init(transactionStatus: .edit, index: indexPath.row, transaction: datasource.transactions?[indexPath.row]))
+        if indexPath.section == 1 {
+            let transactions = CategoryDatasoruce.transactions?.array as! [OnTractTransaction]
+            Viewtransaction(datasource: .init(transactionStatus: .edit, index: indexPath.row, transaction: transactions[indexPath.row]))
+        }
+       
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -167,9 +181,9 @@ extension AddCategoryModel : UITableViewDelegate, UITableViewDataSource {
     
     //MARK: - Contextual Actions
        private func makeDeleteContextualAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
-           return UIContextualAction(style: .destructive, title: "Delete") {[weak self] (action, swipeButtonView, completion) in
-            self?.datasource.transactions?.remove(at: indexPath.row)
-            self?.tableView.reloadData()
+           return UIContextualAction(style: .destructive, title: "Delete") { (action, swipeButtonView, completion) in
+            DatabaseManager.shared.deleteTransaction(self.CategoryDatasoruce, indexPath.row)
+            self.tableView.reloadData()
            }
        }
     
