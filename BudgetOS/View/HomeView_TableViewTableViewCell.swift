@@ -17,15 +17,17 @@ class HomeView_TableViewTableViewCell: UITableViewCell {
         return customAccessoryView
     }()
     
-    var data : CategoryStruct? {
+    var data : Category? {
         didSet {
             //set data
-            if let data = data{
-                self.textLabel?.textColor = CustomProperties.shared.textColour
-                self.detailTextLabel?.textColor = CustomProperties.shared.subtextColor
-                self.textLabel?.text = data.category
-                self.detailTextLabel?.text = "$\(data.difference)"
+            self.textLabel?.textColor = CustomProperties.shared.textColour
+            self.detailTextLabel?.textColor = CustomProperties.shared.subtextColor
+            self.textLabel?.text = data?.categoryDescription
+            if let difference = data?.difference {
+                self.detailTextLabel?.text = "$\(difference)"
             }
+           
+
             self.accessoryType = .disclosureIndicator
         }
     }

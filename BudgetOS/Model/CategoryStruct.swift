@@ -15,16 +15,18 @@ class CategoryStruct: NSObject {
     let id : Double = Date().timeIntervalSince1970
     var category : String?
     var budget : Money?
-    var transactions : [Transaction]? {
-        didSet {
-            var totalTransaction : Money = 0
-            transactions?.forEach({item in
-                totalTransaction = totalTransaction  + (item.amount ?? 0)
-            })
-            actual = totalTransaction
-            difference = (budget ?? 0) - actual
-        }
-    }
+    var transactions : [Transaction]?
+//    func addToTransaction(_ object : Any){
+//        if let transaction = transactions {
+//            (transaction.mutableCopy() as? NSMutableOrderedSet)?.add(object)
+//            
+//        }
+//    }
+//    func editTransaction(_ object : Any, _ index : Int){
+//        if let transactions = transactions {
+//            (transactions.mutableCopy() as? NSMutableOrderedSet)?.replaceObject(at: index, with: object)
+//        }
+//    }
     
     
     //sum of the transactions for the category

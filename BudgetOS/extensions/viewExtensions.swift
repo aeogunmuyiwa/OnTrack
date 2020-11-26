@@ -9,6 +9,7 @@ import UIKit
 extension Notification.Name {
     static let saveCategory_Publisher = Notification.Name(rawValue: "saveCategory_Publisher")
     static let saveTransaction_Publisher = Notification.Name(rawValue: "saveTransaction_Publisher")
+    static let reloadCategoryTable = Notification.Name(rawValue: "reloadCategoryTable")
 }
 
 extension UIView{

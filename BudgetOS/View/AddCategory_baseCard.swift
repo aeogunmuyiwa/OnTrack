@@ -16,7 +16,11 @@ class AddCategory_baseCard: UIView {
     // AddCategoryModel publisher
     var AddCategoryModel :  PassthroughSubject<CategoryStruct?, Never>
     var data : CategoryStruct = .init("", 0, nil)
-    
+
+//    lazy var data : Category = {
+//            let categoryDatasoruce = Category(context: DatabaseManager.shared.viewContext)
+//            return categoryDatasoruce
+//        }()
 
     lazy var categoryName: UILabel = {
         let categoryName = UILabel()
@@ -95,17 +99,16 @@ class AddCategory_baseCard: UIView {
             }, invalidText: {[weak self] _ in
                 self?.AddCategoryModel.send(nil)
             }).sink(receiveValue: {[weak self] receivedValue in
-                self?.prepareDatasource(receivedValue.1, receivedValue.0, nil)
+                self?.prepareDatasource(receivedValue.1, receivedValue.0)
 
             })
         }
     }
     
     //addCategoryButton actionn: send data when completed
-    func prepareDatasource( _ category  : String , _ budget : Money , _ transactions : [Transaction]?){
+    func prepareDatasource( _ category  : String , _ budget : Money ){
         data.category = category
         data.budget = budget
-        data.transactions = transactions
         AddCategoryModel.send(data)
     }
     

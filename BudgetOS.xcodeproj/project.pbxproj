@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4623A24F256C21C20003FE97 /* FormValidations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4623A24E256C21C20003FE97 /* FormValidations.swift */; };
+		464DA89F25700DAD0017DFF6 /* CategoryCollectionViewCell_TableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464DA89E25700DAD0017DFF6 /* CategoryCollectionViewCell_TableModel.swift */; };
 		4660F9D2256D7E4A00A372C5 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4660F9D1256D7E4A00A372C5 /* DatabaseManager.swift */; };
 		4662B3C02566620400F8C48B /* NextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4662B3BF2566620400F8C48B /* NextViewController.swift */; };
 		46DE247F25665E1E001A9415 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DE247E25665E1E001A9415 /* AppDelegate.swift */; };
@@ -58,6 +59,7 @@
 
 /* Begin PBXFileReference section */
 		4623A24E256C21C20003FE97 /* FormValidations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormValidations.swift; sourceTree = "<group>"; };
+		464DA89E25700DAD0017DFF6 /* CategoryCollectionViewCell_TableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCollectionViewCell_TableModel.swift; sourceTree = "<group>"; };
 		4660F9D1256D7E4A00A372C5 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		4662B3BF2566620400F8C48B /* NextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextViewController.swift; sourceTree = "<group>"; };
 		46DE247B25665E1E001A9415 /* BudgetOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BudgetOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -194,6 +196,7 @@
 				46F0C256256A33E000B0FCEA /* showFullCategoryTableModel.swift */,
 				46F0C265256A761700B0FCEA /* AddTransactionModel.swift */,
 				4623A24E256C21C20003FE97 /* FormValidations.swift */,
+				464DA89E25700DAD0017DFF6 /* CategoryCollectionViewCell_TableModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -389,6 +392,7 @@
 				46F0C252256A315400B0FCEA /* showFullCategoryTableViewController.swift in Sources */,
 				4660F9D2256D7E4A00A372C5 /* DatabaseManager.swift in Sources */,
 				4662B3C02566620400F8C48B /* NextViewController.swift in Sources */,
+				464DA89F25700DAD0017DFF6 /* CategoryCollectionViewCell_TableModel.swift in Sources */,
 				46F0C26B256A769500B0FCEA /* AddTransaction_baseCard.swift in Sources */,
 				46F0C261256A755700B0FCEA /* AddTransactionViewController.swift in Sources */,
 				46F0C23A25691CB300B0FCEA /* HomeViewModelManager.swift in Sources */,

@@ -37,6 +37,7 @@ class HomeViewModelManager: NSObject {
     init(HomeViewContoller : UIViewController) {
         self.HomeViewContoller = HomeViewContoller
         super.init()
+        DatabaseManager.shared.deleteAllCategory()
         collectionView.pin(to: HomeViewContoller.view)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         navigationControllerProperties()
@@ -56,7 +57,9 @@ class HomeViewModelManager: NSObject {
     
     //Mark : right button action
     @objc func naviagenext(){
-        HomeViewContoller.navigationController?.pushViewController(NextViewController(), animated: true)
+        let nextVC = NextViewController()
+       // nextVC.delegate = CategoryCollectionViewCell.self as! AddCategoryDelegate
+        HomeViewContoller.navigationController?.pushViewController(nextVC, animated: true)
     }
     
 }

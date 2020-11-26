@@ -90,13 +90,13 @@ enum TransactionStatus {
 struct ViewTransaction{
     let transactionStatus : TransactionStatus
     let index : Int?
-    let transaction : OnTractTransaction?
+    let transaction : Transaction?
 }
 
 enum ErrorMessages  :  LocalizedError{
-    
     case InvalidAmount
     case InvalidText
+   
     
     var errorDescription: String? {
         switch self {
@@ -104,6 +104,16 @@ enum ErrorMessages  :  LocalizedError{
             return NSLocalizedString("Invalid amount entered", comment: "")
         case .InvalidText :
             return NSLocalizedString("Invalid text entered", comment: "")
+        
+        }
+    }
+}
+enum dataBaseErrors : LocalizedError {
+    case ErrorLoadingDatabase
+    var errorDescription: String? {
+        switch self {
+        case .ErrorLoadingDatabase :
+            return NSLocalizedString("Error loading data", comment: "")
         }
     }
 }

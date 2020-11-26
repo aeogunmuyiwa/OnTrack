@@ -87,20 +87,13 @@ class AddTransaction_baseCard: UIView {
         datepicker.timeZone = NSTimeZone.local
         datepicker.backgroundColor = .white
         datepicker.preferredDatePickerStyle = .compact
-        //datepicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
         self.addSubview(datepicker)
         datepicker.translatesAutoresizingMaskIntoConstraints = true
         datepicker.topAnchor(AmountInput.bottomAnchor, 20)
         datepicker.leftAnchor(self.layoutMarginsGuide.leftAnchor, 0)
         return datepicker
     }()
-    
-//    @objc func datePickerValueChanged(_ sender: UIDatePicker){
-////        let dateFormatter: DateFormatter = DateFormatter()
-////        dateFormatter.dateFormat = "MM/dd/yyyy hh:mm a"
-//        preparedatasource(transaction, DescriptionInput.text, amount: Money.init(string: AmountInput.text ?? ""), id: nil, date: datepicker.date.timeIntervalSince1970)
-//
-//    }
+
     @objc func textFieldDidChange(_ textField: UITextField) {
         //check if textfield is categoryNameInput or budgetInput , if true , send data to datasource
         if (textField ==  DescriptionInput) || (textField == AmountInput){
@@ -138,8 +131,6 @@ class AddTransaction_baseCard: UIView {
         AmountLabel.translatesAutoresizingMaskIntoConstraints = false
         AmountInput.translatesAutoresizingMaskIntoConstraints = false
         datepicker.translatesAutoresizingMaskIntoConstraints = false
-        
-       
     }
     
     //mark handle changes in datasource
@@ -148,10 +139,8 @@ class AddTransaction_baseCard: UIView {
         //prepare to send data
         
         if let currenttransaction = currenttransaction{
-            transaction = .init(transactionStatus: currenttransaction.transactionStatus, index: currenttransaction.index, transaction: DatabaseManager.shared.createTransaction(.init(description, amount, id, date)))
-            dump(transaction)
+            transaction = .init(transactionStatus: currenttransaction.transactionStatus, index: currenttransaction.index, transaction: .init(description, amount, id, date))
         }
-        dump(transaction)
         if let transaction = transaction {
             AddTransactionModel.send(transaction)
         }
