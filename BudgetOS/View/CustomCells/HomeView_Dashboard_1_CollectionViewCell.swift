@@ -9,8 +9,8 @@ import UIKit
 
 class HomeView_Dashboard_1_CollectionViewCell: UICollectionViewCell {
     
-    lazy var homeDashboard : HomeView_Dashboard_1 =  {
-        let dashboard = HomeView_Dashboard_1()
+    lazy var homeDashboard : HomeView_DashboardView =  {
+        let dashboard = HomeView_DashboardView()
         self.addSubview(dashboard)
         dashboard.pin(to: contentView)
         return dashboard

@@ -18,8 +18,8 @@ class AddTransactionModel: NSObject {
     lazy var CategoryStruct_publisherAction = TransactionStruct_publisher.eraseToAnyPublisher()
     
     
-    lazy var addTransaction_baseCard: AddTransaction_baseCard = {
-        let addTransaction_baseCard = AddTransaction_baseCard(TransactionStruct_publisher, datasource)
+    lazy var addTransaction_baseCard: AddTransaction_baseCardView = {
+        let addTransaction_baseCard = AddTransaction_baseCardView(TransactionStruct_publisher, datasource)
         viewController.view.addSubview(addTransaction_baseCard)
         addTransaction_baseCard.pin(to: viewController.view)
         return addTransaction_baseCard
@@ -87,7 +87,6 @@ class AddTransactionModel: NSObject {
     
     func saveNewTransaction(){
         if let datasource = datasource {
-            dump(datasource)
             NotificationCenter.default.post(name: .saveTransaction_Publisher, object: datasource)
             viewController.dismiss(animated: true, completion: nil)
         }

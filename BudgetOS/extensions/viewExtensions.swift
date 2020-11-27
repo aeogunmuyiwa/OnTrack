@@ -72,6 +72,10 @@ extension UIView{
         self.rightAnchor.constraint(equalTo: rightAnchor, constant: constant).isActive = true
     }
     
+    //center y anchor constraints
+    func centerYAnchor (_ centerYanchor : NSLayoutYAxisAnchor, _ constant : CGFloat){
+        self.centerYAnchor.constraint(equalTo: centerYanchor, constant: constant).isActive = true
+    }
 
     
 }

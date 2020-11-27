@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-class AddCategoryModel: NSObject {
+class AddBudgetModel: NSObject {
     //managed controoler
     let AddCategory = "AddCategory_TableViewCell"
     let cellId = "TransactionsTableViewCell"
@@ -63,7 +63,7 @@ class AddCategoryModel: NSObject {
         self.viewController.navigationItem.rightBarButtonItem?.isEnabled = false
         self.viewController.navigationItem.rightBarButtonItem?.tintColor = CustomProperties.shared.animationColor
         
-        self.viewController.navigationItem.leftBarButtonItem = .init(title: "back", style: .plain, target: self, action: #selector(navigateBack))
+        //self.viewController.navigationItem.leftBarButtonItem = .init(title: "back", style: .plain, target: self, action: #selector(navigateBack))
         
     }
     
@@ -122,12 +122,14 @@ class AddCategoryModel: NSObject {
     
     //MARK : SAVE CATEGORY STRUCT "DATASOURCE
     @objc func saveCategory(){
-        DatabaseManager.shared.CategorySave(CategoryDatasoruce)
+        DatabaseManager.shared.CategorySave(self.CategoryDatasoruce)
+        NotificationCenter.default.post(name: .reloadCategoryTable, object: nil)
+        
         self.viewController.navigationController?.popToRootViewController(animated: true)
     }
 }
 
-extension AddCategoryModel : UITableViewDelegate, UITableViewDataSource {
+extension AddBudgetModel : UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }

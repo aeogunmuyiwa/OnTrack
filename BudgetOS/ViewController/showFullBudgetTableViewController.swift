@@ -7,16 +7,16 @@
 
 import UIKit
 
-class showFullCategoryTableViewController: UIViewController {
+class showFullBudgetTableViewController: UIViewController {
 
     //showFullCategoryTableModel - ViewModel: manages views
-    lazy var ShowFullCategoryTableModel : showFullCategoryTableModel = {
-        let ShowFullCategoryTableModel = showFullCategoryTableModel(self)
-        return ShowFullCategoryTableModel
+    lazy var ShowFullBudgetTableModel : showFullBudgetTableModel = {
+        let ShowFullBudgetTableModel = showFullBudgetTableModel(self)
+        return ShowFullBudgetTableModel
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        ShowFullCategoryTableModel = .init(self)
+        ShowFullBudgetTableModel = .init(self)
         // Do any additional setup after loading the view.
     }
     

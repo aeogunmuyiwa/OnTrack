@@ -9,12 +9,13 @@ import UIKit
 import Combine
 import CoreData
 
-class CategoryCollectionViewCell: UICollectionViewCell {
-    weak var HomeViewContoller : UIViewController?
+class BudgetCollectionViewCell: UICollectionViewCell {
+    var HomeViewContoller : UIViewController?
+    
     let cellId = "HomeView_TableView_CellId"
-    lazy var categoryLabel : UILabel = {
+    private lazy var categoryLabel : UILabel = {
         let categoryLabel = UILabel()
-        categoryLabel.text = "Category"
+        categoryLabel.text = "Budgets"
         categoryLabel.font = CustomProperties.shared.basicBoldTextFont
         categoryLabel.textColor = CustomProperties.shared.textColour
         categoryLabel.translatesAutoresizingMaskIntoConstraints = true
@@ -26,23 +27,24 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     }()
     
     
-    lazy var newCategory: UIButton = {
+    private lazy var showFullTable: UIButton = {
         let newCategory = UIButton()
-        newCategory.setImage(CustomProperties.shared.tintedColorImage, for: .normal)
-        newCategory.addTarget(self, action: #selector(naviagenext), for: .touchUpInside)
+        newCategory.setImage(CustomProperties.shared.chevronRight, for: .normal)
+        newCategory.addTarget(self, action: #selector(showFullTableAction), for: .touchUpInside)
+        newCategory.tintColor = CustomProperties.shared.animationColor
         newCategory.translatesAutoresizingMaskIntoConstraints = true
         contentView.addSubview(newCategory)
         newCategory.titleLabel?.font = CustomProperties.shared.basicBoldTextFont
         newCategory.titleLabel?.textColor = CustomProperties.shared.textColour
         newCategory.topAnchor(contentView.layoutMarginsGuide.topAnchor, 0)
-        newCategory.rightAnchor(contentView.layoutMarginsGuide.rightAnchor, 0)
+        newCategory.rightAnchor(rightAnchor, 0)
         newCategory.widthAnchor(contentView.widthAnchor, multiplier:0.2, 10)
         return newCategory
     }()
     
-    lazy var tableView: UITableView = {
+    private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero)
-        tableView.register(HomeView_TableViewTableViewCell.self, forCellReuseIdentifier: cellId)
+        tableView.register(Budget_CustomTableViewCell.self, forCellReuseIdentifier: cellId)
         DatabaseManager.shared.fetchedResultsController.delegate = self
         DatabaseManager.shared.performFetch()
         contentView.addSubview(tableView)
@@ -51,52 +53,44 @@ class CategoryCollectionViewCell: UICollectionViewCell {
         tableView.backgroundColor = .clear
         tableView.bounces = false
         tableView.isScrollEnabled = true
+        tableView.allowsMultipleSelectionDuringEditing = false
+        tableView.showsVerticalScrollIndicator = false
+        tableView.showsVerticalScrollIndicator = false
         tableView.allowsMultipleSelection = false
+        tableView.separatorStyle = .none
         tableView.translatesAutoresizingMaskIntoConstraints = true
-        tableView.topAnchor(newCategory.layoutMarginsGuide.bottomAnchor, 10)
+        tableView.topAnchor(showFullTable.layoutMarginsGuide.bottomAnchor, 10)
         tableView.leftAnchor(contentView.layoutMarginsGuide.leftAnchor, 0)
         tableView.rightAnchor(contentView.layoutMarginsGuide.rightAnchor, 0)
-        tableView.bottomAnchor(showMoreLable.layoutMarginsGuide.topAnchor, constant: 0)
+       // tableView.heightAnchor(50)
+        tableView.bottomAnchor(contentView.layoutMarginsGuide.bottomAnchor, constant: 0)
         return tableView
-    }()
-    
-   
-    
-
-
-    
-    lazy var showMoreLable : UIButton = {
-        let showMoreLable = UIButton()
-        showMoreLable.backgroundColor = CustomProperties.shared.animationColor
-        showMoreLable.setTitle("Show more", for: .normal)
-        showMoreLable.titleLabel?.font = CustomProperties.shared.basicBoldTextFont
-        showMoreLable.titleLabel?.textColor = CustomProperties.shared.textColour
-        showMoreLable.translatesAutoresizingMaskIntoConstraints = true
-        contentView.addSubview(showMoreLable)
-        showMoreLable.layer.cornerRadius = 20
-        showMoreLable.addTarget(self, action: #selector(showFullTable), for: .touchUpInside)
-        showMoreLable.leftAnchor(contentView.layoutMarginsGuide.leftAnchor, 10)
-        showMoreLable.bottomAnchor(contentView.bottomAnchor, constant:0)
-        showMoreLable.rightAnchor(contentView.layoutMarginsGuide.rightAnchor, -10)
-        return showMoreLable
     }()
 
     override init(frame: CGRect) {
         super.init(frame: .zero)
         categoryLabel.translatesAutoresizingMaskIntoConstraints = false
-        newCategory.translatesAutoresizingMaskIntoConstraints = false
+        showFullTable.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        showMoreLable.translatesAutoresizingMaskIntoConstraints = false
+      //  showMoreLable.translatesAutoresizingMaskIntoConstraints = false
+        NotificationCenter.default.addObserver(self, selector: #selector(addObservertoTable), name: .reloadCategoryTable, object: nil)
     }
 
+    @objc func addObservertoTable(){
+        tableView.reloadData()
+    }
+    
+    
+    
+    
     
     func setup(_ HomeViewContoller : UIViewController) {
         self.HomeViewContoller = HomeViewContoller
       
     }
     //show full category table
-    @objc func showFullTable(){
-        HomeViewContoller?.navigationController?.pushViewController(showFullCategoryTableViewController(), animated: true)
+    @objc func showFullTableAction(){
+        HomeViewContoller?.navigationController?.pushViewController(showFullBudgetTableViewController(), animated: true)
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -108,25 +102,29 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     
 }
 
-extension CategoryCollectionViewCell: UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate {
+extension BudgetCollectionViewCell: UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let sections = DatabaseManager.shared.fetchedResultsController.sections else { return 0   }
-        return sections[0].numberOfObjects
+        return sections[section].numberOfObjects
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.tableView.deselectRow(at: indexPath, animated: true)
     }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 50
+    }
 
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! HomeView_TableViewTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! Budget_CustomTableViewCell
         configureCell(cell, at: indexPath)
         return cell
     }
-    func configureCell(_ cell: HomeView_TableViewTableViewCell?, at indexPath: IndexPath) {
-        if let cell = cell {
+    func configureCell(_ cell: Budget_CustomTableViewCell?, at indexPath: IndexPath) {
+        if let cell = cell, let HomeViewContoller = HomeViewContoller {
+            cell.setUp(HomeViewContoller)
             cell.data = DatabaseManager.shared.fetchedResultsController.object(at: indexPath)
         }
     }
@@ -159,7 +157,7 @@ extension CategoryCollectionViewCell: UITableViewDelegate, UITableViewDataSource
                 
             case .update :
                 if let indexPath = indexPath {
-                    configureCell(tableView.cellForRow(at: indexPath) as? HomeView_TableViewTableViewCell, at: indexPath)
+                    configureCell(tableView.cellForRow(at: indexPath) as? Budget_CustomTableViewCell, at: indexPath)
                 }
             @unknown default:
                 print("unknown default, will handle error")

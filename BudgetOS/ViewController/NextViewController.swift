@@ -9,7 +9,7 @@ import UIKit
 
 class NextViewController: UIViewController {
 
-    var addCategoryModel : AddCategoryModel?
+    var addCategoryModel : AddBudgetModel?
     override func viewDidLoad() {
         super.viewDidLoad()
         addCategoryModel = .init(self)

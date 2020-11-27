@@ -29,7 +29,7 @@ class FormValidations {
             let validateText_ = self?.validateText(text: text)
             if let validateText = validateText_ , let validateAmount = validateAmount_ {
                 let  combinedValidator = Publishers.Zip(validateAmount, validateText)
-                combinedValidator.sink(receiveCompletion: { errorMessage in
+                _ = combinedValidator.sink(receiveCompletion: { errorMessage in
                     switch errorMessage {
                     case .failure(.InvalidAmount): invalidAmount(.InvalidAmount)
                     case.failure(.InvalidText) : invalidText(.InvalidText)
@@ -38,9 +38,7 @@ class FormValidations {
                 }, receiveValue: { result in
                     promise(.success(result))
                 })
-          
             }
-           
         }   
     }
     
@@ -49,6 +47,10 @@ class FormValidations {
     func validateAmount( amount : Money?, errorMessage : ErrorMessages ) -> Future < Money , ErrorMessages>{
         return Future(){
             promise in
+//            print(amount)
+//            if amount == 0{
+//                promise(.failure(.InvalidAmount))
+//            }
             
             if var amount = amount {
                 var result = Money()

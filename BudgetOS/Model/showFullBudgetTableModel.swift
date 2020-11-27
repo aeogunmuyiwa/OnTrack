@@ -8,15 +8,16 @@
 import UIKit
 import CoreData
 
-class showFullCategoryTableModel: NSObject {
+class showFullBudgetTableModel: NSObject {
     var controller : UIViewController
     let cellId = "HomeView_TableView_CellId"
     
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero)
-        tableView.register(HomeView_TableViewTableViewCell.self, forCellReuseIdentifier: cellId)
+        tableView.register(Budget_CustomTableViewCell.self, forCellReuseIdentifier: cellId)
         DatabaseManager.shared.fetchedResultsController.delegate = self
         DatabaseManager.shared.performFetch()
+        tableView.separatorStyle = .none
         controller.view.addSubview(tableView)
         tableView.backgroundColor = .clear
         tableView.allowsMultipleSelection = false
@@ -38,7 +39,7 @@ class showFullCategoryTableModel: NSObject {
     func navigationControllerProperties(){
         controller.view.backgroundColor = CustomProperties.shared.viewBackgroundColor
         controller.navigationController?.navigationBar.prefersLargeTitles = true
-        controller.navigationItem.title = "Category"
+        controller.navigationItem.title = "Budgets"
         controller.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: CustomProperties.shared.textColour]
 
     }
@@ -46,11 +47,11 @@ class showFullCategoryTableModel: NSObject {
 }
   
 
-extension showFullCategoryTableModel: UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate {
+extension showFullBudgetTableModel: UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let sections = DatabaseManager.shared.fetchedResultsController.sections else { return 0   }
-        return sections[0].numberOfObjects
+        return sections[section].numberOfObjects
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -59,12 +60,17 @@ extension showFullCategoryTableModel: UITableViewDelegate, UITableViewDataSource
 
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! HomeView_TableViewTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! Budget_CustomTableViewCell
         configureCell(cell, at: indexPath)
         return cell
     }
-    func configureCell(_ cell: HomeView_TableViewTableViewCell?, at indexPath: IndexPath) {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 50
+    }
+    func configureCell(_ cell: Budget_CustomTableViewCell?, at indexPath: IndexPath) {
         if let cell = cell {
+            cell.setUp(controller)
             cell.data = DatabaseManager.shared.fetchedResultsController.object(at: indexPath)
         }
     }
@@ -97,7 +103,7 @@ extension showFullCategoryTableModel: UITableViewDelegate, UITableViewDataSource
                 
             case .update :
                 if let indexPath = indexPath {
-                    configureCell(tableView.cellForRow(at: indexPath) as? HomeView_TableViewTableViewCell, at: indexPath)
+                    configureCell(tableView.cellForRow(at: indexPath) as? Budget_CustomTableViewCell, at: indexPath)
                 }
             @unknown default:
                 print("unknown default, will handle error")

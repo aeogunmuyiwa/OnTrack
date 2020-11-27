@@ -8,24 +8,15 @@
 import UIKit
 import Combine
 
-struct tester {
-    let test : String
-}
 
-class AddCategory_baseCard: UIView {
+class AddCategory_baseCardView: UIView {
     // AddCategoryModel publisher
     var AddCategoryModel :  PassthroughSubject<CategoryStruct?, Never>
     var data : CategoryStruct = .init("", 0, nil)
-
-//    lazy var data : Category = {
-//            let categoryDatasoruce = Category(context: DatabaseManager.shared.viewContext)
-//            return categoryDatasoruce
-//        }()
-
     lazy var categoryName: UILabel = {
         let categoryName = UILabel()
         categoryName.text = "Category"
-        categoryName.font = CustomProperties.shared.basicTestFont
+        categoryName.font = CustomProperties.shared.basicTextFont
         categoryName.textColor = CustomProperties.shared.textColour
         categoryName.translatesAutoresizingMaskIntoConstraints = true
         self.addSubview(categoryName)
@@ -59,7 +50,7 @@ class AddCategory_baseCard: UIView {
     lazy var budgeLabel: UILabel = {
         let budgeLabel = UILabel()
         budgeLabel.text = "Budget"
-        budgeLabel.font = CustomProperties.shared.basicTestFont
+        budgeLabel.font = CustomProperties.shared.basicTextFont
         budgeLabel.textColor = CustomProperties.shared.textColour
         budgeLabel.translatesAutoresizingMaskIntoConstraints = true
         self.addSubview(budgeLabel)
@@ -94,7 +85,7 @@ class AddCategory_baseCard: UIView {
         //check if textfield is categoryNameInput or budgetInput , if true , send data to datasource
         if (textField ==  categoryNameInput) || (textField == budgetInput){
             //todo form validation
-            FormValidations.shared.ValidateTransaction(Money.init(string: budgetInput.text ?? ""), categoryNameInput.text, invalidAmount: {[weak self] _ in
+           _ =  FormValidations.shared.ValidateTransaction(Money.init(string: budgetInput.text ?? ""), categoryNameInput.text, invalidAmount: {[weak self] _ in
                 self?.AddCategoryModel.send(nil)
             }, invalidText: {[weak self] _ in
                 self?.AddCategoryModel.send(nil)
@@ -136,11 +127,10 @@ class AddCategory_baseCard: UIView {
     }
     
     func updateUI(_ datasource : CategoryStruct){
-
-        budgetInput.text = "\(datasource.budget)"
-       
+        if let budget = datasource.budget {
+            budgetInput.text = "\(budget)"
+        }
         categoryNameInput.text = datasource.category
-       
     }
 }
 

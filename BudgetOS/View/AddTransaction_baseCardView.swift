@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-class AddTransaction_baseCard: UIView {
+class AddTransaction_baseCardView: UIView {
     
     var AddTransactionModel :  PassthroughSubject<ViewTransaction?, Never>
     var transaction : ViewTransaction?
@@ -17,7 +17,7 @@ class AddTransaction_baseCard: UIView {
     lazy var Description: UILabel = {
         let Description = UILabel()
         Description.text = "Description"
-        Description.font = CustomProperties.shared.basicTestFont
+        Description.font = CustomProperties.shared.basicTextFont
         Description.textColor = CustomProperties.shared.textColour
         Description.translatesAutoresizingMaskIntoConstraints = true
         self.addSubview(Description)
@@ -51,7 +51,7 @@ class AddTransaction_baseCard: UIView {
     lazy var AmountLabel: UILabel = {
         let AmountLabel = UILabel()
         AmountLabel.text = "Amount"
-        AmountLabel.font = CustomProperties.shared.basicTestFont
+        AmountLabel.font = CustomProperties.shared.basicTextFont
         AmountLabel.textColor = CustomProperties.shared.textColour
         AmountLabel.translatesAutoresizingMaskIntoConstraints = true
         self.addSubview(AmountLabel)
@@ -98,7 +98,7 @@ class AddTransaction_baseCard: UIView {
         //check if textfield is categoryNameInput or budgetInput , if true , send data to datasource
         if (textField ==  DescriptionInput) || (textField == AmountInput){
             //todo form validation: make robost
-            FormValidations.shared.ValidateTransaction(Money.init(string: AmountInput.text ?? ""), DescriptionInput.text, invalidAmount: { errorMessage in
+          _ =  FormValidations.shared.ValidateTransaction(Money.init(string: AmountInput.text ?? ""), DescriptionInput.text, invalidAmount: { errorMessage in
                 self.AddTransactionModel.send(nil)
             }, invalidText: { errorMessage in
                 self.AddTransactionModel.send(nil)

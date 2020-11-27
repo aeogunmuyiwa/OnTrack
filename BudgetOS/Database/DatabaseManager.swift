@@ -52,6 +52,7 @@ class DatabaseManager: NSObject {
         do {
             if self.viewContext.hasChanges {
                 try self.viewContext.save()
+                NotificationCenter.default.post(name: .reloadCategoryTable, object: nil)
             }
            
         }catch{
@@ -60,6 +61,7 @@ class DatabaseManager: NSObject {
         }
         
     }
+    
     
     //Mark : create OnTractTransaction object
     func createTransaction(_ transaction : Transaction ) -> OnTractTransaction?  {
@@ -114,7 +116,7 @@ class DatabaseManager: NSObject {
         data.id = category.id
         data.categoryDescription = category.category
         data.difference = data.budget?.subtracting(data.actual ?? 0)
-        category.transactions?.map({ item in
+       _ = category.transactions?.map({ item in
             let transaction = OnTractTransaction.init(context: viewContext)
             transaction.amount =  item.amount as NSDecimalNumber?
             transaction.categoryId =  category.id
@@ -124,6 +126,14 @@ class DatabaseManager: NSObject {
             data.difference = data.budget?.subtracting(data.actual ?? 0)
         })
         
+        self.saveContext()
+    }
+    
+    //Mark updateBudget
+    func updateBudget(_ budget : Category , _ budgetName : String, _ amount : Money){
+        budget.categoryDescription = budgetName
+        budget.budget = NSDecimalNumber(decimal: amount)
+        budget.difference = budget.budget?.subtracting(budget.actual ?? 0)
         self.saveContext()
     }
 
@@ -143,6 +153,21 @@ class DatabaseManager: NSObject {
             }catch {
                 completionHandler(nil)
             }
+    }
+    
+    func loadTransactions(){
+        let TransactionFetchRequest : NSFetchRequest<OnTractTransaction> = OnTractTransaction.fetchRequest()
+        TransactionFetchRequest.sortDescriptors = [.init(keyPath: \OnTractTransaction.date, ascending: true)]
+        do {
+            let transactions = try self.viewContext.fetch(TransactionFetchRequest)
+            transactions.map({item in
+                
+            })
+            
+            
+        }catch {
+            print("error fetching transaction")
+        }
     }
     
     func performFetch(){

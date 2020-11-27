@@ -11,7 +11,7 @@ import Combine
 class HomeViewModelManager: NSObject {
     let dashboardID = "dashboardID"
     let categoryId = "categoryId"
-    var HomeViewContoller : UIViewController
+    weak var HomeViewContoller : UIViewController?
     var defaultHeight : CGFloat = 600
     //Homedashboard
     
@@ -22,44 +22,45 @@ class HomeViewModelManager: NSObject {
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout.init())
         collectionView.setCollectionViewLayout(layout, animated: true)
         collectionView.translatesAutoresizingMaskIntoConstraints = true
-       // collectionView.showsVerticalScrollIndicator = true
+       collectionView.showsVerticalScrollIndicator = false
         collectionView.backgroundColor = .clear
         collectionView.bounces = true
         collectionView.isScrollEnabled = true
         collectionView.register(HomeView_Dashboard_1_CollectionViewCell.self, forCellWithReuseIdentifier: dashboardID)
-        collectionView.register(CategoryCollectionViewCell.self, forCellWithReuseIdentifier: categoryId)
+        collectionView.register(BudgetCollectionViewCell.self, forCellWithReuseIdentifier: categoryId)
         collectionView.delegate = self
         collectionView.dataSource = self
-        HomeViewContoller.view.addSubview(collectionView)
+        HomeViewContoller?.view.addSubview(collectionView)
         return collectionView
      }()
     
     init(HomeViewContoller : UIViewController) {
         self.HomeViewContoller = HomeViewContoller
         super.init()
-        DatabaseManager.shared.deleteAllCategory()
+       // DatabaseManager.shared.deleteAllCategory()
         collectionView.pin(to: HomeViewContoller.view)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         navigationControllerProperties()
        
     }
     
+
     
     //Mark: set navigation controller title and right button
     func navigationControllerProperties(){
-        HomeViewContoller.view.backgroundColor = CustomProperties.shared.viewBackgroundColor
-        HomeViewContoller.navigationController?.navigationBar.prefersLargeTitles = true
-        HomeViewContoller.navigationItem.title = "OnTrack"
-        HomeViewContoller.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: CustomProperties.shared.textColour]
-        HomeViewContoller.navigationItem.rightBarButtonItem = .init(image: CustomProperties.shared.tintedColorImage, style: .plain, target: self, action: #selector(naviagenext))
-        HomeViewContoller.navigationItem.rightBarButtonItem?.tintColor = CustomProperties.shared.animationColor
+        HomeViewContoller?.view.backgroundColor = CustomProperties.shared.viewBackgroundColor
+        HomeViewContoller?.navigationController?.navigationBar.prefersLargeTitles = true
+        HomeViewContoller?.navigationItem.title = "OnTrack"
+        HomeViewContoller?.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: CustomProperties.shared.textColour]
+        HomeViewContoller?.navigationItem.rightBarButtonItem = .init(image: CustomProperties.shared.tintedColorImage, style: .plain, target: self, action: #selector(naviagenext))
+        HomeViewContoller?.navigationItem.rightBarButtonItem?.tintColor = CustomProperties.shared.animationColor
     }
     
     //Mark : right button action
     @objc func naviagenext(){
         let nextVC = NextViewController()
        // nextVC.delegate = CategoryCollectionViewCell.self as! AddCategoryDelegate
-        HomeViewContoller.navigationController?.pushViewController(nextVC, animated: true)
+        HomeViewContoller?.navigationController?.pushViewController(nextVC, animated: true)
     }
     
 }
@@ -78,8 +79,11 @@ extension HomeViewModelManager : UICollectionViewDelegate, UICollectionViewDataS
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: dashboardID, for: indexPath) as! HomeView_Dashboard_1_CollectionViewCell
             return cell
         }else{
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryId, for: indexPath) as! CategoryCollectionViewCell
-            cell.setup(HomeViewContoller)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryId, for: indexPath) as! BudgetCollectionViewCell
+            if let HomeViewContoller = HomeViewContoller {
+                cell.setup(HomeViewContoller)
+            }
+            
             return cell
         }
        
