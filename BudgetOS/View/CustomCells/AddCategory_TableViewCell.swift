@@ -32,8 +32,8 @@ class AddCategory_TableViewCell: UITableViewCell {
     }()
     
     //MARK : Base card view for adding a new category
-    lazy var addCategory_baseCard : AddCategory_baseCard = {
-        let addCategory_baseCard = AddCategory_baseCard.init(AddCategoryModel: CategoryStruct_publisher)
+    lazy var addCategory_baseCard : AddCategory_baseCardView = {
+        let addCategory_baseCard = AddCategory_baseCardView.init(AddCategoryModel: CategoryStruct_publisher)
         addCategory_baseCard.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(addCategory_baseCard)
         addCategory_baseCard.topAnchor(newTransaction.layoutMarginsGuide.bottomAnchor, 20)
@@ -48,7 +48,7 @@ class AddCategory_TableViewCell: UITableViewCell {
         CategoryStruct_subscriber = CategoryStruct_publisherAction
             .sink(receiveValue: { [weak self] (receiveValue) in
                 if let receivedValue = receiveValue{
-                    NotificationCenter.default.post(name: .saveCategory_Publisher, object: receiveValue)
+                    NotificationCenter.default.post(name: .saveCategory_Publisher, object: receivedValue)
                     self?.viewController?.navigationItem.rightBarButtonItem?.isEnabled = true
                 }else{
                     self?.viewController?.navigationItem.rightBarButtonItem?.isEnabled = false
@@ -101,7 +101,6 @@ class AddCategory_TableViewCell: UITableViewCell {
         //vc.categoryDatasource = datasource
         let navbar: UINavigationController = UINavigationController(rootViewController: vc)
         navbar.navigationBar.backgroundColor = CustomProperties.shared.animationColor
-        
         viewController?.present(navbar, animated: true, completion: nil)
     }
     

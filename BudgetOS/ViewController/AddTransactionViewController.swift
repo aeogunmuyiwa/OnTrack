@@ -15,8 +15,9 @@ class AddTransactionViewController: UIViewController {
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        addTransactionModel.viewController = self
-        addTransactionModel.datasource = dataSource
+        addTransactionModel = .init(self, dataSource)
+//        addTransactionModel.viewController = self
+//        addTransactionModel.datasource = dataSource
         // Do any additional setup after loading the view.
     }
     

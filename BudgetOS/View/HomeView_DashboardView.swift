@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HomeView_Dashboard_1: UIView {
+class HomeView_DashboardView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: .zero)

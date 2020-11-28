@@ -9,6 +9,11 @@ import UIKit
 extension Notification.Name {
     static let saveCategory_Publisher = Notification.Name(rawValue: "saveCategory_Publisher")
     static let saveTransaction_Publisher = Notification.Name(rawValue: "saveTransaction_Publisher")
+    static let reloadCategoryTable = Notification.Name(rawValue: "reloadCategoryTable")
+    static let updateHomeViewModelManagerHeight = Notification.Name("updateHomeViewModelManagerHeight")
+    static let saveEditedTransaction = Notification.Name("saveEditedTransaction")
+    static let saveNewTransaction = Notification.Name("saveNewTransaction")
+    static let select_subscriber = Notification.Name(rawValue: "select_subscriber")
 }
 
 extension UIView{
@@ -71,6 +76,10 @@ extension UIView{
         self.rightAnchor.constraint(equalTo: rightAnchor, constant: constant).isActive = true
     }
     
+    //center y anchor constraints
+    func centerYAnchor (_ centerYanchor : NSLayoutYAxisAnchor, _ constant : CGFloat){
+        self.centerYAnchor.constraint(equalTo: centerYanchor, constant: constant).isActive = true
+    }
 
     
 }

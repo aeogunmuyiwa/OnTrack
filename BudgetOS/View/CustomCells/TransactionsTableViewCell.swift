@@ -1,14 +1,15 @@
 //
-//  HomeView_TableViewTableViewCell.swift
+//  TransactionsTableViewCell.swift
 //  BudgetOS
 //
-//  Created by Adebayo  Ogunmuyiwa on 2020-11-20.
+//  Created by Adebayo  Ogunmuyiwa on 2020-11-22.
 //
 
 import UIKit
 
-class HomeView_TableViewTableViewCell: UITableViewCell {
-    let cellId = "HomeView_TableView_CellId"
+class TransactionsTableViewCell: UITableViewCell {
+
+    let cellId = "TransactionsTableViewCell"
   
     lazy var customAccessoryView: UIButton = {
         let customAccessoryView = UIButton(frame: CGRect(x: 0, y: 0, width: 15, height: 15))
@@ -17,14 +18,18 @@ class HomeView_TableViewTableViewCell: UITableViewCell {
         return customAccessoryView
     }()
     
-    var data : CategoryStruct? {
+
+    var data : Transaction? {
         didSet {
             //set data
             if let data = data{
                 self.textLabel?.textColor = CustomProperties.shared.textColour
                 self.detailTextLabel?.textColor = CustomProperties.shared.subtextColor
-                self.textLabel?.text = data.category
-                self.detailTextLabel?.text = "$\(data.difference)"
+                self.textLabel?.text = data.transactionDescription
+                if let amount = data.amount{
+                    self.detailTextLabel?.text = "$\(amount)"
+                }
+               
             }
             self.accessoryType = .disclosureIndicator
         }
@@ -46,8 +51,6 @@ class HomeView_TableViewTableViewCell: UITableViewCell {
         // Initialization code
     }
 
-    
-    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 

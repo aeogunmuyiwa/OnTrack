@@ -1,22 +1,22 @@
 //
-//  showFullCategoryTableViewController.swift
+//  SelectBudgetViewController.swift
 //  BudgetOS
 //
-//  Created by Adebayo  Ogunmuyiwa on 2020-11-21.
+//  Created by Adebayo  Ogunmuyiwa on 2020-11-28.
 //
 
 import UIKit
 
-class showFullCategoryTableViewController: UIViewController {
+class SelectBudgetViewController: UIViewController {
 
-    //showFullCategoryTableModel - ViewModel: manages views
-    lazy var ShowFullCategoryTableModel : showFullCategoryTableModel = {
-        let ShowFullCategoryTableModel = showFullCategoryTableModel(self)
-        return ShowFullCategoryTableModel
+    lazy var selectBudgetModel : SelectBudgetModel = {
+       let selectBudgetModel = SelectBudgetModel(self)
+        return selectBudgetModel
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        ShowFullCategoryTableModel = .init(self)
+        selectBudgetModel = .init(self)
+
         // Do any additional setup after loading the view.
     }
     

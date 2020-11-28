@@ -13,17 +13,20 @@ class AddTransactionModel: NSObject {
     //todo add error handling
     var viewController : UIViewController
     private var TransactionStruct_subscriber : AnyCancellable?
+    
     var datasource : ViewTransaction?
     private lazy var TransactionStruct_publisher = PassthroughSubject<ViewTransaction?, Never>()
     lazy var CategoryStruct_publisherAction = TransactionStruct_publisher.eraseToAnyPublisher()
     
     
-    lazy var addTransaction_baseCard: AddTransaction_baseCard = {
-        let addTransaction_baseCard = AddTransaction_baseCard(TransactionStruct_publisher, datasource)
+    lazy var addTransaction_baseCard: AddTransaction_baseCardView = {
+        let addTransaction_baseCard = AddTransaction_baseCardView(TransactionStruct_publisher, datasource, viewController)
         viewController.view.addSubview(addTransaction_baseCard)
         addTransaction_baseCard.pin(to: viewController.view)
         return addTransaction_baseCard
     }()
+    
+   
     
     init(_ viewController : UIViewController, _ dataSource : ViewTransaction? ) {
         self.viewController = viewController
@@ -41,8 +44,12 @@ class AddTransactionModel: NSObject {
         datasource.map({item in
             if (item.transactionStatus == .edit){
                 self.viewController.navigationItem.title = "Edit Transaction"
-            }else{
+            }else if (item.transactionStatus == .new){
                 self.viewController.navigationItem.title = "New Transaction"
+            }else if (item.transactionStatus == .addTransaction){
+                self.viewController.navigationItem.title = "New Transaction"
+            }else {
+                self.viewController.navigationItem.title = "Edit Transaction"
             }
         })
         self.viewController.navigationController?.navigationBar.prefersLargeTitles = true
@@ -83,12 +90,21 @@ class AddTransactionModel: NSObject {
                 }
             })
     }
+    
+ 
 
     
     func saveNewTransaction(){
         if let datasource = datasource {
-            dump(datasource)
-            NotificationCenter.default.post(name: .saveTransaction_Publisher, object: datasource)
+            if datasource.transactionStatus == .editSaved {
+                   // DatabaseManager.shared.updateTransaction(datasource)
+                NotificationCenter.default.post(name: .saveEditedTransaction, object: datasource)
+            }else if (datasource.transactionStatus == .addTransaction){
+                NotificationCenter.default.post(name: .saveNewTransaction, object: datasource)
+            }else{
+                NotificationCenter.default.post(name: .saveTransaction_Publisher, object: datasource)
+            }
+          
             viewController.dismiss(animated: true, completion: nil)
         }
     }

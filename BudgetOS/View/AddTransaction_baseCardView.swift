@@ -8,16 +8,18 @@
 import UIKit
 import Combine
 
-class AddTransaction_baseCard: UIView {
+class AddTransaction_baseCardView: UIView {
     
     var AddTransactionModel :  PassthroughSubject<ViewTransaction?, Never>
     var transaction : ViewTransaction?
     var cancellable : Cancellable?
-
+    weak var controller : UIViewController?
+    private var select_subscriber : AnyCancellable?
+    
     lazy var Description: UILabel = {
         let Description = UILabel()
         Description.text = "Description"
-        Description.font = CustomProperties.shared.basicTestFont
+        Description.font = CustomProperties.shared.basicTextFont
         Description.textColor = CustomProperties.shared.textColour
         Description.translatesAutoresizingMaskIntoConstraints = true
         self.addSubview(Description)
@@ -51,7 +53,7 @@ class AddTransaction_baseCard: UIView {
     lazy var AmountLabel: UILabel = {
         let AmountLabel = UILabel()
         AmountLabel.text = "Amount"
-        AmountLabel.font = CustomProperties.shared.basicTestFont
+        AmountLabel.font = CustomProperties.shared.basicTextFont
         AmountLabel.textColor = CustomProperties.shared.textColour
         AmountLabel.translatesAutoresizingMaskIntoConstraints = true
         self.addSubview(AmountLabel)
@@ -87,25 +89,50 @@ class AddTransaction_baseCard: UIView {
         datepicker.timeZone = NSTimeZone.local
         datepicker.backgroundColor = .white
         datepicker.preferredDatePickerStyle = .compact
-        //datepicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
         self.addSubview(datepicker)
         datepicker.translatesAutoresizingMaskIntoConstraints = true
         datepicker.topAnchor(AmountInput.bottomAnchor, 20)
         datepicker.leftAnchor(self.layoutMarginsGuide.leftAnchor, 0)
+        datepicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
         return datepicker
     }()
     
-//    @objc func datePickerValueChanged(_ sender: UIDatePicker){
-////        let dateFormatter: DateFormatter = DateFormatter()
-////        dateFormatter.dateFormat = "MM/dd/yyyy hh:mm a"
-//        preparedatasource(transaction, DescriptionInput.text, amount: Money.init(string: AmountInput.text ?? ""), id: nil, date: datepicker.date.timeIntervalSince1970)
-//
-//    }
+    lazy var SelectCategory: selectCategory = {
+        let SelectCategory = selectCategory()
+        SelectCategory.controller =  controller
+        self.addSubview(SelectCategory)
+        SelectCategory.translatesAutoresizingMaskIntoConstraints = true
+        SelectCategory.topAnchor(datepicker.bottomAnchor, 20)
+        SelectCategory.leftAnchor(self.layoutMarginsGuide.leftAnchor, 0)
+        SelectCategory.heightAnchor(60)
+        SelectCategory.rightAnchor(self.layoutMarginsGuide.rightAnchor, 0)
+        SelectCategory.backgroundColor = CustomProperties.shared.animationColor
+        SelectCategory.layer.cornerRadius = 10
+        SelectCategory.isHidden = true
+        
+        return SelectCategory
+    }()
+    
+        @objc func datePickerValueChanged(_ sender: UIDatePicker){
+    //        let dateFormatter: DateFormatter = DateFormatter()
+    //        dateFormatter.dateFormat = "MM/dd/yyyy hh:mm a"
+            
+            _ =  FormValidations.shared.ValidateTransaction(Money.init(string: AmountInput.text ?? ""), DescriptionInput.text, invalidAmount: { errorMessage in
+                  self.AddTransactionModel.send(nil)
+              }, invalidText: { errorMessage in
+                  self.AddTransactionModel.send(nil)
+              }).sink(receiveValue: { [weak self] value in
+                  self?.preparedatasource(self?.transaction, value.1, amount: value.0, id: .zero, date: self?.datepicker.date.timeIntervalSince1970)
+              })
+        }
+    
+
+    
     @objc func textFieldDidChange(_ textField: UITextField) {
         //check if textfield is categoryNameInput or budgetInput , if true , send data to datasource
         if (textField ==  DescriptionInput) || (textField == AmountInput){
             //todo form validation: make robost
-            FormValidations.shared.ValidateTransaction(Money.init(string: AmountInput.text ?? ""), DescriptionInput.text, invalidAmount: { errorMessage in
+          _ =  FormValidations.shared.ValidateTransaction(Money.init(string: AmountInput.text ?? ""), DescriptionInput.text, invalidAmount: { errorMessage in
                 self.AddTransactionModel.send(nil)
             }, invalidText: { errorMessage in
                 self.AddTransactionModel.send(nil)
@@ -116,14 +143,32 @@ class AddTransaction_baseCard: UIView {
         }
     }
     
+    func handleSelectCategorySubscriber (){
+        let selectCategoryPublisher =  NotificationCenter.Publisher.init(center: .default, name: .select_subscriber)
+        select_subscriber = selectCategoryPublisher.sink(receiveValue: { [weak self] result in
+            if let value = result.object as? Category {
+                self?.SelectCategory.categoryData.text = value.categoryDescription
+            }
+        })
+    }
+    
     //MARK : Initialization
-    init(_ AddTransactionModel : PassthroughSubject<ViewTransaction?, Never>?,_ datasource : ViewTransaction? ) {
+    init(_ AddTransactionModel : PassthroughSubject<ViewTransaction?, Never>?,_ datasource : ViewTransaction?, _ controller : UIViewController ) {
         self.AddTransactionModel = AddTransactionModel!
         self.transaction = datasource
+        self.controller = controller
         super.init(frame: .zero)
         setup()
         setupUI()
-        
+        handleSelectCategorySubscriber()
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
+        SelectCategory.isUserInteractionEnabled = true
+        SelectCategory.addGestureRecognizer(tapGestureRecognizer)
+    }
+    
+    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
+        //let tappedImage = tapGestureRecognizer.view as! 
+        // And some actions
     }
     
     required init?(coder: NSCoder) {
@@ -138,8 +183,7 @@ class AddTransaction_baseCard: UIView {
         AmountLabel.translatesAutoresizingMaskIntoConstraints = false
         AmountInput.translatesAutoresizingMaskIntoConstraints = false
         datepicker.translatesAutoresizingMaskIntoConstraints = false
-        
-       
+        SelectCategory.translatesAutoresizingMaskIntoConstraints = false
     }
     
     //mark handle changes in datasource
@@ -148,10 +192,8 @@ class AddTransaction_baseCard: UIView {
         //prepare to send data
         
         if let currenttransaction = currenttransaction{
-            transaction = .init(transactionStatus: currenttransaction.transactionStatus, index: currenttransaction.index, transaction: DatabaseManager.shared.createTransaction(.init(description, amount, id, date)))
-            dump(transaction)
+            transaction = .init(transactionStatus: currenttransaction.transactionStatus, index: currenttransaction.index, transaction: .init(description, amount, id, date))
         }
-        dump(transaction)
         if let transaction = transaction {
             AddTransactionModel.send(transaction)
         }
@@ -170,6 +212,20 @@ class AddTransaction_baseCard: UIView {
                     if let amount = self?.transaction?.transaction?.amount {
                         self?.AmountInput.text = "\(amount)"
                     }}}
+            
+            if item.transactionStatus == .editSaved{
+                DispatchQueue.main.async { [weak self] in
+                    self?.DescriptionInput.text = self?.transaction?.onTransaction?.transactionDescription
+                    if let date =  self?.transaction?.onTransaction?.date {
+                        self?.datepicker.date = Date(timeIntervalSince1970: date)
+                    }
+                    if let amount = self?.transaction?.onTransaction?.amount {
+                        self?.AmountInput.text = "\(amount)"
+                    }}
+            }
+            if item.transactionStatus == .addTransaction {
+                SelectCategory.isHidden = false
+            }
         })
     }
     

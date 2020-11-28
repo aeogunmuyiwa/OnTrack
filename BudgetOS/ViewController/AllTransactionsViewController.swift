@@ -1,22 +1,26 @@
 //
-//  NextViewController.swift
+//  AllTransactionsViewController.swift
 //  BudgetOS
 //
-//  Created by Adebayo  Ogunmuyiwa on 2020-11-19.
+//  Created by Adebayo  Ogunmuyiwa on 2020-11-27.
 //
 
 import UIKit
 
-class NextViewController: UIViewController {
-
-    var addCategoryModel : AddBudgetModel?
+class AllTransactionsViewController: UIViewController {
+    var data : [OnTractTransaction]?
+    lazy var allTransactionsModel : AllTransactionsModel = {
+        let allTransactionsModel = AllTransactionsModel(ViewController: self, data: data ?? .init())
+        return allTransactionsModel
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        addCategoryModel = .init(self)
-   
+        allTransactionsModel = .init(ViewController: self, data: data ?? .init())
         // Do any additional setup after loading the view.
     }
     
+    
+  
 
     /*
     // MARK: - Navigation

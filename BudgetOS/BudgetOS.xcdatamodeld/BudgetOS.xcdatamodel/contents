@@ -6,16 +6,17 @@
         <attribute name="categoryDescription" attributeType="String"/>
         <attribute name="difference" attributeType="Decimal" defaultValueString="0.0"/>
         <attribute name="id" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <relationship name="transactions" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="OnTractTransaction"/>
+        <relationship name="transactions" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="OnTractTransaction"/>
     </entity>
     <entity name="OnTractTransaction" representedClassName=".OnTractTransaction" syncable="YES" codeGenerationType="class">
         <attribute name="amount" attributeType="Decimal" defaultValueString="0.0"/>
         <attribute name="categoryId" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="date" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="transactionDescription" attributeType="String"/>
+        <relationship name="category" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="Category"/>
     </entity>
     <elements>
         <element name="Category" positionX="-310.7177734375" positionY="-64.72030639648438" width="128" height="133"/>
-        <element name="OnTractTransaction" positionX="5.75860595703125" positionY="86.59564208984375" width="128" height="103"/>
+        <element name="OnTractTransaction" positionX="103.7386474609375" positionY="195.6032409667969" width="128" height="104"/>
     </elements>
 </model>

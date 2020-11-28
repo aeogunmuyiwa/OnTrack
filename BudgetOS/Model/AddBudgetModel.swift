@@ -8,21 +8,18 @@
 import UIKit
 import Combine
 
-class AddCategoryModel: NSObject {
+class AddBudgetModel: NSObject {
     //managed controoler
     let AddCategory = "AddCategory_TableViewCell"
     let cellId = "TransactionsTableViewCell"
     var viewController : UIViewController
     private var saveTransactionSubscriber: AnyCancellable?
     private var saveCategorySubscriber : AnyCancellable?
-  //  var datasource : CategoryStruct = .init(nil, nil)
-   // var CategoryDatasoruce = Category(context: DatabaseManager.shared.viewContext)
-    lazy var CategoryDatasoruce : Category = {
-        let categoryDatasoruce = Category(context: DatabaseManager.shared.viewContext)
-        categoryDatasoruce.id = Date().timeIntervalSince1970
-        return categoryDatasoruce
+ 
+    lazy var CategoryDatasoruce : CategoryStruct = {
+        let CategoryDatasoruce = CategoryStruct("", .none)
+        return CategoryDatasoruce
     }()
-    
     
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero)
@@ -36,6 +33,7 @@ class AddCategoryModel: NSObject {
         tableView.isScrollEnabled = true
         tableView.translatesAutoresizingMaskIntoConstraints = true
         tableView.pin(to: viewController.view)
+
         return tableView
     }()
     
@@ -50,8 +48,9 @@ class AddCategoryModel: NSObject {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         CustomProperties.shared.handleHideKeyboard(view: viewController.view)
         CustomProperties.shared.handleHideKeyboardForscrollableView(view: tableView)
+      
     }
-    
+   
     
     //MARK : SETUP navigation controller buttons
     func setupNavigationController(){
@@ -64,17 +63,25 @@ class AddCategoryModel: NSObject {
         self.viewController.navigationItem.rightBarButtonItem?.isEnabled = false
         self.viewController.navigationItem.rightBarButtonItem?.tintColor = CustomProperties.shared.animationColor
         
+        //self.viewController.navigationItem.leftBarButtonItem = .init(title: "back", style: .plain, target: self, action: #selector(navigateBack))
+        
     }
     
+    
+    
+    //Mark : Navigate to previous view
+    
+    @objc func navigateBack(){
+        self.viewController.navigationController?.popToRootViewController(animated: true)
+    }
 
    // handle publisher envents and set datasource
     func handleCategorySavePublisher(){
         let savePublisher = NotificationCenter.Publisher.init(center: .default, name: .saveCategory_Publisher)
         saveCategorySubscriber = savePublisher.sink(receiveValue: { [weak self] result in
             if let data = result.object as? CategoryStruct {
-                self?.CategoryDatasoruce.categoryDescription = data.category
-                self?.CategoryDatasoruce.budget = data.budget as NSDecimalNumber?
-                self?.CategoryDatasoruce.difference = self?.CategoryDatasoruce.budget?.subtracting(self?.CategoryDatasoruce.actual ?? 0)
+                self?.CategoryDatasoruce.category = data.category
+                self?.CategoryDatasoruce.budget = data.budget
             }
         })
     }
@@ -91,7 +98,6 @@ class AddCategoryModel: NSObject {
                 if data.transactionStatus == .new {
                     self?.saveNewTransaction(data)
                 }
-                
                 self?.tableView.reloadData()
             }
         })
@@ -102,29 +108,28 @@ class AddCategoryModel: NSObject {
     func saveNewTransaction(_ data : ViewTransaction ){
         data.transaction?.categoryId = CategoryDatasoruce.id
         if let transaction = data.transaction{
-            DatabaseManager.shared.AddTransactionToCategory(transaction, category: self.CategoryDatasoruce)
+            CategoryDatasoruce.transactions?.append(transaction)
         }
     }
     //Mark : function for updating edited transactions
     func editTransaction(_ data : ViewTransaction){
         if let index = data.index , let transaction = data.transaction{
-            DatabaseManager.shared.editTransactionToCategory(transaction, category: CategoryDatasoruce, index)
+            CategoryDatasoruce.transactions?[index] = transaction
         }
        
     }
     
     //MARK : SAVE CATEGORY STRUCT "DATASOURCE
     @objc func saveCategory(){
-        dump(CategoryDatasoruce.transactions?.array)
-        
-        dump(CategoryDatasoruce)
-       
+       // dump(self.CategoryDatasoruce)
+        DatabaseManager.shared.CategorySave(self.CategoryDatasoruce)
+        NotificationCenter.default.post(name: .reloadCategoryTable, object: nil)
+        self.viewController.navigationController?.popViewController(animated: true)
+        //self.viewController.navigationController?.popToRootViewController(animated: true)
     }
-    
-
 }
 
-extension AddCategoryModel : UITableViewDelegate, UITableViewDataSource {
+extension AddBudgetModel : UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
@@ -149,8 +154,8 @@ extension AddCategoryModel : UITableViewDelegate, UITableViewDataSource {
         }else{
             let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! TransactionsTableViewCell
             //cell.data = datasource.transactions?[indexPath.row]
-            let transactions = CategoryDatasoruce.transactions?.array as! [OnTractTransaction]
-            cell.data = transactions[indexPath.row]
+            let transactions = CategoryDatasoruce.transactions?[indexPath.row]
+            cell.data = transactions
             return cell
         }
     }
@@ -158,8 +163,8 @@ extension AddCategoryModel : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 1 {
-            let transactions = CategoryDatasoruce.transactions?.array as! [OnTractTransaction]
-            Viewtransaction(datasource: .init(transactionStatus: .edit, index: indexPath.row, transaction: transactions[indexPath.row]))
+            let transactions = CategoryDatasoruce.transactions?[indexPath.row]
+            Viewtransaction(datasource: .init(transactionStatus: .edit, index: indexPath.row, transaction: transactions))
         }
        
     }
@@ -182,7 +187,7 @@ extension AddCategoryModel : UITableViewDelegate, UITableViewDataSource {
     //MARK: - Contextual Actions
        private func makeDeleteContextualAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
            return UIContextualAction(style: .destructive, title: "Delete") { (action, swipeButtonView, completion) in
-            DatabaseManager.shared.deleteTransaction(self.CategoryDatasoruce, indexPath.row)
+            self.CategoryDatasoruce.transactions?.remove(at: indexPath.row)
             self.tableView.reloadData()
            }
        }
