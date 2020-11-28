@@ -6,7 +6,7 @@
         <attribute name="categoryDescription" attributeType="String"/>
         <attribute name="difference" attributeType="Decimal" defaultValueString="0.0"/>
         <attribute name="id" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <relationship name="transactions" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="OnTractTransaction"/>
+        <relationship name="transactions" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="OnTractTransaction"/>
     </entity>
     <entity name="OnTractTransaction" representedClassName=".OnTractTransaction" syncable="YES" codeGenerationType="class">
         <attribute name="amount" attributeType="Decimal" defaultValueString="0.0"/>

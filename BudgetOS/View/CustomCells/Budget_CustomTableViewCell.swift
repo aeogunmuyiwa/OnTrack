@@ -12,7 +12,7 @@ class Budget_CustomTableViewCell: UITableViewCell {
     var index : Int?
     private lazy var BudgetName : UILabel = {
         let budgetName = UILabel()
-        budgetName.textColor = CustomProperties.shared.whiteTextColor
+        budgetName.textColor = CustomProperties.shared.blackTextColor
         budgetName.font = CustomProperties.shared.basicTextfontStandard
         contentView.addSubview(budgetName)
         budgetName.translatesAutoresizingMaskIntoConstraints = true
@@ -23,7 +23,7 @@ class Budget_CustomTableViewCell: UITableViewCell {
     
     private lazy var difference : UILabel = {
         let difference = UILabel()
-        difference.textColor = CustomProperties.shared.lightGray
+        difference.textColor = CustomProperties.shared.blackTextColor
         difference.font = CustomProperties.shared.basicTextfontStandard
         contentView.addSubview(difference)
         difference.translatesAutoresizingMaskIntoConstraints = true
@@ -38,7 +38,7 @@ class Budget_CustomTableViewCell: UITableViewCell {
         edit.setImage(CustomProperties.shared.editImage, for: .normal)
         edit.addTarget(self, action: #selector(editBudget), for: .touchUpInside)
         edit.translatesAutoresizingMaskIntoConstraints = false
-        edit.tintColor = CustomProperties.shared.lightGray
+        edit.tintColor = CustomProperties.shared.animationColor
         contentView.addSubview(edit)
         edit.centerYAnchor(contentView.centerYAnchor, 0)
         edit.rightAnchor(contentView.rightAnchor, 0)
@@ -87,8 +87,10 @@ class Budget_CustomTableViewCell: UITableViewCell {
         }
     }
     
-    func setUp(_ viewController : UIViewController ){
+    func setUp(_ viewController : UIViewController, textColor : UIColor ){
         self.ViewController = viewController
+        difference.textColor = textColor
+        BudgetName.textColor = textColor
     }
     @objc func editBudget(){
         var budgetField: UITextField?

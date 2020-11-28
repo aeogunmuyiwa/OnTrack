@@ -1,23 +1,21 @@
 //
-//  AddTransactionViewController.swift
+//  AllTransactionsViewController.swift
 //  BudgetOS
 //
-//  Created by Adebayo  Ogunmuyiwa on 2020-11-22.
+//  Created by Adebayo  Ogunmuyiwa on 2020-11-27.
 //
 
 import UIKit
 
-class AddTransactionViewController: UIViewController {
-    var dataSource : ViewTransaction?
-    lazy var addTransactionModel :  AddTransactionModel = {
-        let addTransactionModel = AddTransactionModel(self, dataSource)
-        return addTransactionModel
+class AllTransactionsViewController: UIViewController {
+    var data : NSOrderedSet?
+    lazy var allTransactionsModel : AllTransactionsModel = {
+        let allTransactionsModel = AllTransactionsModel(ViewController: self, data: data ?? .init())
+        return allTransactionsModel
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        addTransactionModel = .init(self, dataSource)
-//        addTransactionModel.viewController = self
-//        addTransactionModel.datasource = dataSource
+        allTransactionsModel = .init(ViewController: self, data: data ?? .init())
         // Do any additional setup after loading the view.
     }
     

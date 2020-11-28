@@ -9,7 +9,7 @@ import UIKit
 import CoreData
 
 class showFullBudgetTableModel: NSObject {
-    var controller : UIViewController
+    weak var controller : UIViewController?
     let cellId = "HomeView_TableView_CellId"
     
     lazy var tableView: UITableView = {
@@ -18,7 +18,7 @@ class showFullBudgetTableModel: NSObject {
         DatabaseManager.shared.fetchedResultsController.delegate = self
         DatabaseManager.shared.performFetch()
         tableView.separatorStyle = .none
-        controller.view.addSubview(tableView)
+        controller?.view.addSubview(tableView)
         tableView.backgroundColor = .clear
         tableView.allowsMultipleSelection = false
         tableView.dataSource = self
@@ -26,7 +26,10 @@ class showFullBudgetTableModel: NSObject {
         tableView.bounces = true
         tableView.isScrollEnabled = true
         tableView.translatesAutoresizingMaskIntoConstraints = true
-        tableView.pin(to: controller.view)
+        if let controller = controller {
+            tableView.pin(to: controller.view)
+        }
+        
         return tableView
     }()
     
@@ -34,15 +37,9 @@ class showFullBudgetTableModel: NSObject {
         self.controller = controller
         super.init()
         self.tableView.translatesAutoresizingMaskIntoConstraints = false
-        navigationControllerProperties()
+        CustomProperties.shared.navigationControllerProperties(ViewController: controller, title: "Budgets")
     }
-    func navigationControllerProperties(){
-        controller.view.backgroundColor = CustomProperties.shared.viewBackgroundColor
-        controller.navigationController?.navigationBar.prefersLargeTitles = true
-        controller.navigationItem.title = "Budgets"
-        controller.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: CustomProperties.shared.textColour]
-
-    }
+   
 
 }
   
@@ -56,6 +53,14 @@ extension showFullBudgetTableModel: UITableViewDelegate, UITableViewDataSource, 
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.tableView.deselectRow(at: indexPath, animated: true)
+        DispatchQueue.main.async {
+            let item =  DatabaseManager.shared.fetchedResultsController.object(at: indexPath).transactions
+          // let data = item?.allObjects as? [OnTractTransaction]
+            let vc = AllTransactionsViewController()
+            vc.data = item
+            self.controller?.navigationController?.pushViewController(vc, animated: true)
+        }
+        
     }
 
 
@@ -68,16 +73,29 @@ extension showFullBudgetTableModel: UITableViewDelegate, UITableViewDataSource, 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 50
     }
+    
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        return UISwipeActionsConfiguration(actions: [makeDeleteContextualAction(forRowAt: indexPath)])
+    }
+    
     func configureCell(_ cell: Budget_CustomTableViewCell?, at indexPath: IndexPath) {
-        if let cell = cell {
-            cell.setUp(controller)
+        if let cell = cell , let controller = controller {
+            cell.setUp(controller, textColor: CustomProperties.shared.whiteTextColor)
             cell.data = DatabaseManager.shared.fetchedResultsController.object(at: indexPath)
         }
     }
-        
+    //MARK: - Contextual Actions
+       private func makeDeleteContextualAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
+           return UIContextualAction(style: .destructive, title: "Delete") { (action, swipeButtonView, completion) in
+            DatabaseManager.shared.deleteCategory(DatabaseManager.shared.fetchedResultsController.object(at: indexPath))
+           // self.tableView.reloadData()
+           }
+       }
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()
+      
     }
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.endUpdates()

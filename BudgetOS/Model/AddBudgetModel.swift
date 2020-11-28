@@ -122,6 +122,7 @@ class AddBudgetModel: NSObject {
     
     //MARK : SAVE CATEGORY STRUCT "DATASOURCE
     @objc func saveCategory(){
+       // dump(self.CategoryDatasoruce)
         DatabaseManager.shared.CategorySave(self.CategoryDatasoruce)
         NotificationCenter.default.post(name: .reloadCategoryTable, object: nil)
         

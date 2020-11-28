@@ -11,18 +11,20 @@ import Combine
 class HomeViewModelManager: NSObject {
     let dashboardID = "dashboardID"
     let categoryId = "categoryId"
-    weak var HomeViewContoller : UIViewController?
-    var defaultHeight : CGFloat = 600
+    private weak var HomeViewContoller : UIViewController?
+    var defaultHeight : CGFloat = 100
     //Homedashboard
     
 
     lazy var collectionView:UICollectionView = {
         let layout:UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
         layout.scrollDirection = .vertical
-        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout.init())
+        let flowlayout = UICollectionViewFlowLayout()
+        flowlayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowlayout)
         collectionView.setCollectionViewLayout(layout, animated: true)
         collectionView.translatesAutoresizingMaskIntoConstraints = true
-       collectionView.showsVerticalScrollIndicator = false
+        collectionView.showsVerticalScrollIndicator = false
         collectionView.backgroundColor = .clear
         collectionView.bounces = true
         collectionView.isScrollEnabled = true
@@ -30,7 +32,12 @@ class HomeViewModelManager: NSObject {
         collectionView.register(BudgetCollectionViewCell.self, forCellWithReuseIdentifier: categoryId)
         collectionView.delegate = self
         collectionView.dataSource = self
+        
         HomeViewContoller?.view.addSubview(collectionView)
+        if let HomeViewContoller = HomeViewContoller {
+            collectionView.pin(to: HomeViewContoller.view)
+        }
+      
         return collectionView
      }()
     
@@ -38,20 +45,17 @@ class HomeViewModelManager: NSObject {
         self.HomeViewContoller = HomeViewContoller
         super.init()
        // DatabaseManager.shared.deleteAllCategory()
-        collectionView.pin(to: HomeViewContoller.view)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateHeight), name: .updateHomeViewModelManagerHeight, object: nil)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        CustomProperties.shared.navigationControllerProperties(ViewController: HomeViewContoller, title: "OnTrack")
         navigationControllerProperties()
-       
+        
     }
     
 
     
     //Mark: set navigation controller title and right button
     func navigationControllerProperties(){
-        HomeViewContoller?.view.backgroundColor = CustomProperties.shared.viewBackgroundColor
-        HomeViewContoller?.navigationController?.navigationBar.prefersLargeTitles = true
-        HomeViewContoller?.navigationItem.title = "OnTrack"
-        HomeViewContoller?.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: CustomProperties.shared.textColour]
         HomeViewContoller?.navigationItem.rightBarButtonItem = .init(image: CustomProperties.shared.tintedColorImage, style: .plain, target: self, action: #selector(naviagenext))
         HomeViewContoller?.navigationItem.rightBarButtonItem?.tintColor = CustomProperties.shared.animationColor
     }
@@ -63,6 +67,13 @@ class HomeViewModelManager: NSObject {
         HomeViewContoller?.navigationController?.pushViewController(nextVC, animated: true)
     }
     
+   @objc func updateHeight(notification: NSNotification){
+        if let height = notification.object as? CGFloat {
+            print("default height \(height)")
+            defaultHeight = height
+          //  collectionView.reloadData()
+        }
+   }
 }
 
 
@@ -80,22 +91,20 @@ extension HomeViewModelManager : UICollectionViewDelegate, UICollectionViewDataS
             return cell
         }else{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryId, for: indexPath) as! BudgetCollectionViewCell
+            cell.layer.cornerRadius = 20
+            cell.backgroundColor = CustomProperties.shared.blackTextColor
             if let HomeViewContoller = HomeViewContoller {
                 cell.setup(HomeViewContoller)
             }
-            
             return cell
         }
-       
-       
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-      
+
         if (indexPath.section == 0) {
             return CGSize(width: collectionView.frame.width , height: 310)
-        }else{
-            return CGSize(width: collectionView.frame.width, height: defaultHeight)
         }
+        return CGSize(width: collectionView.frame.width, height: defaultHeight)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {

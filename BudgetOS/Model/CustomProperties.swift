@@ -126,6 +126,21 @@ class CustomProperties: NSObject {
         }
     }
     
+    func navigationControllerProperties(ViewController : UIViewController?, title : String){
+        ViewController?.view.backgroundColor = CustomProperties.shared.viewBackgroundColor
+        ViewController?.navigationController?.navigationBar.prefersLargeTitles = true
+        ViewController?.navigationItem.title = title
+        ViewController?.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: CustomProperties.shared.textColour]
+
+    }
+    lazy var dateFormatter : DateFormatter = {
+       let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .medium
+        return dateFormatter
+    }()
+
+    
     
    
 }

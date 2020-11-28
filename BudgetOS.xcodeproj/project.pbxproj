@@ -13,6 +13,9 @@
 		4662B3C02566620400F8C48B /* NextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4662B3BF2566620400F8C48B /* NextViewController.swift */; };
 		467F53002570BA18005E6DAE /* GradientHorizontalProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F52FF2570BA18005E6DAE /* GradientHorizontalProgressBar.swift */; };
 		467F53082570BAD5005E6DAE /* Budget_CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F53072570BAD5005E6DAE /* Budget_CustomTableViewCell.swift */; };
+		467F53262571510C005E6DAE /* AllTransactionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F53252571510C005E6DAE /* AllTransactionsViewController.swift */; };
+		467F532B25715177005E6DAE /* AllTransactionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F532A25715177005E6DAE /* AllTransactionsModel.swift */; };
+		4688165C25715B79006D52D0 /* AllTransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4688165B25715B79006D52D0 /* AllTransactionsTableViewCell.swift */; };
 		46DE247F25665E1E001A9415 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DE247E25665E1E001A9415 /* AppDelegate.swift */; };
 		46DE248125665E1E001A9415 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DE248025665E1E001A9415 /* SceneDelegate.swift */; };
 		46DE248325665E1E001A9415 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DE248225665E1E001A9415 /* HomeViewController.swift */; };
@@ -66,6 +69,9 @@
 		4662B3BF2566620400F8C48B /* NextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextViewController.swift; sourceTree = "<group>"; };
 		467F52FF2570BA18005E6DAE /* GradientHorizontalProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientHorizontalProgressBar.swift; sourceTree = "<group>"; };
 		467F53072570BAD5005E6DAE /* Budget_CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Budget_CustomTableViewCell.swift; sourceTree = "<group>"; };
+		467F53252571510C005E6DAE /* AllTransactionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTransactionsViewController.swift; sourceTree = "<group>"; };
+		467F532A25715177005E6DAE /* AllTransactionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTransactionsModel.swift; sourceTree = "<group>"; };
+		4688165B25715B79006D52D0 /* AllTransactionsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTransactionsTableViewCell.swift; sourceTree = "<group>"; };
 		46DE247B25665E1E001A9415 /* BudgetOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BudgetOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		46DE247E25665E1E001A9415 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		46DE248025665E1E001A9415 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -151,6 +157,7 @@
 				46F0C22A25681E2500B0FCEA /* HomeView_TableViewTableViewCell.swift */,
 				46F0C23E25691FA500B0FCEA /* HomeView_Dashboard_1_CollectionViewCell.swift */,
 				467F53072570BAD5005E6DAE /* Budget_CustomTableViewCell.swift */,
+				4688165B25715B79006D52D0 /* AllTransactionsTableViewCell.swift */,
 			);
 			path = CustomCells;
 			sourceTree = "<group>";
@@ -222,6 +229,7 @@
 				46F0C265256A761700B0FCEA /* AddTransactionModel.swift */,
 				4623A24E256C21C20003FE97 /* FormValidations.swift */,
 				464DA89E25700DAD0017DFF6 /* CategoryCollectionViewCell_TableModel.swift */,
+				467F532A25715177005E6DAE /* AllTransactionsModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -245,6 +253,7 @@
 				4662B3BF2566620400F8C48B /* NextViewController.swift */,
 				46F0C251256A315400B0FCEA /* showFullBudgetTableViewController.swift */,
 				46F0C260256A755700B0FCEA /* AddTransactionViewController.swift */,
+				467F53252571510C005E6DAE /* AllTransactionsViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -405,6 +414,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				467F532B25715177005E6DAE /* AllTransactionsModel.swift in Sources */,
 				46F0C22B25681E2500B0FCEA /* HomeView_TableViewTableViewCell.swift in Sources */,
 				46F0C20425679F8000B0FCEA /* HomeView_DashboardView.swift in Sources */,
 				46F0C2212568140300B0FCEA /* CategoryStruct.swift in Sources */,
@@ -419,8 +429,10 @@
 				46F0C261256A755700B0FCEA /* AddTransactionViewController.swift in Sources */,
 				46F0C23A25691CB300B0FCEA /* HomeViewModelManager.swift in Sources */,
 				46F0C2172567E5ED00B0FCEA /* CustomProperties.swift in Sources */,
+				4688165C25715B79006D52D0 /* AllTransactionsTableViewCell.swift in Sources */,
 				46DE248325665E1E001A9415 /* HomeViewController.swift in Sources */,
 				467F53002570BA18005E6DAE /* GradientHorizontalProgressBar.swift in Sources */,
+				467F53262571510C005E6DAE /* AllTransactionsViewController.swift in Sources */,
 				46F0C2262568162500B0FCEA /* Transactions.swift in Sources */,
 				46F0C266256A761700B0FCEA /* AddTransactionModel.swift in Sources */,
 				46F0C25C256A3C5900B0FCEA /* AddCategory_TableViewCell.swift in Sources */,

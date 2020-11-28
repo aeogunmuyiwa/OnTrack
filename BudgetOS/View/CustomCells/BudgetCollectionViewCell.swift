@@ -11,13 +11,13 @@ import CoreData
 
 class BudgetCollectionViewCell: UICollectionViewCell {
     var HomeViewContoller : UIViewController?
-    
+  
     let cellId = "HomeView_TableView_CellId"
     private lazy var categoryLabel : UILabel = {
         let categoryLabel = UILabel()
         categoryLabel.text = "Budgets"
         categoryLabel.font = CustomProperties.shared.basicBoldTextFont
-        categoryLabel.textColor = CustomProperties.shared.textColour
+        categoryLabel.textColor = CustomProperties.shared.whiteTextColor
         categoryLabel.translatesAutoresizingMaskIntoConstraints = true
         contentView.addSubview(categoryLabel)
         categoryLabel.topAnchor(contentView.layoutMarginsGuide.topAnchor, 0)
@@ -37,7 +37,7 @@ class BudgetCollectionViewCell: UICollectionViewCell {
         newCategory.titleLabel?.font = CustomProperties.shared.basicBoldTextFont
         newCategory.titleLabel?.textColor = CustomProperties.shared.textColour
         newCategory.topAnchor(contentView.layoutMarginsGuide.topAnchor, 0)
-        newCategory.rightAnchor(rightAnchor, 0)
+        newCategory.rightAnchor(contentView.layoutMarginsGuide.rightAnchor, 20)
         newCategory.widthAnchor(contentView.widthAnchor, multiplier:0.2, 10)
         return newCategory
     }()
@@ -74,8 +74,13 @@ class BudgetCollectionViewCell: UICollectionViewCell {
         tableView.translatesAutoresizingMaskIntoConstraints = false
       //  showMoreLable.translatesAutoresizingMaskIntoConstraints = false
         NotificationCenter.default.addObserver(self, selector: #selector(addObservertoTable), name: .reloadCategoryTable, object: nil)
-    }
+        determineHeight()
+      }
 
+    func determineHeight(){
+        let height = (DatabaseManager.shared.fetchedResultsController.sections?[0].numberOfObjects ?? 0) * 100
+        NotificationCenter.default.post(name: .updateHomeViewModelManagerHeight, object: height)
+    }
     @objc func addObservertoTable(){
         tableView.reloadData()
     }
@@ -94,12 +99,7 @@ class BudgetCollectionViewCell: UICollectionViewCell {
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    @objc func naviagenext(){
-        HomeViewContoller?.navigationController?.pushViewController(NextViewController(), animated: true)
-    }
-    
+    }    
 }
 
 extension BudgetCollectionViewCell: UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate {
@@ -124,7 +124,7 @@ extension BudgetCollectionViewCell: UITableViewDelegate, UITableViewDataSource, 
     }
     func configureCell(_ cell: Budget_CustomTableViewCell?, at indexPath: IndexPath) {
         if let cell = cell, let HomeViewContoller = HomeViewContoller {
-            cell.setUp(HomeViewContoller)
+            cell.setUp(HomeViewContoller, textColor: CustomProperties.shared.whiteTextColor)
             cell.data = DatabaseManager.shared.fetchedResultsController.object(at: indexPath)
         }
     }
@@ -132,9 +132,11 @@ extension BudgetCollectionViewCell: UITableViewDelegate, UITableViewDataSource, 
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()
+       
     }
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.endUpdates()
+  
     }
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
        
