@@ -101,7 +101,6 @@ class AddCategory_TableViewCell: UITableViewCell {
         //vc.categoryDatasource = datasource
         let navbar: UINavigationController = UINavigationController(rootViewController: vc)
         navbar.navigationBar.backgroundColor = CustomProperties.shared.animationColor
-        
         viewController?.present(navbar, animated: true, completion: nil)
     }
     

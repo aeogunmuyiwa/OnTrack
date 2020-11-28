@@ -10,7 +10,6 @@ import UIKit
 class AllTransactionsTableViewCell: UITableViewCell {
     private lazy var transactionName : UILabel = {
         let transactionName = UILabel()
-        transactionName.text = "ssss"
         transactionName.textColor = CustomProperties.shared.whiteTextColor
         transactionName.font = CustomProperties.shared.basicTextfontStandard
         contentView.addSubview(transactionName)
@@ -22,23 +21,35 @@ class AllTransactionsTableViewCell: UITableViewCell {
     
     private lazy var transactionDate : UILabel = {
         let transactionDate = UILabel()
-        transactionDate.text = "test"
         transactionDate.textColor = CustomProperties.shared.lightGray
         transactionDate.font = CustomProperties.shared.basicTextfontStandard
         contentView.addSubview(transactionDate)
         transactionDate.translatesAutoresizingMaskIntoConstraints = true
-        transactionDate.topAnchor(transactionName.bottomAnchor, 0)
-        transactionDate.leftAnchor(contentView.leftAnchor, 0)
+        transactionDate.topAnchor(transactionAmount.bottomAnchor, 0)
+        transactionDate.rightAnchor(contentView.rightAnchor, 0)
         return transactionDate
     }()
+    
+    private lazy var transactionCategory : UILabel = {
+        let transactionCategory = UILabel()
+        transactionCategory.text = "Uncategorized"
+        transactionCategory.textColor = CustomProperties.shared.lightGray
+        transactionCategory.font = CustomProperties.shared.basicTextfontStandard
+        contentView.addSubview(transactionCategory)
+        transactionCategory.translatesAutoresizingMaskIntoConstraints = true
+        transactionCategory.topAnchor(transactionName.bottomAnchor, 0)
+        transactionCategory.leftAnchor(contentView.leftAnchor, 0)
+        return transactionCategory
+    }()
+    
     private lazy var transactionAmount : UILabel = {
         let transactionAmount = UILabel()
-        transactionAmount.text = "ssss"
         transactionAmount.textColor = CustomProperties.shared.whiteTextColor
         transactionAmount.font = CustomProperties.shared.basicTextfontStandard
         contentView.addSubview(transactionAmount)
         transactionAmount.translatesAutoresizingMaskIntoConstraints = true
-        transactionAmount.centerYAnchor(contentView.centerYAnchor, 0)
+        //transactionAmount.centerYAnchor(contentView.centerYAnchor, 0)
+        transactionAmount.topAnchor(contentView.topAnchor, 0)
         transactionAmount.rightAnchor(contentView.rightAnchor, 0)
         return transactionAmount
     }()
@@ -52,6 +63,11 @@ class AllTransactionsTableViewCell: UITableViewCell {
             if let amount = data?.amount{
                 transactionAmount.text = CustomProperties.shared.displayMoney(amount)
             }
+            let category = data?.category?.categoryDescription
+            if category?.isEmpty == false {
+                transactionCategory.text = data?.category?.categoryDescription
+            }
+            
         }
     }
     
@@ -68,6 +84,7 @@ class AllTransactionsTableViewCell: UITableViewCell {
         transactionName.translatesAutoresizingMaskIntoConstraints = false
         transactionDate.translatesAutoresizingMaskIntoConstraints = false
         transactionAmount.translatesAutoresizingMaskIntoConstraints = false
+        transactionCategory.translatesAutoresizingMaskIntoConstraints = false
     }
     
     required init?(coder: NSCoder) {

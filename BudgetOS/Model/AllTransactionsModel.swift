@@ -13,6 +13,8 @@ class AllTransactionsModel: NSObject {
     var data : [OnTractTransaction]?
     let cellId = "AllTransactionsModel"
     private var saveEditedTransactionSubscriber: AnyCancellable?
+    private var saveNewTransactionSubscriber: AnyCancellable?
+    
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero)
         tableView.register(AllTransactionsTableViewCell.self, forCellReuseIdentifier: cellId)
@@ -37,14 +39,15 @@ class AllTransactionsModel: NSObject {
     init(ViewController : UIViewController, data : [OnTractTransaction]) {
         self.ViewController = ViewController
         self.data = data
-        dump(data)
 //        self.data?.sort(by: {(item_1, item_2) in
 //            item_1.date.is(than: item_2.date)
 //        })
         super.init()
         handleSaveEditedTransaction()
+        handleSaveNewTransaction()
         activateView()
         CustomProperties.shared.navigationControllerProperties(ViewController: ViewController, title: "All transaction")
+        navigationControllerProperties()
         
     }
     
@@ -64,6 +67,35 @@ class AllTransactionsModel: NSObject {
                 }
             }
         })
+    }
+    
+    //handle save new transaction Publisher
+    func handleSaveNewTransaction(){
+        let savePublisher = NotificationCenter.Publisher.init(center: .default, name: .saveNewTransaction)
+        saveNewTransactionSubscriber = savePublisher.sink(receiveValue: {[weak self] result in
+            if let value = result.object as? ViewTransaction {
+                let transaction = DatabaseManager.shared.saveTransaction(value)
+                self?.data?.append(transaction)
+                self?.tableView.reloadData()
+            }
+        })
+    }
+    
+    
+    //Mark: set navigation controller title and right button
+    func navigationControllerProperties(){
+        ViewController?.navigationItem.rightBarButtonItem = .init(image: CustomProperties.shared.tintedColorImage, style: .plain, target: self, action: #selector(Addtransaction))
+        ViewController?.navigationItem.rightBarButtonItem?.tintColor = CustomProperties.shared.animationColor
+    }
+    
+    //Mark: transition to addTransaction controller
+    @objc func Addtransaction( ){
+        let vc = AddTransactionViewController()
+        vc.dataSource = .init(transactionStatus: .addTransaction, index: nil, transaction: nil)
+        //vc.categoryDatasource = datasource
+        let navbar: UINavigationController = UINavigationController(rootViewController: vc)
+        navbar.navigationBar.backgroundColor = CustomProperties.shared.animationColor
+        ViewController?.present(navbar, animated: true, completion: nil)
     }
     
     
@@ -88,7 +120,6 @@ extension AllTransactionsModel : UITableViewDelegate, UITableViewDataSource{
         }
     }
     
-    
     func configureCell(_ cell: AllTransactionsTableViewCell?, at indexPath: IndexPath) {
         cell?.data = data?[indexPath.row]
     }
@@ -96,6 +127,7 @@ extension AllTransactionsModel : UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         return UISwipeActionsConfiguration(actions: [makeDeleteContextualAction(forRowAt: indexPath)])
     }
+    
     //MARK: - Contextual Actions
        private func makeDeleteContextualAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
            return UIContextualAction(style: .destructive, title: "Delete") { (action, swipeButtonView, completion) in

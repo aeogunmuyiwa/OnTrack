@@ -97,6 +97,16 @@ class DatabaseManager: NSObject {
         category.difference = category.budget?.subtracting(temp ?? 0)
     }
     
+    //Mark save transaction
+    func saveTransaction (_ transactionValue : ViewTransaction ) -> OnTractTransaction{
+        let transaction = OnTractTransaction.init(context: viewContext)
+        transaction.amount = NSDecimalNumber(decimal: transactionValue.transaction?.amount ?? 0)
+        transaction.date = transactionValue.transaction?.date ?? Date().timeIntervalSince1970
+        transaction.transactionDescription = transactionValue.transaction?.transactionDescription
+        saveContext()
+        return transaction
+    }
+    
  
     //MARK: edit transaction
 //    func editTransactionToCategory(_ transaction : OnTractTransaction, category : Category, _ index : Int){
@@ -188,7 +198,9 @@ class DatabaseManager: NSObject {
     func deleteTransaction(_ transactionObject : OnTractTransaction){
         if let category  = transactionObject.category {
             deleteTransactionHelper(category, transaction: transactionObject)
-            
+        }else{
+            viewContext.delete(transactionObject)
+            saveContext()
         }
         
     }

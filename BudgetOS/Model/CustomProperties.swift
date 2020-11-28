@@ -38,6 +38,8 @@ class CustomProperties: NSObject {
     
     let categoryImage = UIImage(named: "category")?.withRenderingMode(.automatic).withTintColor(#colorLiteral(red: 0.9882352941, green: 0.6392156863, blue: 0.06666666667, alpha: 1))
     
+    let categoryImagePlain = UIImage(named: "category")
+    
     let chevronRight = UIImage(systemName: "chevron.right")?.withTintColor(#colorLiteral(red: 0.9882352941, green: 0.6392156863, blue: 0.06666666667, alpha: 1))
     
     let editImage = UIImage(systemName: "pencil")
@@ -138,7 +140,7 @@ class CustomProperties: NSObject {
     lazy var dateFormatter : DateFormatter = {
        let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .medium
+       // dateFormatter.timeStyle = .medium
         return dateFormatter
     }()
 
@@ -153,6 +155,7 @@ enum TransactionStatus {
     case new
     case edit
     case editSaved
+    case addTransaction
 }
 
 struct ViewTransaction{

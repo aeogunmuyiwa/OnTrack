@@ -93,7 +93,26 @@ class AddTransaction_baseCardView: UIView {
         datepicker.leftAnchor(self.layoutMarginsGuide.leftAnchor, 0)
         return datepicker
     }()
+    
+    lazy var SelectCategory: selectCategory = {
+        let SelectCategory = selectCategory()
+        self.addSubview(SelectCategory)
+        SelectCategory.translatesAutoresizingMaskIntoConstraints = true
+        SelectCategory.topAnchor(datepicker.bottomAnchor, 20)
+        SelectCategory.leftAnchor(self.layoutMarginsGuide.leftAnchor, 0)
+        SelectCategory.heightAnchor(60)
+        SelectCategory.rightAnchor(self.layoutMarginsGuide.rightAnchor, 0)
+        SelectCategory.backgroundColor = CustomProperties.shared.animationColor
+        SelectCategory.layer.cornerRadius = 10
+        SelectCategory.isHidden = true
+        return SelectCategory
+    }()
+    
 
+    
+    
+
+    
     @objc func textFieldDidChange(_ textField: UITextField) {
         //check if textfield is categoryNameInput or budgetInput , if true , send data to datasource
         if (textField ==  DescriptionInput) || (textField == AmountInput){
@@ -117,6 +136,14 @@ class AddTransaction_baseCardView: UIView {
         setup()
         setupUI()
         
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
+        SelectCategory.isUserInteractionEnabled = true
+        SelectCategory.addGestureRecognizer(tapGestureRecognizer)
+    }
+    
+    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
+        //let tappedImage = tapGestureRecognizer.view as! 
+        // And some actions
     }
     
     required init?(coder: NSCoder) {
@@ -131,6 +158,7 @@ class AddTransaction_baseCardView: UIView {
         AmountLabel.translatesAutoresizingMaskIntoConstraints = false
         AmountInput.translatesAutoresizingMaskIntoConstraints = false
         datepicker.translatesAutoresizingMaskIntoConstraints = false
+        SelectCategory.translatesAutoresizingMaskIntoConstraints = false
     }
     
     //mark handle changes in datasource
@@ -169,6 +197,9 @@ class AddTransaction_baseCardView: UIView {
                     if let amount = self?.transaction?.onTransaction?.amount {
                         self?.AmountInput.text = "\(amount)"
                     }}
+            }
+            if item.transactionStatus == .addTransaction {
+                SelectCategory.isHidden = false
             }
         })
     }

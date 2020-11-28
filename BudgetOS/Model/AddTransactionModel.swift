@@ -25,6 +25,8 @@ class AddTransactionModel: NSObject {
         return addTransaction_baseCard
     }()
     
+   
+    
     init(_ viewController : UIViewController, _ dataSource : ViewTransaction? ) {
         self.viewController = viewController
         self.datasource = dataSource
@@ -42,6 +44,8 @@ class AddTransactionModel: NSObject {
             if (item.transactionStatus == .edit){
                 self.viewController.navigationItem.title = "Edit Transaction"
             }else if (item.transactionStatus == .new){
+                self.viewController.navigationItem.title = "New Transaction"
+            }else if (item.transactionStatus == .addTransaction){
                 self.viewController.navigationItem.title = "New Transaction"
             }else {
                 self.viewController.navigationItem.title = "Edit Transaction"
@@ -93,6 +97,8 @@ class AddTransactionModel: NSObject {
             if datasource.transactionStatus == .editSaved {
                    // DatabaseManager.shared.updateTransaction(datasource)
                 NotificationCenter.default.post(name: .saveEditedTransaction, object: datasource)
+            }else if (datasource.transactionStatus == .addTransaction){
+                NotificationCenter.default.post(name: .saveNewTransaction, object: datasource)
             }else{
                 NotificationCenter.default.post(name: .saveTransaction_Publisher, object: datasource)
             }
