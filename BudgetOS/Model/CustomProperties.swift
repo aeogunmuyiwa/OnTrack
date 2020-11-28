@@ -163,6 +163,7 @@ struct ViewTransaction{
     let index : Int?
     let transaction : Transaction?
     var onTransaction : OnTractTransaction? = nil
+    var category : Category? = nil
     
 }
 

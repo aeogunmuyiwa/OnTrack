@@ -103,6 +103,13 @@ class DatabaseManager: NSObject {
         transaction.amount = NSDecimalNumber(decimal: transactionValue.transaction?.amount ?? 0)
         transaction.date = transactionValue.transaction?.date ?? Date().timeIntervalSince1970
         transaction.transactionDescription = transactionValue.transaction?.transactionDescription
+        if let category = transactionValue.category {
+            transaction.category = category
+            transaction.category?.actual = transaction.category?.actual?.adding(transaction.amount ?? 0)
+            transaction.category?.difference = transaction.category?.budget?.subtracting(transaction.category?.actual ?? 0)
+            transaction.category?.addToTransactions(transaction)
+        }
+      
         saveContext()
         return transaction
     }

@@ -9,6 +9,8 @@ import UIKit
 
 class selectCategory: UIView {
 
+    
+    weak var controller : UIViewController?
     lazy var categoryImage: UIImageView = {
         let categoryImage = UIImageView()
         categoryImage.image = CustomProperties.shared.categoryImagePlain
@@ -34,7 +36,7 @@ class selectCategory: UIView {
     private lazy var showFullTable: UIButton = {
         let showFullTable = UIButton()
         showFullTable.setImage(CustomProperties.shared.chevronRight, for: .normal)
-        //newCategory.addTarget(self, action: #selector(), for: .touchUpInside)
+        showFullTable.addTarget(self, action: #selector(selectCategory), for: .touchUpInside)
         showFullTable.tintColor = .black
         showFullTable.translatesAutoresizingMaskIntoConstraints = true
         self.addSubview(showFullTable)
@@ -65,7 +67,18 @@ class selectCategory: UIView {
         categoryData.translatesAutoresizingMaskIntoConstraints = false
         showFullTable.translatesAutoresizingMaskIntoConstraints = false
     }
+    //Mark: transition to addTransaction controller
+    @objc func selectCategory( ){
+        let vc = SelectBudgetViewController()
+        let navbar: UINavigationController = UINavigationController(rootViewController: vc)
+        navbar.navigationBar.backgroundColor = CustomProperties.shared.animationColor
+        if let controller = controller  {
+            CustomProperties.shared.navigateToController(to: vc, from: controller)
+        }
+    }
+    
   
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

@@ -98,7 +98,6 @@ class AddBudgetModel: NSObject {
                 if data.transactionStatus == .new {
                     self?.saveNewTransaction(data)
                 }
-                
                 self?.tableView.reloadData()
             }
         })

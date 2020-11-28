@@ -14,6 +14,8 @@ class AllTransactionsModel: NSObject {
     let cellId = "AllTransactionsModel"
     private var saveEditedTransactionSubscriber: AnyCancellable?
     private var saveNewTransactionSubscriber: AnyCancellable?
+    private var select_subscriber : AnyCancellable?
+    private var tempCategory : Category?
     
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero)
@@ -45,6 +47,7 @@ class AllTransactionsModel: NSObject {
         super.init()
         handleSaveEditedTransaction()
         handleSaveNewTransaction()
+        handleSelectCategorySubscriber()
         activateView()
         CustomProperties.shared.navigationControllerProperties(ViewController: ViewController, title: "All transaction")
         navigationControllerProperties()
@@ -73,7 +76,11 @@ class AllTransactionsModel: NSObject {
     func handleSaveNewTransaction(){
         let savePublisher = NotificationCenter.Publisher.init(center: .default, name: .saveNewTransaction)
         saveNewTransactionSubscriber = savePublisher.sink(receiveValue: {[weak self] result in
-            if let value = result.object as? ViewTransaction {
+            if var value = result.object as? ViewTransaction {
+                if let category = self?.tempCategory {
+                    value.category = category
+                }
+           
                 let transaction = DatabaseManager.shared.saveTransaction(value)
                 self?.data?.append(transaction)
                 self?.tableView.reloadData()
@@ -81,6 +88,15 @@ class AllTransactionsModel: NSObject {
         })
     }
     
+    func handleSelectCategorySubscriber (){
+        let selectCategoryPublisher =  NotificationCenter.Publisher.init(center: .default, name: .select_subscriber)
+        select_subscriber = selectCategoryPublisher.sink(receiveValue: { [weak self] result in
+            if let value = result.object as? Category {
+               
+                self?.tempCategory = value
+            }
+        })
+    }
     
     //Mark: set navigation controller title and right button
     func navigationControllerProperties(){

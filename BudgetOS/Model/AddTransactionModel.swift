@@ -13,13 +13,14 @@ class AddTransactionModel: NSObject {
     //todo add error handling
     var viewController : UIViewController
     private var TransactionStruct_subscriber : AnyCancellable?
+    
     var datasource : ViewTransaction?
     private lazy var TransactionStruct_publisher = PassthroughSubject<ViewTransaction?, Never>()
     lazy var CategoryStruct_publisherAction = TransactionStruct_publisher.eraseToAnyPublisher()
     
     
     lazy var addTransaction_baseCard: AddTransaction_baseCardView = {
-        let addTransaction_baseCard = AddTransaction_baseCardView(TransactionStruct_publisher, datasource)
+        let addTransaction_baseCard = AddTransaction_baseCardView(TransactionStruct_publisher, datasource, viewController)
         viewController.view.addSubview(addTransaction_baseCard)
         addTransaction_baseCard.pin(to: viewController.view)
         return addTransaction_baseCard
@@ -89,10 +90,11 @@ class AddTransactionModel: NSObject {
                 }
             })
     }
+    
+ 
 
     
     func saveNewTransaction(){
-     
         if let datasource = datasource {
             if datasource.transactionStatus == .editSaved {
                    // DatabaseManager.shared.updateTransaction(datasource)

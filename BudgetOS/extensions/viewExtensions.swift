@@ -13,6 +13,7 @@ extension Notification.Name {
     static let updateHomeViewModelManagerHeight = Notification.Name("updateHomeViewModelManagerHeight")
     static let saveEditedTransaction = Notification.Name("saveEditedTransaction")
     static let saveNewTransaction = Notification.Name("saveNewTransaction")
+    static let select_subscriber = Notification.Name(rawValue: "select_subscriber")
 }
 
 extension UIView{

@@ -13,7 +13,9 @@ class AddTransaction_baseCardView: UIView {
     var AddTransactionModel :  PassthroughSubject<ViewTransaction?, Never>
     var transaction : ViewTransaction?
     var cancellable : Cancellable?
-
+    weak var controller : UIViewController?
+    private var select_subscriber : AnyCancellable?
+    
     lazy var Description: UILabel = {
         let Description = UILabel()
         Description.text = "Description"
@@ -91,11 +93,13 @@ class AddTransaction_baseCardView: UIView {
         datepicker.translatesAutoresizingMaskIntoConstraints = true
         datepicker.topAnchor(AmountInput.bottomAnchor, 20)
         datepicker.leftAnchor(self.layoutMarginsGuide.leftAnchor, 0)
+        datepicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
         return datepicker
     }()
     
     lazy var SelectCategory: selectCategory = {
         let SelectCategory = selectCategory()
+        SelectCategory.controller =  controller
         self.addSubview(SelectCategory)
         SelectCategory.translatesAutoresizingMaskIntoConstraints = true
         SelectCategory.topAnchor(datepicker.bottomAnchor, 20)
@@ -105,11 +109,22 @@ class AddTransaction_baseCardView: UIView {
         SelectCategory.backgroundColor = CustomProperties.shared.animationColor
         SelectCategory.layer.cornerRadius = 10
         SelectCategory.isHidden = true
+        
         return SelectCategory
     }()
     
-
-    
+        @objc func datePickerValueChanged(_ sender: UIDatePicker){
+    //        let dateFormatter: DateFormatter = DateFormatter()
+    //        dateFormatter.dateFormat = "MM/dd/yyyy hh:mm a"
+            
+            _ =  FormValidations.shared.ValidateTransaction(Money.init(string: AmountInput.text ?? ""), DescriptionInput.text, invalidAmount: { errorMessage in
+                  self.AddTransactionModel.send(nil)
+              }, invalidText: { errorMessage in
+                  self.AddTransactionModel.send(nil)
+              }).sink(receiveValue: { [weak self] value in
+                  self?.preparedatasource(self?.transaction, value.1, amount: value.0, id: .zero, date: self?.datepicker.date.timeIntervalSince1970)
+              })
+        }
     
 
     
@@ -128,14 +143,24 @@ class AddTransaction_baseCardView: UIView {
         }
     }
     
+    func handleSelectCategorySubscriber (){
+        let selectCategoryPublisher =  NotificationCenter.Publisher.init(center: .default, name: .select_subscriber)
+        select_subscriber = selectCategoryPublisher.sink(receiveValue: { [weak self] result in
+            if let value = result.object as? Category {
+                self?.SelectCategory.categoryData.text = value.categoryDescription
+            }
+        })
+    }
+    
     //MARK : Initialization
-    init(_ AddTransactionModel : PassthroughSubject<ViewTransaction?, Never>?,_ datasource : ViewTransaction? ) {
+    init(_ AddTransactionModel : PassthroughSubject<ViewTransaction?, Never>?,_ datasource : ViewTransaction?, _ controller : UIViewController ) {
         self.AddTransactionModel = AddTransactionModel!
         self.transaction = datasource
+        self.controller = controller
         super.init(frame: .zero)
         setup()
         setupUI()
-        
+        handleSelectCategorySubscriber()
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
         SelectCategory.isUserInteractionEnabled = true
         SelectCategory.addGestureRecognizer(tapGestureRecognizer)
