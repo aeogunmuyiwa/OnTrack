@@ -41,8 +41,10 @@ class AddTransactionModel: NSObject {
         datasource.map({item in
             if (item.transactionStatus == .edit){
                 self.viewController.navigationItem.title = "Edit Transaction"
-            }else{
+            }else if (item.transactionStatus == .new){
                 self.viewController.navigationItem.title = "New Transaction"
+            }else {
+                self.viewController.navigationItem.title = "Edit Transaction"
             }
         })
         self.viewController.navigationController?.navigationBar.prefersLargeTitles = true
@@ -86,8 +88,15 @@ class AddTransactionModel: NSObject {
 
     
     func saveNewTransaction(){
+     
         if let datasource = datasource {
-            NotificationCenter.default.post(name: .saveTransaction_Publisher, object: datasource)
+            if datasource.transactionStatus == .editSaved {
+                   // DatabaseManager.shared.updateTransaction(datasource)
+                NotificationCenter.default.post(name: .saveEditedTransaction, object: datasource)
+            }else{
+                NotificationCenter.default.post(name: .saveTransaction_Publisher, object: datasource)
+            }
+          
             viewController.dismiss(animated: true, completion: nil)
         }
     }

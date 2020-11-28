@@ -8,7 +8,7 @@
 import UIKit
 
 class AllTransactionsViewController: UIViewController {
-    var data : NSOrderedSet?
+    var data : [OnTractTransaction]?
     lazy var allTransactionsModel : AllTransactionsModel = {
         let allTransactionsModel = AllTransactionsModel(ViewController: self, data: data ?? .init())
         return allTransactionsModel

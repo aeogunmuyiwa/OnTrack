@@ -11,17 +11,18 @@ import Combine
 class HomeViewModelManager: NSObject {
     let dashboardID = "dashboardID"
     let categoryId = "categoryId"
+    let transactionId = "transactionId"
     private weak var HomeViewContoller : UIViewController?
-    var defaultHeight : CGFloat = 100
+    var defaultHeight : CGFloat = 300
+    var TransactionTableHeight : CGFloat = 0
     //Homedashboard
     
 
     lazy var collectionView:UICollectionView = {
         let layout:UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
         layout.scrollDirection = .vertical
-        let flowlayout = UICollectionViewFlowLayout()
-        flowlayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowlayout)
+        layout.sectionInset = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
+        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         collectionView.setCollectionViewLayout(layout, animated: true)
         collectionView.translatesAutoresizingMaskIntoConstraints = true
         collectionView.showsVerticalScrollIndicator = false
@@ -30,26 +31,23 @@ class HomeViewModelManager: NSObject {
         collectionView.isScrollEnabled = true
         collectionView.register(HomeView_Dashboard_1_CollectionViewCell.self, forCellWithReuseIdentifier: dashboardID)
         collectionView.register(BudgetCollectionViewCell.self, forCellWithReuseIdentifier: categoryId)
+        collectionView.register(TransactionCollectionViewCell.self, forCellWithReuseIdentifier: transactionId)
         collectionView.delegate = self
         collectionView.dataSource = self
-        
         HomeViewContoller?.view.addSubview(collectionView)
         if let HomeViewContoller = HomeViewContoller {
             collectionView.pin(to: HomeViewContoller.view)
         }
-      
         return collectionView
      }()
+    
     
     init(HomeViewContoller : UIViewController) {
         self.HomeViewContoller = HomeViewContoller
         super.init()
-       // DatabaseManager.shared.deleteAllCategory()
-        NotificationCenter.default.addObserver(self, selector: #selector(updateHeight), name: .updateHomeViewModelManagerHeight, object: nil)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         CustomProperties.shared.navigationControllerProperties(ViewController: HomeViewContoller, title: "OnTrack")
         navigationControllerProperties()
-        
     }
     
 
@@ -63,23 +61,15 @@ class HomeViewModelManager: NSObject {
     //Mark : right button action
     @objc func naviagenext(){
         let nextVC = NextViewController()
-       // nextVC.delegate = CategoryCollectionViewCell.self as! AddCategoryDelegate
         HomeViewContoller?.navigationController?.pushViewController(nextVC, animated: true)
     }
     
-   @objc func updateHeight(notification: NSNotification){
-        if let height = notification.object as? CGFloat {
-            print("default height \(height)")
-            defaultHeight = height
-          //  collectionView.reloadData()
-        }
-   }
 }
 
 
 extension HomeViewModelManager : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        return 3
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 1
@@ -89,27 +79,45 @@ extension HomeViewModelManager : UICollectionViewDelegate, UICollectionViewDataS
         if indexPath.section == 0 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: dashboardID, for: indexPath) as! HomeView_Dashboard_1_CollectionViewCell
             return cell
-        }else{
+        }
+        if indexPath.section == 1{
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: transactionId, for: indexPath) as! TransactionCollectionViewCell
+            cell.layer.cornerRadius = 20
+            if let HomeViewContoller = HomeViewContoller {
+                cell.setup(colour: CustomProperties.shared.blackTextColor, ViewController: HomeViewContoller)
+            }
+          
+            cell.backgroundColor = CustomProperties.shared.whiteTextColor
+            return cell
+        }
+        if indexPath.section == 2  {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryId, for: indexPath) as! BudgetCollectionViewCell
             cell.layer.cornerRadius = 20
-            cell.backgroundColor = CustomProperties.shared.blackTextColor
+            cell.backgroundColor = CustomProperties.shared.whiteTextColor
             if let HomeViewContoller = HomeViewContoller {
-                cell.setup(HomeViewContoller)
+                cell.setup(HomeViewContoller, color: CustomProperties.shared.blackTextColor)
             }
             return cell
         }
+        return UICollectionViewCell()
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
         if (indexPath.section == 0) {
             return CGSize(width: collectionView.frame.width , height: 310)
+        } else if (indexPath.section == 1 || indexPath.section == 2){
+            return CGSize(width: collectionView.frame.width, height: defaultHeight )
         }
-        return CGSize(width: collectionView.frame.width, height: defaultHeight)
+        return .zero
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-             return 30
-    }
+//
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+//             return 30
+//    }
     
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+//            return UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
+//    }
     
 }

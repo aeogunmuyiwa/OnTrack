@@ -68,6 +68,8 @@ class CustomProperties: NSObject {
     
     let basicTexrFieldFont = UIFont.preferredFont(forTextStyle: .body)
     
+    //buttom image confir
+    let config = UIImage.SymbolConfiguration(pointSize: 30)
     
     //input field height
     
@@ -88,7 +90,6 @@ class CustomProperties: NSObject {
     
     //decimal rounding scale
     let decimalScale = 2
-    
     func roundAmount(_ amount : String) -> Money? {
         let formatter = NumberFormatter()
         formatter.numberStyle = NumberFormatter.Style.decimal
@@ -98,6 +99,7 @@ class CustomProperties: NSObject {
         let roundedAmount = formatter.number(from: amount)
         return roundedAmount?.decimalValue
     }
+    
     func displayMoney (_ amount : NSDecimalNumber) -> String {
         if amount.compare(NSDecimalNumber.zero) == .orderedAscending  {
             let negativeValue = NSDecimalNumber(mantissa: 1, exponent: 0, isNegative: true)
@@ -140,19 +142,25 @@ class CustomProperties: NSObject {
         return dateFormatter
     }()
 
-    
+    //MARK : Helper navigation function
+    func navigateToController( to : UIViewController , from  : UIViewController){
+        from.navigationController?.pushViewController(to, animated: true)
+    }
     
    
 }
 enum TransactionStatus {
     case new
-    case edit 
+    case edit
+    case editSaved
 }
 
 struct ViewTransaction{
     let transactionStatus : TransactionStatus
     let index : Int?
     let transaction : Transaction?
+    var onTransaction : OnTractTransaction? = nil
+    
 }
 
 enum ErrorMessages  :  LocalizedError{
@@ -170,6 +178,7 @@ enum ErrorMessages  :  LocalizedError{
         }
     }
 }
+
 enum dataBaseErrors : LocalizedError {
     case ErrorLoadingDatabase
     var errorDescription: String? {

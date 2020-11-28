@@ -72,26 +72,15 @@ class BudgetCollectionViewCell: UICollectionViewCell {
         categoryLabel.translatesAutoresizingMaskIntoConstraints = false
         showFullTable.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
-      //  showMoreLable.translatesAutoresizingMaskIntoConstraints = false
         NotificationCenter.default.addObserver(self, selector: #selector(addObservertoTable), name: .reloadCategoryTable, object: nil)
-        determineHeight()
       }
-
-    func determineHeight(){
-        let height = (DatabaseManager.shared.fetchedResultsController.sections?[0].numberOfObjects ?? 0) * 100
-        NotificationCenter.default.post(name: .updateHomeViewModelManagerHeight, object: height)
-    }
+    
     @objc func addObservertoTable(){
         tableView.reloadData()
     }
-    
-    
-    
-    
-    
-    func setup(_ HomeViewContoller : UIViewController) {
+    func setup(_ HomeViewContoller : UIViewController, color : UIColor) {
         self.HomeViewContoller = HomeViewContoller
-      
+        categoryLabel.textColor = color
     }
     //show full category table
     @objc func showFullTableAction(){
@@ -109,9 +98,21 @@ extension BudgetCollectionViewCell: UITableViewDelegate, UITableViewDataSource, 
         return sections[section].numberOfObjects
     }
 
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        self.tableView.deselectRow(at: indexPath, animated: true)
+//    }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.tableView.deselectRow(at: indexPath, animated: true)
+            let item =  DatabaseManager.shared.fetchedResultsController.object(at: indexPath).transactions
+            let vc = AllTransactionsViewController()
+            vc.data = item?.array as? [OnTractTransaction]
+            if let From = HomeViewContoller {
+                CustomProperties.shared.navigateToController(to: vc, from: From)
+            }
     }
+    
+    
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 50
     }
@@ -124,7 +125,7 @@ extension BudgetCollectionViewCell: UITableViewDelegate, UITableViewDataSource, 
     }
     func configureCell(_ cell: Budget_CustomTableViewCell?, at indexPath: IndexPath) {
         if let cell = cell, let HomeViewContoller = HomeViewContoller {
-            cell.setUp(HomeViewContoller, textColor: CustomProperties.shared.whiteTextColor)
+            cell.setUp(HomeViewContoller, textColor: CustomProperties.shared.blackTextColor)
             cell.data = DatabaseManager.shared.fetchedResultsController.object(at: indexPath)
         }
     }
@@ -164,8 +165,6 @@ extension BudgetCollectionViewCell: UITableViewDelegate, UITableViewDataSource, 
             @unknown default:
                 print("unknown default, will handle error")
             }
-        
-        
     }
 }
 

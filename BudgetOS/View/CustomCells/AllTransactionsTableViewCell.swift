@@ -55,6 +55,13 @@ class AllTransactionsTableViewCell: UITableViewCell {
         }
     }
     
+    func setup(textColor : UIColor?){
+        if let textColor = textColor {
+            transactionName.textColor = textColor
+            transactionAmount.textColor = textColor
+        }
+
+    }
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.backgroundColor = .clear

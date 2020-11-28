@@ -159,6 +159,17 @@ class AddTransaction_baseCardView: UIView {
                     if let amount = self?.transaction?.transaction?.amount {
                         self?.AmountInput.text = "\(amount)"
                     }}}
+            
+            if item.transactionStatus == .editSaved{
+                DispatchQueue.main.async { [weak self] in
+                    self?.DescriptionInput.text = self?.transaction?.onTransaction?.transactionDescription
+                    if let date =  self?.transaction?.onTransaction?.date {
+                        self?.datepicker.date = Date(timeIntervalSince1970: date)
+                    }
+                    if let amount = self?.transaction?.onTransaction?.amount {
+                        self?.AmountInput.text = "\(amount)"
+                    }}
+            }
         })
     }
     

@@ -11,6 +11,7 @@ extension Notification.Name {
     static let saveTransaction_Publisher = Notification.Name(rawValue: "saveTransaction_Publisher")
     static let reloadCategoryTable = Notification.Name(rawValue: "reloadCategoryTable")
     static let updateHomeViewModelManagerHeight = Notification.Name("updateHomeViewModelManagerHeight")
+    static let saveEditedTransaction = Notification.Name("saveEditedTransaction")
 }
 
 extension UIView{

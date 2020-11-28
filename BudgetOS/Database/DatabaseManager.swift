@@ -35,7 +35,14 @@ class DatabaseManager: NSObject {
         categoryFetchRequest.sortDescriptors = [.init(keyPath: \Category.categoryDescription, ascending: true)]
         
         let fetchedController = NSFetchedResultsController<Category>(fetchRequest: categoryFetchRequest, managedObjectContext: viewContext, sectionNameKeyPath: nil, cacheName: nil)
-        print("1. NSFetchResultController Initialized :)")
+        return fetchedController
+    }()
+    
+    lazy var fetchedTransactionResultsController: NSFetchedResultsController<OnTractTransaction> = {
+        let TransactionFetchRequest : NSFetchRequest<OnTractTransaction> = OnTractTransaction.fetchRequest()
+        TransactionFetchRequest.sortDescriptors = [.init(keyPath: \OnTractTransaction.date, ascending: false)]
+        
+        let fetchedController = NSFetchedResultsController<OnTractTransaction>(fetchRequest: TransactionFetchRequest, managedObjectContext: viewContext, sectionNameKeyPath: nil, cacheName: nil)
         return fetchedController
     }()
     
@@ -105,14 +112,14 @@ class DatabaseManager: NSObject {
 //    }
     
     //MARK: DELETE TRANSACTION FORM CATEGORY AND UPDATE ACTUAL AND DIFFERENCE
-//    func deleteTransaction(_ category : Category, _ index : Int){
-//        let transaction = (category.transactions?.array as! [OnTractTransaction])[index]
-//        category.actual?.subtracting(transaction.amount ?? 0)
-//        category.difference = category.budget
-//        category.difference?.subtracting(category.actual ?? 0)
-//        category.removeFromTransactions(at: index)
-//
-//    }
+    func deleteTransactionHelper(_ category : Category, transaction : OnTractTransaction){
+        category.actual =  category.actual?.subtracting(transaction.amount ?? 0)
+        category.difference = category.budget?.subtracting(category.actual ?? 0)
+        saveContext()
+        viewContext.delete(transaction)
+        saveContext()
+        
+    }
     
     //MARK: save category helper function,
     func CategorySave(_ category : CategoryStruct){
@@ -129,7 +136,8 @@ class DatabaseManager: NSObject {
             transaction.transactionDescription = item.transactionDescription
             data.actual = data.actual?.adding(transaction.amount ?? 0)
             data.difference = data.budget?.subtracting(data.actual ?? 0)
-                data.addToTransactions(transaction)
+            data.addToTransactions(transaction)
+                transaction.category = data
         })
         self.saveContext()
     }
@@ -142,10 +150,46 @@ class DatabaseManager: NSObject {
         self.saveContext()
     }
 
+    //Mark : update Transaction
+    func updateTransaction(_ viewTransaction : ViewTransaction, transaction : OnTractTransaction){
+        let t_atPreviousIndex = transaction.amount
+        transaction.amount = NSDecimalNumber(decimal: viewTransaction.transaction?.amount ?? 0)
+        transaction.date = viewTransaction.transaction?.date ?? Date().timeIntervalSince1970
+        transaction.transactionDescription = viewTransaction.transaction?.transactionDescription
+        
+    
+        transaction.category?.actual = transaction.category?.actual?.subtracting(t_atPreviousIndex ?? 0)
+        transaction.category?.actual = transaction.category?.actual?.adding(transaction.amount ?? 0)
+        transaction.category?.difference = transaction.category?.budget?.subtracting(transaction.category?.actual ?? 0)
+        saveContext()
+    }
+    
+    
+    //MARK: edit transaction
+//    func editTransactionToCategory(_ transaction : OnTractTransaction, category : Category, _ index : Int){
+//
+//        let t_atPreviousIndex = (category.transactions?.array as! [OnTractTransaction])[index].amount ?? 0
+//
+//        let actual_difference = category.actual?.subtracting(t_atPreviousIndex)
+//        category.actual = actual_difference?.adding(transaction.amount ?? 0)
+//        category.replaceTransactions(at: index, with: transaction)
+//        category.difference = category.budget?.subtracting(category.actual ?? 0)
+//
+//
+//    }
     //MARK: delete category from database
     func deleteCategory(_ deleteObject : NSManagedObject){
         viewContext.delete(deleteObject)
         saveContext()
+        
+    }
+    
+    //Mark delete transaction from database
+    func deleteTransaction(_ transactionObject : OnTractTransaction){
+        if let category  = transactionObject.category {
+            deleteTransactionHelper(category, transaction: transactionObject)
+            
+        }
         
     }
  
@@ -162,19 +206,16 @@ class DatabaseManager: NSObject {
             }
     }
     
-    func loadTransactions(){
-        let TransactionFetchRequest : NSFetchRequest<OnTractTransaction> = OnTractTransaction.fetchRequest()
-        TransactionFetchRequest.sortDescriptors = [.init(keyPath: \OnTractTransaction.date, ascending: true)]
-        do {
-            let transactions = try self.viewContext.fetch(TransactionFetchRequest)
-            transactions.map({item in
-                
-            })
-            
-            
-        }catch {
-            print("error fetching transaction")
-        }
+    func loadTransactions() -> [OnTractTransaction]? {
+       
+            let TransactionFetchRequest : NSFetchRequest<OnTractTransaction> = OnTractTransaction.fetchRequest()
+            TransactionFetchRequest.sortDescriptors = [.init(keyPath: \OnTractTransaction.date, ascending: true)]
+            do {
+                let transactions = try self.viewContext.fetch(TransactionFetchRequest)
+                return transactions
+            }catch {
+                return nil
+            }
     }
     
     func performFetch(){
@@ -183,7 +224,14 @@ class DatabaseManager: NSObject {
         } catch  {
             print("error")
         }
-       
+    }
+    
+    func performTransactionFetch(){
+        do {
+            try fetchedTransactionResultsController.performFetch()
+        }catch{
+            print("error")
+        }
     }
     
     //func delete all categories from coredata

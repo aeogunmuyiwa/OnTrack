@@ -55,12 +55,12 @@ extension showFullBudgetTableModel: UITableViewDelegate, UITableViewDataSource, 
         self.tableView.deselectRow(at: indexPath, animated: true)
         DispatchQueue.main.async {
             let item =  DatabaseManager.shared.fetchedResultsController.object(at: indexPath).transactions
-          // let data = item?.allObjects as? [OnTractTransaction]
             let vc = AllTransactionsViewController()
-            vc.data = item
-            self.controller?.navigationController?.pushViewController(vc, animated: true)
+            vc.data = item?.array as? [OnTractTransaction]
+            if let From = self.controller{
+                CustomProperties.shared.navigateToController(to: vc, from: From)
+            }
         }
-        
     }
 
 

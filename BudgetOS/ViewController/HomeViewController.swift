@@ -11,7 +11,6 @@ class HomeViewController: UIViewController {
 
     
     //MARK : OUTLET
-    
     //HomeView - ViewModel: manages views
     lazy var homeViewModel : HomeViewModelManager = {
         let homeViewModel = HomeViewModelManager(HomeViewContoller: self)
@@ -24,7 +23,10 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         homeViewModel = .init(HomeViewContoller: self)
-        DatabaseManager.shared.loadTransactions()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+   
     }
     
    

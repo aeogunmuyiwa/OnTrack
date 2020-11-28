@@ -125,8 +125,8 @@ class AddBudgetModel: NSObject {
        // dump(self.CategoryDatasoruce)
         DatabaseManager.shared.CategorySave(self.CategoryDatasoruce)
         NotificationCenter.default.post(name: .reloadCategoryTable, object: nil)
-        
-        self.viewController.navigationController?.popToRootViewController(animated: true)
+        self.viewController.navigationController?.popViewController(animated: true)
+        //self.viewController.navigationController?.popToRootViewController(animated: true)
     }
 }
 
