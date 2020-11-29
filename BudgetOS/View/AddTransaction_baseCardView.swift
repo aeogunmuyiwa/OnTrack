@@ -32,7 +32,7 @@ class AddTransaction_baseCardView: UIView {
     lazy var DescriptionInput: UITextField = {
         let DescriptionInput = UITextField()
         DescriptionInput.borderStyle = .roundedRect
-        DescriptionInput.placeholder = "Enter description"
+        DescriptionInput.attributedPlaceholder = NSAttributedString(string: "Enter transaction", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black])
         DescriptionInput.leftViewMode = .always
         DescriptionInput.leftView = UIImageView(image: CustomProperties.shared.categoryImage)
         DescriptionInput.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
@@ -70,6 +70,7 @@ class AddTransaction_baseCardView: UIView {
         AmountInput.leftViewMode = .always
         AmountInput.leftView = UIImageView(image: CustomProperties.shared.dollarSign)
         AmountInput.placeholder = "Enter amount"
+        AmountInput.attributedPlaceholder = NSAttributedString(string: "Enter transaction amount", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black])
         AmountInput.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         AmountInput.backgroundColor = CustomProperties.shared.textColour
         AmountInput.textColor = CustomProperties.shared.blackTextColor

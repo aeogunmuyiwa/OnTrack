@@ -76,6 +76,7 @@ class BudgetCollectionViewCell: UICollectionViewCell {
       }
     
     @objc func addObservertoTable(){
+        DatabaseManager.shared.performFetch()
         tableView.reloadData()
     }
     func setup(_ HomeViewContoller : UIViewController, color : UIColor) {

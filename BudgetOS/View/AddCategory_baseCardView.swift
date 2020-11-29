@@ -15,7 +15,7 @@ class AddCategory_baseCardView: UIView {
     var data : CategoryStruct = .init("", 0, nil)
     lazy var categoryName: UILabel = {
         let categoryName = UILabel()
-        categoryName.text = "Category"
+        categoryName.text = "Budget"
         categoryName.font = CustomProperties.shared.basicTextFont
         categoryName.textColor = CustomProperties.shared.textColour
         categoryName.translatesAutoresizingMaskIntoConstraints = true
@@ -28,13 +28,14 @@ class AddCategory_baseCardView: UIView {
     lazy var categoryNameInput: UITextField = {
         let categoryNameInput = UITextField()
         categoryNameInput.borderStyle = .roundedRect
-        categoryNameInput.placeholder = "Enter category"
+        categoryNameInput.placeholder = "Enter budget name"
         categoryNameInput.leftViewMode = .always
         categoryNameInput.leftView = UIImageView(image: CustomProperties.shared.categoryImage)
         categoryNameInput.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         categoryNameInput.backgroundColor = CustomProperties.shared.textColour
         categoryNameInput.textColor = CustomProperties.shared.blackTextColor
         categoryNameInput.font = CustomProperties.shared.basicTexrFieldFont
+        categoryNameInput.attributedPlaceholder = NSAttributedString(string: "Enter budget name", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black])
         self.addSubview(categoryNameInput)
         categoryNameInput.translatesAutoresizingMaskIntoConstraints = true
         categoryNameInput.topAnchor(categoryName.bottomAnchor, 0)
@@ -69,6 +70,7 @@ class AddCategory_baseCardView: UIView {
         budgetInput.placeholder = "Enter budget"
         budgetInput.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         budgetInput.backgroundColor = CustomProperties.shared.textColour
+        budgetInput.attributedPlaceholder = NSAttributedString(string: "Enter budget amount", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black])
         budgetInput.textColor = CustomProperties.shared.blackTextColor
         budgetInput.font = CustomProperties.shared.basicTexrFieldFont
         self.addSubview(budgetInput)

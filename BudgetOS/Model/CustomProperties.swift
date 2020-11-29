@@ -149,6 +149,10 @@ class CustomProperties: NSObject {
         from.navigationController?.pushViewController(to, animated: true)
     }
     
+    //Mark placeholder attribute
+
+ 
+    
    
 }
 enum TransactionStatus {
