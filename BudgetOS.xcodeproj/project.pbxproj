@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4623A24F256C21C20003FE97 /* FormValidations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4623A24E256C21C20003FE97 /* FormValidations.swift */; };
 		464DA89F25700DAD0017DFF6 /* CategoryCollectionViewCell_TableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464DA89E25700DAD0017DFF6 /* CategoryCollectionViewCell_TableModel.swift */; };
+		465C6C902573C58E0006B5EC /* AllBudgetTransactionParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465C6C8F2573C58E0006B5EC /* AllBudgetTransactionParentViewController.swift */; };
 		4660F9D2256D7E4A00A372C5 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4660F9D1256D7E4A00A372C5 /* DatabaseManager.swift */; };
 		4662B3C02566620400F8C48B /* NextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4662B3BF2566620400F8C48B /* NextViewController.swift */; };
 		467F53002570BA18005E6DAE /* GradientHorizontalProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F52FF2570BA18005E6DAE /* GradientHorizontalProgressBar.swift */; };
@@ -69,6 +70,7 @@
 /* Begin PBXFileReference section */
 		4623A24E256C21C20003FE97 /* FormValidations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormValidations.swift; sourceTree = "<group>"; };
 		464DA89E25700DAD0017DFF6 /* CategoryCollectionViewCell_TableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCollectionViewCell_TableModel.swift; sourceTree = "<group>"; };
+		465C6C8F2573C58E0006B5EC /* AllBudgetTransactionParentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllBudgetTransactionParentViewController.swift; sourceTree = "<group>"; };
 		4660F9D1256D7E4A00A372C5 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		4662B3BF2566620400F8C48B /* NextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextViewController.swift; sourceTree = "<group>"; };
 		467F52FF2570BA18005E6DAE /* GradientHorizontalProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientHorizontalProgressBar.swift; sourceTree = "<group>"; };
@@ -266,6 +268,7 @@
 				46F0C260256A755700B0FCEA /* AddTransactionViewController.swift */,
 				467F53252571510C005E6DAE /* AllTransactionsViewController.swift */,
 				46D764342572D274007ABD49 /* SelectBudgetViewController.swift */,
+				465C6C8F2573C58E0006B5EC /* AllBudgetTransactionParentViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -446,6 +449,7 @@
 				46F0C2172567E5ED00B0FCEA /* CustomProperties.swift in Sources */,
 				4688165C25715B79006D52D0 /* AllTransactionsTableViewCell.swift in Sources */,
 				46DE248325665E1E001A9415 /* HomeViewController.swift in Sources */,
+				465C6C902573C58E0006B5EC /* AllBudgetTransactionParentViewController.swift in Sources */,
 				467F53002570BA18005E6DAE /* GradientHorizontalProgressBar.swift in Sources */,
 				467F53262571510C005E6DAE /* AllTransactionsViewController.swift in Sources */,
 				46F0C2262568162500B0FCEA /* Transactions.swift in Sources */,

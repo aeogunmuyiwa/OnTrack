@@ -102,8 +102,6 @@ class Budget_CustomTableViewCell: UITableViewCell {
         let SaveAction = UIAlertAction(title: "Save", style: .default) { (login) in
             if let budgetName = budgetField?.text, let amount = AmountField?.text {
                 ///self.data?.categoryDescription = budgetName
-                print("budgetName is: \(budgetName)")
-                print("AmountField is: \(amount)")
                 if let data = self.data {
                     DatabaseManager.shared.updateBudget(data, budgetName, Money.init(string: amount) ?? 0)
                 }

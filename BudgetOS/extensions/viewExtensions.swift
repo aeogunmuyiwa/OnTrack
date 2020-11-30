@@ -14,6 +14,7 @@ extension Notification.Name {
     static let saveEditedTransaction = Notification.Name("saveEditedTransaction")
     static let saveNewTransaction = Notification.Name("saveNewTransaction")
     static let select_subscriber = Notification.Name(rawValue: "select_subscriber")
+    static let reloadShowFullBudgetTableModel = Notification.Name("reloadShowFullBudgetTableModel")
 }
 
 extension UIView{

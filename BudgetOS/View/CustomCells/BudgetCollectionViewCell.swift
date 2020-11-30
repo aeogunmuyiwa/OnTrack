@@ -106,6 +106,7 @@ extension BudgetCollectionViewCell: UITableViewDelegate, UITableViewDataSource, 
         self.tableView.deselectRow(at: indexPath, animated: true)
             let item =  DatabaseManager.shared.fetchedResultsController.object(at: indexPath).transactions
             let vc = AllTransactionsViewController()
+            vc.tempCatgeory = DatabaseManager.shared.fetchedResultsController.object(at: indexPath)
             vc.data = item?.array as? [OnTractTransaction]
             if let From = HomeViewContoller {
                 CustomProperties.shared.navigateToController(to: vc, from: From)

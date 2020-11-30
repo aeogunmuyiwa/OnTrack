@@ -15,7 +15,8 @@ class AllTransactionsModel: NSObject {
     private var saveEditedTransactionSubscriber: AnyCancellable?
     private var saveNewTransactionSubscriber: AnyCancellable?
     private var select_subscriber : AnyCancellable?
-    private var tempCategory : Category?
+    var tempCategory : Category?
+    var compareCategory : Category?
     
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero)
@@ -38,9 +39,11 @@ class AllTransactionsModel: NSObject {
     }()
     
     
-    init(ViewController : UIViewController, data : [OnTractTransaction]) {
+    init(ViewController : UIViewController, data : [OnTractTransaction], tempCategory : Category?) {
         self.ViewController = ViewController
         self.data = data
+        self.tempCategory = tempCategory
+        self.compareCategory = tempCategory
 //        self.data?.sort(by: {(item_1, item_2) in
 //            item_1.date.is(than: item_2.date)
 //        })
@@ -82,7 +85,10 @@ class AllTransactionsModel: NSObject {
                 }
            
                 let transaction = DatabaseManager.shared.saveTransaction(value)
-                self?.data?.append(transaction)
+                if self?.compareCategory?.id == value.category?.id{
+                    self?.data?.append(transaction)
+                }
+                NotificationCenter.default.post(name: .reloadShowFullBudgetTableModel, object: nil)
                 self?.tableView.reloadData()
             }
         })
@@ -92,7 +98,6 @@ class AllTransactionsModel: NSObject {
         let selectCategoryPublisher =  NotificationCenter.Publisher.init(center: .default, name: .select_subscriber)
         select_subscriber = selectCategoryPublisher.sink(receiveValue: { [weak self] result in
             if let value = result.object as? Category {
-               
                 self?.tempCategory = value
             }
         })
@@ -108,6 +113,8 @@ class AllTransactionsModel: NSObject {
     @objc func Addtransaction( ){
         let vc = AddTransactionViewController()
         vc.dataSource = .init(transactionStatus: .addTransaction, index: nil, transaction: nil)
+        vc.dataSource?.category = tempCategory
+        
         //vc.categoryDatasource = datasource
         let navbar: UINavigationController = UINavigationController(rootViewController: vc)
         navbar.navigationBar.backgroundColor = CustomProperties.shared.animationColor

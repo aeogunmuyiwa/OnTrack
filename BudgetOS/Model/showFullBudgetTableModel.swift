@@ -7,10 +7,12 @@
 
 import UIKit
 import CoreData
+import Combine
 
 class showFullBudgetTableModel: NSObject {
     weak var controller : UIViewController?
     let cellId = "HomeView_TableView_CellId"
+    private var reloadShowFullBudgetTableModel : AnyCancellable?
     
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero)
@@ -38,9 +40,12 @@ class showFullBudgetTableModel: NSObject {
         super.init()
         self.tableView.translatesAutoresizingMaskIntoConstraints = false
         CustomProperties.shared.navigationControllerProperties(ViewController: controller, title: "Budgets")
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadShowTable), name: .reloadShowFullBudgetTableModel, object: nil)
     }
-   
-
+   @objc func reloadShowTable(){
+        DatabaseManager.shared.performFetch()
+        tableView.reloadData()
+    }
 }
   
 
@@ -56,9 +61,22 @@ extension showFullBudgetTableModel: UITableViewDelegate, UITableViewDataSource, 
         DispatchQueue.main.async {
             let item =  DatabaseManager.shared.fetchedResultsController.object(at: indexPath).transactions
             let vc = AllTransactionsViewController()
+            vc.tempCatgeory = DatabaseManager.shared.fetchedResultsController.object(at: indexPath)
             vc.data = item?.array as? [OnTractTransaction]
             if let From = self.controller{
-                CustomProperties.shared.navigateToController(to: vc, from: From)
+                let parent = AllBudgetTransactionParentViewController()
+                parent.addChild(vc)
+                parent.view.addSubview(vc.view)
+                From.didMove(toParent: parent)
+             
+                vc.view.translatesAutoresizingMaskIntoConstraints = false
+                vc.view.topAnchor(parent.view.layoutMarginsGuide.topAnchor, 200)
+                vc.view.leftAnchor(parent.view.layoutMarginsGuide.leftAnchor, 0)
+                vc.view.rightAnchor(parent.view.layoutMarginsGuide.rightAnchor, 0)
+                vc.view.bottomAnchor(parent.view.layoutMarginsGuide.bottomAnchor, constant: 0)
+                
+                CustomProperties.shared.navigationControllerProperties(ViewController: parent, title: "Budgets")
+                CustomProperties.shared.navigateToController(to: parent, from: From)
             }
         }
     }
@@ -89,7 +107,7 @@ extension showFullBudgetTableModel: UITableViewDelegate, UITableViewDataSource, 
        private func makeDeleteContextualAction(forRowAt indexPath: IndexPath) -> UIContextualAction {
            return UIContextualAction(style: .destructive, title: "Delete") { (action, swipeButtonView, completion) in
             DatabaseManager.shared.deleteCategory(DatabaseManager.shared.fetchedResultsController.object(at: indexPath))
-           // self.tableView.reloadData()
+            self.tableView.reloadData()
            }
        }
     

@@ -9,13 +9,14 @@ import UIKit
 
 class AllTransactionsViewController: UIViewController {
     var data : [OnTractTransaction]?
+    var tempCatgeory : Category?
     lazy var allTransactionsModel : AllTransactionsModel = {
-        let allTransactionsModel = AllTransactionsModel(ViewController: self, data: data ?? .init())
+        let allTransactionsModel = AllTransactionsModel(ViewController: self, data: data ?? .init(), tempCategory: tempCatgeory)
         return allTransactionsModel
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        allTransactionsModel = .init(ViewController: self, data: data ?? .init())
+        allTransactionsModel = .init(ViewController: self, data: data ?? .init(), tempCategory: tempCatgeory)
         // Do any additional setup after loading the view.
     }
     

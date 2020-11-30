@@ -16,9 +16,7 @@ class HomeViewController: UIViewController {
         let homeViewModel = HomeViewModelManager(HomeViewContoller: self)
         return homeViewModel
     }()
-    deinit {
-        print("CategoryCollectionViewCell deint")
-    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()

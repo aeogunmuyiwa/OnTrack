@@ -226,6 +226,7 @@ class AddTransaction_baseCardView: UIView {
             }
             if item.transactionStatus == .addTransaction {
                 SelectCategory.isHidden = false
+                SelectCategory.categoryData.text = self.transaction?.category?.categoryDescription
             }
         })
     }
