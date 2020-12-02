@@ -28,7 +28,7 @@ class CustomProperties: NSObject {
     let viewBackgroundColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 1)
     
     //default animation color
-    let animationColor = #colorLiteral(red: 0.9882352941, green: 0.6392156863, blue: 0.06666666667, alpha: 1)
+    let animationColor = #colorLiteral(red: 0.7164592147, green: 0.717515409, blue: 0.7175281048, alpha: 1)
         //UIColor.init(red: 252, green: 164, blue: 17, alpha: 1)
     
     
