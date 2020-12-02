@@ -127,6 +127,7 @@ extension BudgetCollectionViewCell: UITableViewDelegate, UITableViewDataSource, 
     }
     func configureCell(_ cell: Budget_CustomTableViewCell?, at indexPath: IndexPath) {
         if let cell = cell, let HomeViewContoller = HomeViewContoller {
+            cell.selectedBackgroundView = CustomProperties.shared.cellBackgroundView
             cell.setUp(HomeViewContoller, textColor: CustomProperties.shared.blackTextColor)
             cell.data = DatabaseManager.shared.fetchedResultsController.object(at: indexPath)
         }

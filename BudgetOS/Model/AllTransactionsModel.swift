@@ -39,15 +39,17 @@ class AllTransactionsModel: NSObject {
     }()
     
     
-    init(ViewController : UIViewController, data : [OnTractTransaction], tempCategory : Category?) {
+    init(ViewController : UIViewController, data : [OnTractTransaction], tempCategory : Category?, tableViewEnable : Bool) {
         self.ViewController = ViewController
         self.data = data
         self.tempCategory = tempCategory
         self.compareCategory = tempCategory
+
 //        self.data?.sort(by: {(item_1, item_2) in
 //            item_1.date.is(than: item_2.date)
 //        })
         super.init()
+        self.tableView.isScrollEnabled = tableViewEnable
         handleSaveEditedTransaction()
         handleSaveNewTransaction()
         handleSelectCategorySubscriber()
@@ -114,8 +116,6 @@ class AllTransactionsModel: NSObject {
         let vc = AddTransactionViewController()
         vc.dataSource = .init(transactionStatus: .addTransaction, index: nil, transaction: nil)
         vc.dataSource?.category = tempCategory
-        
-        //vc.categoryDatasource = datasource
         let navbar: UINavigationController = UINavigationController(rootViewController: vc)
         navbar.navigationBar.backgroundColor = CustomProperties.shared.animationColor
         ViewController?.present(navbar, animated: true, completion: nil)
@@ -142,8 +142,12 @@ extension AllTransactionsModel : UITableViewDelegate, UITableViewDataSource{
 
         }
     }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 44
+    }
     
     func configureCell(_ cell: AllTransactionsTableViewCell?, at indexPath: IndexPath) {
+        cell?.selectedBackgroundView = CustomProperties.shared.cellBackgroundView
         cell?.data = data?[indexPath.row]
     }
     
@@ -156,12 +160,13 @@ extension AllTransactionsModel : UITableViewDelegate, UITableViewDataSource{
            return UIContextualAction(style: .destructive, title: "Delete") { (action, swipeButtonView, completion) in
             let transaction =  self.data?[indexPath.row]
             if let transaction = transaction {
-                DatabaseManager.shared.deleteTransaction(transaction)
+                DispatchQueue.main.async {
+                    DatabaseManager.shared.deleteTransaction(transaction)
+                }
+                
                 self.data?.remove(at: indexPath.row)
                 self.tableView.reloadData()
             }
-            //DatabaseManager.shared.deleteCategory(DatabaseManager.shared.fetchedResultsController.object(at: indexPath))
-           // self.tableView.reloadData()
            }
        }
     
@@ -169,7 +174,6 @@ extension AllTransactionsModel : UITableViewDelegate, UITableViewDataSource{
         let vc = AddTransactionViewController()
         vc.dataSource = .init(transactionStatus: .editSaved, index: index, transaction: nil)
         vc.dataSource?.onTransaction = transaction
-        //vc.categoryDatasource = datasource
         let navbar: UINavigationController = UINavigationController(rootViewController: vc)
         navbar.navigationBar.backgroundColor = CustomProperties.shared.animationColor
         ViewController?.present(navbar, animated: true, completion: nil)

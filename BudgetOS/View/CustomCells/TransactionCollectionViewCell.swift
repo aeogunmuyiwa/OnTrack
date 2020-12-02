@@ -113,6 +113,7 @@ extension TransactionCollectionViewCell : UITableViewDelegate, UITableViewDataSo
 
     func configureCell(_ cell: AllTransactionsTableViewCell?, at indexPath: IndexPath) {
         cell?.setup(textColor: textcolor)
+        cell?.selectedBackgroundView = CustomProperties.shared.cellBackgroundView
         cell?.data = DatabaseManager.shared.fetchedTransactionResultsController.object(at: indexPath)
     }
         

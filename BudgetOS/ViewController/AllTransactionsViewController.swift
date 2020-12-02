@@ -10,13 +10,14 @@ import UIKit
 class AllTransactionsViewController: UIViewController {
     var data : [OnTractTransaction]?
     var tempCatgeory : Category?
+    var tableViewScrollEnable : Bool = true
     lazy var allTransactionsModel : AllTransactionsModel = {
-        let allTransactionsModel = AllTransactionsModel(ViewController: self, data: data ?? .init(), tempCategory: tempCatgeory)
+        let allTransactionsModel = AllTransactionsModel(ViewController: self, data: data ?? .init(), tempCategory: tempCatgeory, tableViewEnable: tableViewScrollEnable)
         return allTransactionsModel
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        allTransactionsModel = .init(ViewController: self, data: data ?? .init(), tempCategory: tempCatgeory)
+        allTransactionsModel = .init(ViewController: self, data: data ?? .init(), tempCategory: tempCatgeory, tableViewEnable: tableViewScrollEnable)
         // Do any additional setup after loading the view.
     }
     

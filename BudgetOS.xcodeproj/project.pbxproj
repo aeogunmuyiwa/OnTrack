@@ -17,6 +17,8 @@
 		467F53262571510C005E6DAE /* AllTransactionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F53252571510C005E6DAE /* AllTransactionsViewController.swift */; };
 		467F532B25715177005E6DAE /* AllTransactionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F532A25715177005E6DAE /* AllTransactionsModel.swift */; };
 		4688165C25715B79006D52D0 /* AllTransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4688165B25715B79006D52D0 /* AllTransactionsTableViewCell.swift */; };
+		46937956257742F8000F5326 /* AllBudgetTransactionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46937955257742F8000F5326 /* AllBudgetTransactionModel.swift */; };
+		4693795B2577474E000F5326 /* AllBudgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4693795A2577474E000F5326 /* AllBudgetView.swift */; };
 		46B9307C25729EF9003F1C61 /* selectCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B9307B25729EF9003F1C61 /* selectCategory.swift */; };
 		46D764352572D274007ABD49 /* SelectBudgetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46D764342572D274007ABD49 /* SelectBudgetViewController.swift */; };
 		46D7643A2572D30A007ABD49 /* SelectBudgetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46D764392572D30A007ABD49 /* SelectBudgetModel.swift */; };
@@ -78,6 +80,8 @@
 		467F53252571510C005E6DAE /* AllTransactionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTransactionsViewController.swift; sourceTree = "<group>"; };
 		467F532A25715177005E6DAE /* AllTransactionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTransactionsModel.swift; sourceTree = "<group>"; };
 		4688165B25715B79006D52D0 /* AllTransactionsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTransactionsTableViewCell.swift; sourceTree = "<group>"; };
+		46937955257742F8000F5326 /* AllBudgetTransactionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllBudgetTransactionModel.swift; sourceTree = "<group>"; };
+		4693795A2577474E000F5326 /* AllBudgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllBudgetView.swift; sourceTree = "<group>"; };
 		46B9307B25729EF9003F1C61 /* selectCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = selectCategory.swift; sourceTree = "<group>"; };
 		46D764342572D274007ABD49 /* SelectBudgetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectBudgetViewController.swift; sourceTree = "<group>"; };
 		46D764392572D30A007ABD49 /* SelectBudgetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectBudgetModel.swift; sourceTree = "<group>"; };
@@ -242,6 +246,7 @@
 				464DA89E25700DAD0017DFF6 /* CategoryCollectionViewCell_TableModel.swift */,
 				467F532A25715177005E6DAE /* AllTransactionsModel.swift */,
 				46D764392572D30A007ABD49 /* SelectBudgetModel.swift */,
+				46937955257742F8000F5326 /* AllBudgetTransactionModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -255,6 +260,7 @@
 				46F0C20325679F8000B0FCEA /* HomeView_DashboardView.swift */,
 				46F0C26A256A769500B0FCEA /* AddTransaction_baseCardView.swift */,
 				46B9307B25729EF9003F1C61 /* selectCategory.swift */,
+				4693795A2577474E000F5326 /* AllBudgetView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -456,8 +462,10 @@
 				46F0C266256A761700B0FCEA /* AddTransactionModel.swift in Sources */,
 				46F0C25C256A3C5900B0FCEA /* AddCategory_TableViewCell.swift in Sources */,
 				46DE247F25665E1E001A9415 /* AppDelegate.swift in Sources */,
+				4693795B2577474E000F5326 /* AllBudgetView.swift in Sources */,
 				46F0C257256A33E000B0FCEA /* showFullBudgetTableModel.swift in Sources */,
 				4623A24F256C21C20003FE97 /* FormValidations.swift in Sources */,
+				46937956257742F8000F5326 /* AllBudgetTransactionModel.swift in Sources */,
 				467F53082570BAD5005E6DAE /* Budget_CustomTableViewCell.swift in Sources */,
 				46D7643A2572D30A007ABD49 /* SelectBudgetModel.swift in Sources */,
 				46F0C20A2567ACD600B0FCEA /* viewExtensions.swift in Sources */,

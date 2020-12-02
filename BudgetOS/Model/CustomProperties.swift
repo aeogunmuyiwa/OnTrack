@@ -33,6 +33,7 @@ class CustomProperties: NSObject {
     
     
     let tintedColorImage = UIImage(named: "plus")?.withRenderingMode(.automatic).withTintColor(#colorLiteral(red: 0.9882352941, green: 0.6392156863, blue: 0.06666666667, alpha: 1))
+    let trashImage = UIImage(systemName: "trash")?.withTintColor(#colorLiteral(red: 0.9882352941, green: 0.6392156863, blue: 0.06666666667, alpha: 1))
     
     let dollarSign = UIImage(named: "dollar")?.withRenderingMode(.automatic).withTintColor(#colorLiteral(red: 0.9882352941, green: 0.6392156863, blue: 0.06666666667, alpha: 1))
     
@@ -130,13 +131,35 @@ class CustomProperties: NSObject {
         }
     }
     
+    //Mark : normalizing to 0-1
+    func normalize( _ actual : NSDecimalNumber?, _ budget : NSDecimalNumber?) -> CGFloat{
+        if let actual = actual , let budget = budget {
+            if budget.doubleValue != 0 {
+                return  CGFloat(actual.doubleValue /  budget.doubleValue)
+            }
+        }
+        return 0
+    }
+    
+    //Mark : navigation controller title setter
     func navigationControllerProperties(ViewController : UIViewController?, title : String){
         ViewController?.view.backgroundColor = CustomProperties.shared.viewBackgroundColor
+        ViewController?.navigationController?.navigationBar.tintColor = CustomProperties.shared.animationColor
         ViewController?.navigationController?.navigationBar.prefersLargeTitles = true
         ViewController?.navigationItem.title = title
         ViewController?.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: CustomProperties.shared.textColour]
 
     }
+    
+    //Mark changecell selected BackgroundView
+    
+    lazy var cellBackgroundView: UIView = {
+        let cellBackgroundView = UIView()
+        cellBackgroundView.backgroundColor = CustomProperties.shared.animationColor
+        return cellBackgroundView
+    }()
+    
+    //Mark shared date formatter
     lazy var dateFormatter : DateFormatter = {
        let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
@@ -150,11 +173,9 @@ class CustomProperties: NSObject {
     }
     
     //Mark placeholder attribute
-
- 
-    
-   
 }
+
+
 enum TransactionStatus {
     case new
     case edit
@@ -186,6 +207,7 @@ enum ErrorMessages  :  LocalizedError{
         }
     }
 }
+
 
 enum dataBaseErrors : LocalizedError {
     case ErrorLoadingDatabase

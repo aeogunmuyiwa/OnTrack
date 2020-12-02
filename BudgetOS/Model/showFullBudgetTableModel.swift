@@ -65,16 +65,7 @@ extension showFullBudgetTableModel: UITableViewDelegate, UITableViewDataSource, 
             vc.data = item?.array as? [OnTractTransaction]
             if let From = self.controller{
                 let parent = AllBudgetTransactionParentViewController()
-                parent.addChild(vc)
-                parent.view.addSubview(vc.view)
-                From.didMove(toParent: parent)
-             
-                vc.view.translatesAutoresizingMaskIntoConstraints = false
-                vc.view.topAnchor(parent.view.layoutMarginsGuide.topAnchor, 200)
-                vc.view.leftAnchor(parent.view.layoutMarginsGuide.leftAnchor, 0)
-                vc.view.rightAnchor(parent.view.layoutMarginsGuide.rightAnchor, 0)
-                vc.view.bottomAnchor(parent.view.layoutMarginsGuide.bottomAnchor, constant: 0)
-                
+                parent.category = DatabaseManager.shared.fetchedResultsController.object(at: indexPath)
                 CustomProperties.shared.navigationControllerProperties(ViewController: parent, title: "Budgets")
                 CustomProperties.shared.navigateToController(to: parent, from: From)
             }
@@ -84,6 +75,7 @@ extension showFullBudgetTableModel: UITableViewDelegate, UITableViewDataSource, 
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! Budget_CustomTableViewCell
+        cell.selectedBackgroundView = CustomProperties.shared.cellBackgroundView
         configureCell(cell, at: indexPath)
         return cell
     }
@@ -144,8 +136,6 @@ extension showFullBudgetTableModel: UITableViewDelegate, UITableViewDataSource, 
             @unknown default:
                 print("unknown default, will handle error")
             }
-        
-        
     }
 }
 

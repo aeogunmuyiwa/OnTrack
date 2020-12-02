@@ -130,9 +130,9 @@ class DatabaseManager: NSObject {
     
     //MARK: DELETE TRANSACTION FORM CATEGORY AND UPDATE ACTUAL AND DIFFERENCE
     func deleteTransactionHelper(_ category : Category, transaction : OnTractTransaction){
-        category.actual =  category.actual?.subtracting(transaction.amount ?? 0)
-        category.difference = category.budget?.subtracting(category.actual ?? 0)
-        saveContext()
+        transaction.category?.actual =  category.actual?.subtracting(transaction.amount ?? 0)
+        transaction.category?.difference = category.budget?.subtracting(category.actual ?? 0)
+       // saveContext()
         viewContext.delete(transaction)
         saveContext()
         
@@ -173,8 +173,6 @@ class DatabaseManager: NSObject {
         transaction.amount = NSDecimalNumber(decimal: viewTransaction.transaction?.amount ?? 0)
         transaction.date = viewTransaction.transaction?.date ?? Date().timeIntervalSince1970
         transaction.transactionDescription = viewTransaction.transaction?.transactionDescription
-        
-    
         transaction.category?.actual = transaction.category?.actual?.subtracting(t_atPreviousIndex ?? 0)
         transaction.category?.actual = transaction.category?.actual?.adding(transaction.amount ?? 0)
         transaction.category?.difference = transaction.category?.budget?.subtracting(transaction.category?.actual ?? 0)
