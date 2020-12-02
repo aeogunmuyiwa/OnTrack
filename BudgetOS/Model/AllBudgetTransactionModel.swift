@@ -91,13 +91,12 @@ class AllBudgetTransactionModel: NSObject {
         controller?.navigationItem.rightBarButtonItem?.tintColor = CustomProperties.shared.animationColor
     }
     @objc func performDeleteBudget(){
-    if let category = self.category{
-        DatabaseManager.shared.deleteCategory(category)
+        if let category = self.category{
+            DatabaseManager.shared.deleteCategory(category)
+        }
+         controller?.navigationController?.popViewController(animated: true)
     }
-     controller?.navigationController?.popViewController(animated: true)
-      
-        
-    }
+    
     func activateViews(){
         if let controller = controller {
             scrollView.frame = controller.view.bounds

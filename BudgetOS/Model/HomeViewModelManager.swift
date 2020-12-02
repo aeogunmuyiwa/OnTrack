@@ -49,7 +49,7 @@ class HomeViewModelManager: NSObject {
         CustomProperties.shared.navigationControllerProperties(ViewController: HomeViewContoller, title: "OnTrack")
         navigationControllerProperties()
     }
-    
+   
 
     
     //Mark: set navigation controller title and right button
@@ -78,6 +78,10 @@ extension HomeViewModelManager : UICollectionViewDelegate, UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.section == 0 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: dashboardID, for: indexPath) as! HomeView_Dashboard_1_CollectionViewCell
+            if let controller = HomeViewContoller {
+                cell.setUp(controller)
+            }
+           
             return cell
         }
         if indexPath.section == 1{
