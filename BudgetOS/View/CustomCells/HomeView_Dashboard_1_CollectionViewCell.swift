@@ -9,14 +9,6 @@ import UIKit
 
 class HomeView_Dashboard_1_CollectionViewCell: UICollectionViewCell {
     weak var controller : UIViewController?
-//    lazy var homeDashboard : HomeView_DashboardView =  {
-//        let dashboard = HomeView_DashboardView()
-//        self.addSubview(dashboard)
-//        dashboard.pin(to: contentView)
-//        dashboard.backgroundColor = .red
-//        return dashboard
-//    }()
-    
     override init(frame: CGRect) {
         super.init(frame: .zero)
      //   homeDashboard.translatesAutoresizingMaskIntoConstraints = false

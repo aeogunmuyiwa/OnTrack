@@ -70,8 +70,6 @@ class selectCategory: UIView {
     //Mark: transition to addTransaction controller
     @objc func selectCategory( ){
         let vc = SelectBudgetViewController()
-        let navbar: UINavigationController = UINavigationController(rootViewController: vc)
-        navbar.navigationBar.backgroundColor = CustomProperties.shared.animationColor
         if let controller = controller  {
             CustomProperties.shared.navigateToController(to: vc, from: controller)
         }

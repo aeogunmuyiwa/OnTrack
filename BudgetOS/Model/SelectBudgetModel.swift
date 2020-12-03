@@ -37,7 +37,14 @@ class SelectBudgetModel: NSObject {
         self.controller = controller
         super.init()
         self.tableView.translatesAutoresizingMaskIntoConstraints = false
+        let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: self, action: #selector(dismissView))
+        controller.navigationItem.leftBarButtonItem = backButton
+        controller.navigationItem.leftBarButtonItem?.tintColor = .black
         CustomProperties.shared.navigationControllerProperties(ViewController: controller, title: "Select budget")
+    }
+    
+    @objc func dismissView(){
+        controller?.navigationController?.popViewController(animated: true)
     }
 }
 

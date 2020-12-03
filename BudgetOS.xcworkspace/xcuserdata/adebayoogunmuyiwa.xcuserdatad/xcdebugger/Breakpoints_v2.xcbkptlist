@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "0F64F8AC-B05B-4344-A586-FB0759D7D289"
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A6BE922E-F9C5-4617-A7F9-F928A2E06054"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BudgetOS/Model/AnalyticsPages.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "58"
+            endingLineNumber = "58"
+            landmarkName = "setdata(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "A6BE922E-F9C5-4617-A7F9-F928A2E06054 - a3320304aa3f15d0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BudgetOS.AnalyticsPages.setdata(BudgetOS.AnalyticsPages) -&gt; Swift.Optional&lt;Any&gt;"
+                  moduleName = "BudgetOS"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/adebayoogunmuyiwa/Documents/BudgetOS/BudgetOS/Model/AnalyticsPages.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "58"
+                  endingLineNumber = "58"
+                  offsetFromSymbolStart = "1471">
+               </Location>
+               <Location
+                  uuid = "A6BE922E-F9C5-4617-A7F9-F928A2E06054 - f662f822505c4664"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (BudgetOS.OnTractTransaction) -&gt; Swift.Bool in BudgetOS.AnalyticsPages.setdata(BudgetOS.AnalyticsPages) -&gt; Swift.Optional&lt;Any&gt;"
+                  moduleName = "BudgetOS"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/adebayoogunmuyiwa/Documents/BudgetOS/BudgetOS/Model/AnalyticsPages.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "59"
+                  endingLineNumber = "59"
+                  offsetFromSymbolStart = "76">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4924F913-68A8-49E0-A8D7-C720257140BF"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BudgetOS/Model/AnalyticsPages.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "60"
+            endingLineNumber = "60"
+            landmarkName = "setdata(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B38D19B9-A922-415A-8B5B-2278A2DE0DD9"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BudgetOS/Model/AnalyticsPages.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
+            landmarkName = "setdata(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
