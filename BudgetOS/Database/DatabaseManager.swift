@@ -60,6 +60,7 @@ class DatabaseManager: NSObject {
             if self.viewContext.hasChanges {
                 try self.viewContext.save()
                 NotificationCenter.default.post(name: .reloadCategoryTable, object: nil)
+                NotificationCenter.default.post(name: .reloadAnalytics, object: nil)
                 determineHeight()
             }
            

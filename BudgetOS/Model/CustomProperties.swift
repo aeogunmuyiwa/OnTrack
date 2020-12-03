@@ -200,6 +200,33 @@ class CustomProperties: NSObject {
         else {saturday()}
     }
     
+    //Mark helper function for pageZero
+    func convertWeekdayNSdecimalToFloat(_ data : [weekdays : NSDecimalNumber]) -> [CGFloat]{
+        var dataPoint  : [CGFloat] = .init(repeating: 0, count: weekdays.allCases.count)
+        data.forEach({(key, value )in
+            switch key {
+            case .monday: dataPoint[1] = CGFloat(exactly: value) ?? 0
+            case .tuesday: dataPoint[2] = CGFloat(exactly: value) ?? 0
+            case .wednesday: dataPoint[3] = CGFloat(exactly: value) ?? 0
+            case .thursday: dataPoint[4] = CGFloat(exactly: value) ?? 0
+            case .friday: dataPoint[5] = CGFloat(exactly: value) ?? 0
+            case .saturday:dataPoint[6] = CGFloat(exactly: value) ?? 0
+            case .sunday:dataPoint[0] = CGFloat(exactly: value) ?? 0
+            }
+        })
+        return dataPoint
+    }
+    
+ 
+        func isDayInCurrentWeek(date: Date) -> Bool? {
+            let currentComponents = Calendar.current.dateComponents([.weekOfYear], from: Date())
+            let dateComponents = Calendar.current.dateComponents([.weekOfYear], from: date)
+            guard let currentWeekOfYear = currentComponents.weekOfYear, let dateWeekOfYear = dateComponents.weekOfYear else { return nil }
+            return currentWeekOfYear == dateWeekOfYear
+        }
+    
+
+  
     
     //Mark placeholder attribute
 }

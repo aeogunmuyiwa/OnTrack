@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class homeAnalyticsViewController: UIViewController {
   
@@ -13,7 +14,6 @@ class homeAnalyticsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         homeAnalyticsModel = .init(HomeViewController: self)
-             
         // Do any additional setup after loading the view.
     }
  
@@ -29,4 +29,6 @@ class homeAnalyticsViewController: UIViewController {
     */
 
 }
+
+
 
