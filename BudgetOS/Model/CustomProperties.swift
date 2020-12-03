@@ -172,6 +172,35 @@ class CustomProperties: NSObject {
         from.navigationController?.pushViewController(to, animated: true)
     }
     
+    func checkdate(date : Date) -> Int? {
+        let calendar = Calendar(identifier: .gregorian)
+        let components = calendar.dateComponents([.weekday], from: date)
+        return components.weekday
+    }
+    
+    //Mark : convert components.weekday to sunday = 1
+    func convertDatetoDAY(day : Int) -> String {
+        if day == 1 {return "Sunday"}
+        if day == 2 {return "Monday"}
+        if day == 3 {return "Tueday"}
+        if day == 4 {return "Wednesday"}
+        if day == 5 {return "Thurday"}
+        if day == 6 {return "Friday"}
+        else {return "Saturday"}
+    }
+   
+    func convertDatetoDAY(day : Int , sunday : @escaping() -> Void , monday : @escaping() -> Void,
+                          tueday : @escaping() -> Void, wedneday : @escaping() -> Void,thursday : @escaping() -> Void, friday : @escaping() -> Void,saturday : @escaping() -> Void)  {
+        if day == 1 {sunday()}
+        else if day == 2 {monday()}
+        else if day == 3 {tueday()}
+        else if day == 4 {wedneday()}
+        else if day == 5 {thursday()}
+        else if day == 6 {friday()}
+        else {saturday()}
+    }
+    
+    
     //Mark placeholder attribute
 }
 

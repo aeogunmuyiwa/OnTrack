@@ -12,6 +12,8 @@
 		465C6C902573C58E0006B5EC /* AllBudgetTransactionParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 465C6C8F2573C58E0006B5EC /* AllBudgetTransactionParentViewController.swift */; };
 		4660F9D2256D7E4A00A372C5 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4660F9D1256D7E4A00A372C5 /* DatabaseManager.swift */; };
 		4662B3C02566620400F8C48B /* NextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4662B3BF2566620400F8C48B /* NextViewController.swift */; };
+		46737A6E25780F4B00768273 /* homeAnalyticsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46737A6D25780F4B00768273 /* homeAnalyticsModel.swift */; };
+		46737A732578CAC900768273 /* sortingFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46737A722578CAC900768273 /* sortingFile.swift */; };
 		467F53002570BA18005E6DAE /* GradientHorizontalProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F52FF2570BA18005E6DAE /* GradientHorizontalProgressBar.swift */; };
 		467F53082570BAD5005E6DAE /* Budget_CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F53072570BAD5005E6DAE /* Budget_CustomTableViewCell.swift */; };
 		467F53262571510C005E6DAE /* AllTransactionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F53252571510C005E6DAE /* AllTransactionsViewController.swift */; };
@@ -86,6 +88,8 @@
 		465C6C8F2573C58E0006B5EC /* AllBudgetTransactionParentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllBudgetTransactionParentViewController.swift; sourceTree = "<group>"; };
 		4660F9D1256D7E4A00A372C5 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		4662B3BF2566620400F8C48B /* NextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextViewController.swift; sourceTree = "<group>"; };
+		46737A6D25780F4B00768273 /* homeAnalyticsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = homeAnalyticsModel.swift; sourceTree = "<group>"; };
+		46737A722578CAC900768273 /* sortingFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sortingFile.swift; sourceTree = "<group>"; };
 		467F52FF2570BA18005E6DAE /* GradientHorizontalProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientHorizontalProgressBar.swift; sourceTree = "<group>"; };
 		467F53072570BAD5005E6DAE /* Budget_CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Budget_CustomTableViewCell.swift; sourceTree = "<group>"; };
 		467F53252571510C005E6DAE /* AllTransactionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTransactionsViewController.swift; sourceTree = "<group>"; };
@@ -283,6 +287,8 @@
 				467F532A25715177005E6DAE /* AllTransactionsModel.swift */,
 				46D764392572D30A007ABD49 /* SelectBudgetModel.swift */,
 				46937955257742F8000F5326 /* AllBudgetTransactionModel.swift */,
+				46737A6D25780F4B00768273 /* homeAnalyticsModel.swift */,
+				46737A722578CAC900768273 /* sortingFile.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -577,6 +583,7 @@
 			files = (
 				467F532B25715177005E6DAE /* AllTransactionsModel.swift in Sources */,
 				46F0C22B25681E2500B0FCEA /* HomeView_TableViewTableViewCell.swift in Sources */,
+				46737A732578CAC900768273 /* sortingFile.swift in Sources */,
 				46F0C20425679F8000B0FCEA /* HomeView_DashboardView.swift in Sources */,
 				46D7BB362572575A00AEC083 /* TransactionCollectionViewCell.swift in Sources */,
 				46B9307C25729EF9003F1C61 /* selectCategory.swift in Sources */,
@@ -615,6 +622,7 @@
 				46DE248925665E1E001A9415 /* BudgetOS.xcdatamodeld in Sources */,
 				46F0C23F25691FA500B0FCEA /* HomeView_Dashboard_1_CollectionViewCell.swift in Sources */,
 				46DE248125665E1E001A9415 /* SceneDelegate.swift in Sources */,
+				46737A6E25780F4B00768273 /* homeAnalyticsModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
