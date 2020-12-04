@@ -68,6 +68,7 @@ class AddTransactionModel: NSObject {
     }
     
     @objc func dismissView() {
+       
         viewController.dismiss(animated: true, completion: nil)
     }
     

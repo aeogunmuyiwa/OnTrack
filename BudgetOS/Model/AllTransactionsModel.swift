@@ -44,10 +44,6 @@ class AllTransactionsModel: NSObject {
         self.data = data
         self.tempCategory = tempCategory
         self.compareCategory = tempCategory
-
-//        self.data?.sort(by: {(item_1, item_2) in
-//            item_1.date.is(than: item_2.date)
-//        })
         super.init()
         self.tableView.isScrollEnabled = tableViewEnable
         handleSaveEditedTransaction()
@@ -90,6 +86,9 @@ class AllTransactionsModel: NSObject {
                 if self?.compareCategory?.id == value.category?.id{
                     self?.data?.append(transaction)
                 }
+                if self?.tempCategory != nil && self?.compareCategory == nil {
+                    self?.data?.append(transaction)
+                }
                 NotificationCenter.default.post(name: .reloadShowFullBudgetTableModel, object: nil)
                 self?.tableView.reloadData()
             }
@@ -116,6 +115,7 @@ class AllTransactionsModel: NSObject {
         let vc = AddTransactionViewController()
         vc.dataSource = .init(transactionStatus: .addTransaction, index: nil, transaction: nil)
         vc.dataSource?.category = tempCategory
+        
         let navbar: UINavigationController = UINavigationController(rootViewController: vc)
         navbar.navigationBar.backgroundColor = CustomProperties.shared.animationColor
         ViewController?.present(navbar, animated: true, completion: nil)
@@ -178,7 +178,5 @@ extension AllTransactionsModel : UITableViewDelegate, UITableViewDataSource{
         navbar.navigationBar.backgroundColor = CustomProperties.shared.animationColor
         ViewController?.present(navbar, animated: true, completion: nil)
     }
-    
-    
     
 }

@@ -99,6 +99,18 @@ extension TransactionCollectionViewCell : UITableViewDelegate, UITableViewDataSo
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.tableView.deselectRow(at: indexPath, animated: true)
+        if let transaction = DatabaseManager.shared.fetchedTransactionResultsController.fetchedObjects?[indexPath.row] {
+            EditTransaction(transaction: transaction, index: indexPath.row)
+
+        }
+    }
+    @objc func EditTransaction(transaction : OnTractTransaction , index : Int){
+        let vc = AddTransactionViewController()
+        vc.dataSource = .init(transactionStatus: .editSaved, index: index, transaction: nil)
+        vc.dataSource?.onTransaction = transaction
+        let navbar: UINavigationController = UINavigationController(rootViewController: vc)
+        navbar.navigationBar.backgroundColor = CustomProperties.shared.animationColor
+        viewController?.present(navbar, animated: true, completion: nil)
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 50

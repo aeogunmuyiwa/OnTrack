@@ -6,7 +6,6 @@
 //
 
 import UIKit
-
 struct analytics {
     let horizontalAxisMarker : [String]
     let dataValueStruct : [DataValueStruct]
@@ -17,6 +16,11 @@ struct analytics {
     }
 }
 
+struct BudgetVSTransaction {
+    let horizontalAxisMarker : [String]
+    let budgetValues : [CGFloat]
+    let actualValues : [CGFloat]
+}
 
 
 class analytics_sortbyweekday {

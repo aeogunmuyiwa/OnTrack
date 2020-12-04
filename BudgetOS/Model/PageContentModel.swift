@@ -47,7 +47,33 @@ class PageContentModel: NSObject {
                 chartView.graphView.yMinimum = values.min()
                 chartView.graphView.yMaximum = values.max()
             }
-        default: ()
+        case .pageTwo :
+            if let data = page.data as? BudgetVSTransaction {
+                var budget = data.budgetValues
+                var actual = data.actualValues
+                var horizintalAxis = data.horizontalAxisMarker
+                if data.horizontalAxisMarker.count < 2 {
+                    budget.append(0)
+                    actual.append(0)
+                    horizintalAxis.append("")
+                }
+                chartView.graphView.horizontalAxisMarkers = horizintalAxis
+                chartView.headerView.titleLabel.text = page.name
+                chartView.graphView.dataSeries = [
+                    OCKDataSeries(values: actual, title: "actual", size: 14, color: CustomProperties.shared.animationColor),
+                    OCKDataSeries(values: budget, title: "Budget", size: 14, color: CustomProperties.shared.lightGray)
+                ]
+                if budget.min() ?? 0 < actual.min() ?? 0 {
+                    chartView.graphView.yMinimum = budget.min() ?? 0
+                }else{
+                    chartView.graphView.yMinimum = actual.min() ?? 0
+                }
+                if actual.max() ?? 0 > budget.max() ?? 0{
+                    chartView.graphView.yMaximum = actual.max()
+                }else{
+                    chartView.graphView.yMaximum = budget.max()
+                }
+            }
         }
     }
     

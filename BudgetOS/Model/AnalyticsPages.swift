@@ -10,7 +10,7 @@ enum AnalyticsPages: CaseIterable {
     case pageZero
     case pageOne
     case pageTwo
-    case pageThree
+   
     
     var name: String {
         switch self {
@@ -19,16 +19,14 @@ enum AnalyticsPages: CaseIterable {
         case .pageOne:
             return "This month transaction summary"
         case .pageTwo:
-            return "Weekly transactions"
-        case .pageThree:
-            return "This is page three"
+            return "Budget vs transactions"
         }
     }
     var data : Any? {
         switch self {
         case .pageZero: return setdata(.pageZero)
         case .pageOne: return setdata(.pageOne)
-        default: return analytics.self
+        case .pageTwo: return setdata(.pageTwo)
         }
     }
     
@@ -68,8 +66,24 @@ enum AnalyticsPages: CaseIterable {
             }
             return nil
             
-        
-        default:
+            
+            
+        case .pageTwo:
+            DatabaseManager.shared.performFetch()
+            let categories = DatabaseManager.shared.fetchedResultsController.fetchedObjects
+            if let categories = categories {
+                let horizonalValue = categories.map({ item in
+                    return (item.categoryDescription ?? "")
+                })
+                let value : [CGFloat] = categories.map({item in
+                    return  (CGFloat(exactly: item.budget ?? 0) ?? 0)
+                })
+                
+                let actial : [CGFloat] = categories.map({item in
+                    return (CGFloat(exactly: item.actual ?? 0) ?? 0)
+                })
+                return BudgetVSTransaction(horizontalAxisMarker: horizonalValue, budgetValues: value, actualValues: actial)
+            }
             return nil
         }
     }
@@ -83,8 +97,6 @@ enum AnalyticsPages: CaseIterable {
             return 1
         case .pageTwo:
             return 2
-        case .pageThree:
-            return 3
         }
     }
 }
