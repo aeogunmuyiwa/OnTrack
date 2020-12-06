@@ -21,6 +21,7 @@ class DatabaseManager: NSObject {
          application to it. This property is optional since there are legitimate
          error conditions that could cause the creation of the store to fail.
         */
+        
         let container = NSPersistentContainer(name: "BudgetOS")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
@@ -55,7 +56,7 @@ class DatabaseManager: NSObject {
     // MARK: - Core Data Saving support
 
     func saveContext () {
-        
+        dataDog.shared.startSpanc(operationName: "saveContext")
         do {
             if self.viewContext.hasChanges {
                 try self.viewContext.save()
@@ -66,8 +67,11 @@ class DatabaseManager: NSObject {
            
         }catch{
             let nsError = error as NSError
+            dataDog.shared.logger?.critical(nsError.userInfo.description)
             print("Unresolved error \(nsError), \(nsError.userInfo)")
         }
+        
+        dataDog.shared.span?.finish()
         
     }
     func determineHeight(){
@@ -220,6 +224,7 @@ class DatabaseManager: NSObject {
                 completionHandler(categories)
                 
             }catch {
+                dataDog.shared.logger?.critical("error in loadDatabase")
                 completionHandler(nil)
             }
     }
@@ -232,24 +237,31 @@ class DatabaseManager: NSObject {
                 let transactions = try self.viewContext.fetch(TransactionFetchRequest)
                 return transactions
             }catch {
+                dataDog.shared.logger?.critical("error loadTransactions")
                 return nil
             }
     }
     
     func performFetch(){
+        dataDog.shared.startSpanc(operationName: "performFetch")
         do {
             try fetchedResultsController.performFetch()
         } catch  {
+            dataDog.shared.logger?.critical("error fetchedResultsController")
             print("error")
         }
+        dataDog.shared.span?.finish()
     }
     
     func performTransactionFetch(){
+        dataDog.shared.startSpanc(operationName: "performTransactionFetch")
         do {
             try fetchedTransactionResultsController.performFetch()
         }catch{
+            dataDog.shared.logger?.critical("error fetchedTransactionResultsController")
             print("error")
         }
+        dataDog.shared.span?.finish()
     }
     
     //func delete all categories from coredata
@@ -259,6 +271,7 @@ class DatabaseManager: NSObject {
         do {
             try viewContext.execute(deleteRequest)
         } catch {
+            dataDog.shared.logger?.critical("error deleteAllCategory")
             print("error performing batch delete")
         }
     }
@@ -271,6 +284,7 @@ class DatabaseManager: NSObject {
                 let categories = try self.viewContext.fetch(categoryFetchRequest)
                 promise(.success(categories))
             }catch {
+                dataDog.shared.logger?.critical("error LoadDatabase")
                 promise(.failure(.ErrorLoadingDatabase))
             }
 

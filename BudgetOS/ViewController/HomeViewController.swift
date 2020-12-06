@@ -20,7 +20,9 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    
         homeViewModel = .init(HomeViewContoller: self)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {

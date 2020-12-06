@@ -112,7 +112,10 @@ extension Date {
 
 extension UITableView {
     func setEmptyView(title: String, message: String, textColor : UIColor) {
-        let emptyView = UIView(frame: CGRect(x: self.center.x, y: self.center.y, width: self.bounds.size.width, height: self.bounds.size.height))
+        let emptyView = UIView()
+            //UIView(frame: CGRect(x: self.center.x, y: self.center.y, width: self.bounds.size.width, height: self.bounds.size.height))
+        self.addSubview(emptyView)
+        emptyView.pin(to: self)
         let titleLabel = UILabel()
         let messageLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
