@@ -53,6 +53,8 @@ extension showFullBudgetTableModel: UITableViewDelegate, UITableViewDataSource, 
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let sections = DatabaseManager.shared.fetchedResultsController.sections else { return 0   }
+        let data = sections[section].numberOfObjects
+        CustomProperties.shared.emptyDatasource(data: data, tableView: tableView, title: "You do not have any budget yet", message: "Click the plus icon '+' to add a new budget", textColor: CustomProperties.shared.whiteTextColor)
         return sections[section].numberOfObjects
     }
 

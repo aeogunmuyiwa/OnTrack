@@ -60,7 +60,7 @@ class PageContentModel: NSObject {
                 chartView.graphView.horizontalAxisMarkers = horizintalAxis
                 chartView.headerView.titleLabel.text = page.name
                 chartView.graphView.dataSeries = [
-                    OCKDataSeries(values: actual, title: "actual", size: 14, color: CustomProperties.shared.animationColor),
+                    OCKDataSeries(values: actual, title: "Transactions", size: 10, color: CustomProperties.shared.animationColor),
                     OCKDataSeries(values: budget, title: "Budget", size: 14, color: CustomProperties.shared.lightGray)
                 ]
                 if budget.min() ?? 0 < actual.min() ?? 0 {

@@ -225,6 +225,13 @@ class CustomProperties: NSObject {
             return currentWeekOfYear == dateWeekOfYear
         }
     
+    func emptyDatasource(data : Int, tableView : UITableView, title : String, message : String, textColor : UIColor){
+        if data == 0 {
+            tableView.setEmptyView(title: title, message: message, textColor: textColor)
+        }else{
+            tableView.restore()
+        }
+    }
 
   
     

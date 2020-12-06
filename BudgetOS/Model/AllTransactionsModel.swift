@@ -126,7 +126,9 @@ class AllTransactionsModel: NSObject {
 
 extension AllTransactionsModel : UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data?.count ?? 0
+        guard let dataValue = data?.count  else { return 0 }
+        CustomProperties.shared.emptyDatasource(data: dataValue, tableView: tableView, title: "You do not have any transactions yet", message: "Click the plus icon '+' to add a new transaction", textColor: CustomProperties.shared.whiteTextColor)
+        return dataValue
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

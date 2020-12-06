@@ -94,6 +94,8 @@ class TransactionCollectionViewCell: UICollectionViewCell {
 extension TransactionCollectionViewCell : UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let sections = DatabaseManager.shared.fetchedTransactionResultsController.sections else { return 0   }
+        let data = sections[section].numberOfObjects
+        CustomProperties.shared.emptyDatasource(data: data, tableView: tableView, title: "You do not have any transactions yet", message: "Your saved transactions will appear here", textColor: CustomProperties.shared.blackTextColor)
         return sections[section].numberOfObjects
     }
 

@@ -42,10 +42,11 @@ class AddBudgetModel: NSObject {
     init(_ viewController : UIViewController) {
         self.viewController = viewController
         super.init()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         setupNavigationController()
         handleCategorySavePublisher()
         handleTransactionSavePublisher()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+     
         CustomProperties.shared.handleHideKeyboard(view: viewController.view)
         CustomProperties.shared.handleHideKeyboardForscrollableView(view: tableView)
       
@@ -139,7 +140,10 @@ extension AddBudgetModel : UITableViewDelegate, UITableViewDataSource {
             return 1
         }else{
             //return datasource.transactions?.count ?? 00
-            return CategoryDatasoruce.transactions?.count ?? 0
+            
+            guard let data = CategoryDatasoruce.transactions?.count else { return 0 }
+            CustomProperties.shared.emptyDatasource(data: data, tableView: tableView, title: "You do not have any transactions yet", message: "Click the plus icon '+' to add a new transaction", textColor: CustomProperties.shared.whiteTextColor)
+            return data
         }
     }
     

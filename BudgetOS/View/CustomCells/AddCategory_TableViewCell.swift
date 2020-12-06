@@ -37,9 +37,9 @@ class AddCategory_TableViewCell: UITableViewCell {
         addCategory_baseCard.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(addCategory_baseCard)
         addCategory_baseCard.topAnchor(newTransaction.layoutMarginsGuide.bottomAnchor, 20)
-        addCategory_baseCard.leftAnchor(contentView.layoutMarginsGuide.leftAnchor, 0)
-        addCategory_baseCard.rightAnchor(contentView.layoutMarginsGuide.rightAnchor, 0)
-        addCategory_baseCard.bottomAnchor(contentView.layoutMarginsGuide.bottomAnchor, constant: 0)
+        addCategory_baseCard.leftAnchor(leftAnchor, 0)
+        addCategory_baseCard.rightAnchor(rightAnchor, 0)
+        addCategory_baseCard.bottomAnchor(bottomAnchor, constant: 0)
         return addCategory_baseCard
     }()
     
@@ -69,10 +69,13 @@ class AddCategory_TableViewCell: UITableViewCell {
     //init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: cellId)
-        newTransaction.translatesAutoresizingMaskIntoConstraints = false
-        addCategory_baseCard.translatesAutoresizingMaskIntoConstraints = false
-        handlePublisherSubscriber()
-        self.backgroundColor = .clear
+        DispatchQueue.main.async {
+            self.newTransaction.translatesAutoresizingMaskIntoConstraints = false
+            self.addCategory_baseCard.translatesAutoresizingMaskIntoConstraints = false
+            self.handlePublisherSubscriber()
+            self.backgroundColor = .clear
+        }
+       
     }
     
     
