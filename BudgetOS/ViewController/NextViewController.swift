@@ -9,12 +9,19 @@ import UIKit
 
 class NextViewController: UIViewController {
 
-    var addCategoryModel : AddBudgetModel?
+ 
+    lazy var addCategoryModel: AddBudgetModel? = {
+        let addCategoryModel = AddBudgetModel(self)
+        return addCategoryModel
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        addCategoryModel = .init(self)
+       
    
         // Do any additional setup after loading the view.
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        addCategoryModel = .init(self)
     }
     
 

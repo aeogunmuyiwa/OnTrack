@@ -8,6 +8,10 @@
 import UIKit
 import CoreData
 import Combine
+enum AllTransactionsModelState {
+    case showFullBudgetTableModel
+    case base
+}
 class AllTransactionsModel: NSObject {
     private weak var ViewController : UIViewController?
     var data : [OnTractTransaction]?
@@ -15,7 +19,9 @@ class AllTransactionsModel: NSObject {
     private var saveEditedTransactionSubscriber: AnyCancellable?
     private var saveNewTransactionSubscriber: AnyCancellable?
     private var select_subscriber : AnyCancellable?
-    private var tempCategory : Category?
+    var tempCategory : Category?
+    var compareCategory : Category?
+    var state : AllTransactionsModelState
     
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero)
@@ -38,13 +44,14 @@ class AllTransactionsModel: NSObject {
     }()
     
     
-    init(ViewController : UIViewController, data : [OnTractTransaction]) {
+    init(ViewController : UIViewController, data : [OnTractTransaction], tempCategory : Category?, tableViewEnable : Bool, state : AllTransactionsModelState) {
         self.ViewController = ViewController
         self.data = data
-//        self.data?.sort(by: {(item_1, item_2) in
-//            item_1.date.is(than: item_2.date)
-//        })
+        self.tempCategory = tempCategory
+        self.compareCategory = tempCategory
+        self.state = state
         super.init()
+        self.tableView.isScrollEnabled = tableViewEnable
         handleSaveEditedTransaction()
         handleSaveNewTransaction()
         handleSelectCategorySubscriber()
@@ -82,7 +89,13 @@ class AllTransactionsModel: NSObject {
                 }
            
                 let transaction = DatabaseManager.shared.saveTransaction(value)
-                self?.data?.append(transaction)
+                if self?.compareCategory?.id == value.category?.id{
+                    self?.data?.append(transaction)
+                }
+                if self?.tempCategory != nil && self?.compareCategory == nil {
+                    self?.data?.append(transaction)
+                }
+                NotificationCenter.default.post(name: .reloadShowFullBudgetTableModel, object: nil)
                 self?.tableView.reloadData()
             }
         })
@@ -92,7 +105,6 @@ class AllTransactionsModel: NSObject {
         let selectCategoryPublisher =  NotificationCenter.Publisher.init(center: .default, name: .select_subscriber)
         select_subscriber = selectCategoryPublisher.sink(receiveValue: { [weak self] result in
             if let value = result.object as? Category {
-               
                 self?.tempCategory = value
             }
         })
@@ -108,7 +120,8 @@ class AllTransactionsModel: NSObject {
     @objc func Addtransaction( ){
         let vc = AddTransactionViewController()
         vc.dataSource = .init(transactionStatus: .addTransaction, index: nil, transaction: nil)
-        //vc.categoryDatasource = datasource
+        vc.dataSource?.category = tempCategory
+        
         let navbar: UINavigationController = UINavigationController(rootViewController: vc)
         navbar.navigationBar.backgroundColor = CustomProperties.shared.animationColor
         ViewController?.present(navbar, animated: true, completion: nil)
@@ -119,7 +132,12 @@ class AllTransactionsModel: NSObject {
 
 extension AllTransactionsModel : UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data?.count ?? 0
+        guard let dataValue = data?.count  else { return 0 }
+        switch state {
+            case .base:  CustomProperties.shared.emptyDatasource(data: dataValue, tableView: tableView, title: "You do not have any transactions yet", message: "Click the plus icon '+' to add a new transaction", textColor: CustomProperties.shared.whiteTextColor)
+            case .showFullBudgetTableModel :  CustomProperties.shared.emptyDatasource(data: dataValue, tableView: tableView, title: "You do not have any transactions yet", message: "Your saved transactions will appear here", textColor: CustomProperties.shared.whiteTextColor)
+        }
+        return dataValue
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -135,8 +153,12 @@ extension AllTransactionsModel : UITableViewDelegate, UITableViewDataSource{
 
         }
     }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 44
+    }
     
     func configureCell(_ cell: AllTransactionsTableViewCell?, at indexPath: IndexPath) {
+        cell?.selectedBackgroundView = CustomProperties.shared.cellBackgroundView
         cell?.data = data?[indexPath.row]
     }
     
@@ -149,12 +171,13 @@ extension AllTransactionsModel : UITableViewDelegate, UITableViewDataSource{
            return UIContextualAction(style: .destructive, title: "Delete") { (action, swipeButtonView, completion) in
             let transaction =  self.data?[indexPath.row]
             if let transaction = transaction {
-                DatabaseManager.shared.deleteTransaction(transaction)
+                DispatchQueue.main.async {
+                    DatabaseManager.shared.deleteTransaction(transaction)
+                }
+                
                 self.data?.remove(at: indexPath.row)
                 self.tableView.reloadData()
             }
-            //DatabaseManager.shared.deleteCategory(DatabaseManager.shared.fetchedResultsController.object(at: indexPath))
-           // self.tableView.reloadData()
            }
        }
     
@@ -162,12 +185,9 @@ extension AllTransactionsModel : UITableViewDelegate, UITableViewDataSource{
         let vc = AddTransactionViewController()
         vc.dataSource = .init(transactionStatus: .editSaved, index: index, transaction: nil)
         vc.dataSource?.onTransaction = transaction
-        //vc.categoryDatasource = datasource
         let navbar: UINavigationController = UINavigationController(rootViewController: vc)
         navbar.navigationBar.backgroundColor = CustomProperties.shared.animationColor
         ViewController?.present(navbar, animated: true, completion: nil)
     }
-    
-    
     
 }

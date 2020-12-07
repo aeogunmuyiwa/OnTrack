@@ -32,7 +32,7 @@ class AddTransaction_baseCardView: UIView {
     lazy var DescriptionInput: UITextField = {
         let DescriptionInput = UITextField()
         DescriptionInput.borderStyle = .roundedRect
-        DescriptionInput.placeholder = "Enter description"
+        DescriptionInput.attributedPlaceholder = NSAttributedString(string: "Enter transaction", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black])
         DescriptionInput.leftViewMode = .always
         DescriptionInput.leftView = UIImageView(image: CustomProperties.shared.categoryImage)
         DescriptionInput.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
@@ -70,6 +70,7 @@ class AddTransaction_baseCardView: UIView {
         AmountInput.leftViewMode = .always
         AmountInput.leftView = UIImageView(image: CustomProperties.shared.dollarSign)
         AmountInput.placeholder = "Enter amount"
+        AmountInput.attributedPlaceholder = NSAttributedString(string: "Enter transaction amount", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black])
         AmountInput.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         AmountInput.backgroundColor = CustomProperties.shared.textColour
         AmountInput.textColor = CustomProperties.shared.blackTextColor
@@ -109,9 +110,9 @@ class AddTransaction_baseCardView: UIView {
         SelectCategory.backgroundColor = CustomProperties.shared.animationColor
         SelectCategory.layer.cornerRadius = 10
         SelectCategory.isHidden = true
-        
         return SelectCategory
     }()
+    
     
         @objc func datePickerValueChanged(_ sender: UIDatePicker){
     //        let dateFormatter: DateFormatter = DateFormatter()
@@ -147,7 +148,8 @@ class AddTransaction_baseCardView: UIView {
         let selectCategoryPublisher =  NotificationCenter.Publisher.init(center: .default, name: .select_subscriber)
         select_subscriber = selectCategoryPublisher.sink(receiveValue: { [weak self] result in
             if let value = result.object as? Category {
-                self?.SelectCategory.categoryData.text = value.categoryDescription
+               // self?.SelectCategory.categoryData.text = value.categoryDescription
+                self?.SelectCategory.category.text = value.categoryDescription
             }
         })
     }
@@ -161,14 +163,20 @@ class AddTransaction_baseCardView: UIView {
         setup()
         setupUI()
         handleSelectCategorySubscriber()
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(selectCategoryAction(tapGestureRecognizer:)))
         SelectCategory.isUserInteractionEnabled = true
         SelectCategory.addGestureRecognizer(tapGestureRecognizer)
     }
     
-    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
-        //let tappedImage = tapGestureRecognizer.view as! 
-        // And some actions
+  
+    
+    @objc func selectCategoryAction(tapGestureRecognizer: UITapGestureRecognizer) {
+        let vc = SelectBudgetViewController()
+        if let controller = controller{
+            CustomProperties.shared.navigateToController(to: vc, from: controller)
+        }
+           
+        
     }
     
     required init?(coder: NSCoder) {
@@ -225,6 +233,13 @@ class AddTransaction_baseCardView: UIView {
             }
             if item.transactionStatus == .addTransaction {
                 SelectCategory.isHidden = false
+                let categoryTest = self.transaction?.category?.categoryDescription
+                if categoryTest?.isEmpty == nil{
+                    SelectCategory.category.text = "Select budget"
+                }else{
+                    SelectCategory.category.text = categoryTest
+                }
+                
             }
         })
     }

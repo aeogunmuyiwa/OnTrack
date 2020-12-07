@@ -1,0 +1,27 @@
+PODS:
+  - AppCenter (4.0.0):
+    - AppCenter/Analytics (= 4.0.0)
+    - AppCenter/Crashes (= 4.0.0)
+  - AppCenter/Analytics (4.0.0):
+    - AppCenter/Core
+  - AppCenter/Core (4.0.0)
+  - AppCenter/Crashes (4.0.0):
+    - AppCenter/Core
+  - DatadogSDK (1.4.0-beta1)
+
+DEPENDENCIES:
+  - AppCenter (~> 4.0)
+  - DatadogSDK (= 1.4.0-beta1)
+
+SPEC REPOS:
+  trunk:
+    - AppCenter
+    - DatadogSDK
+
+SPEC CHECKSUMS:
+  AppCenter: 51351e0121e40ba75e28ecb7de5c2e69d480df5e
+  DatadogSDK: 1b449496917b0e4dc00ccf93770d3214f4a363a8
+
+PODFILE CHECKSUM: fb1ff99636fc76e3dcca149ad0c7f3f552dcdcd5
+
+COCOAPODS: 1.10.0

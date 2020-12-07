@@ -15,9 +15,9 @@ class AddCategory_baseCardView: UIView {
     var data : CategoryStruct = .init("", 0, nil)
     lazy var categoryName: UILabel = {
         let categoryName = UILabel()
-        categoryName.text = "Category"
+        categoryName.text = "Budget"
         categoryName.font = CustomProperties.shared.basicTextFont
-        categoryName.textColor = CustomProperties.shared.textColour
+        categoryName.textColor = CustomProperties.shared.blackTextColor
         categoryName.translatesAutoresizingMaskIntoConstraints = true
         self.addSubview(categoryName)
         categoryName.topAnchor(self.layoutMarginsGuide.topAnchor, 0)
@@ -28,13 +28,14 @@ class AddCategory_baseCardView: UIView {
     lazy var categoryNameInput: UITextField = {
         let categoryNameInput = UITextField()
         categoryNameInput.borderStyle = .roundedRect
-        categoryNameInput.placeholder = "Enter category"
+        categoryNameInput.placeholder = "Enter budget name"
         categoryNameInput.leftViewMode = .always
-        categoryNameInput.leftView = UIImageView(image: CustomProperties.shared.categoryImage)
+        //categoryNameInput.leftView = UIImageView(image: CustomProperties.shared.categoryImage)
         categoryNameInput.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         categoryNameInput.backgroundColor = CustomProperties.shared.textColour
         categoryNameInput.textColor = CustomProperties.shared.blackTextColor
         categoryNameInput.font = CustomProperties.shared.basicTexrFieldFont
+        categoryNameInput.attributedPlaceholder = NSAttributedString(string: "Enter budget name", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black])
         self.addSubview(categoryNameInput)
         categoryNameInput.translatesAutoresizingMaskIntoConstraints = true
         categoryNameInput.topAnchor(categoryName.bottomAnchor, 0)
@@ -49,12 +50,12 @@ class AddCategory_baseCardView: UIView {
     //Mark =: budget label
     lazy var budgeLabel: UILabel = {
         let budgeLabel = UILabel()
-        budgeLabel.text = "Budget"
+        budgeLabel.text = "Amount"
         budgeLabel.font = CustomProperties.shared.basicTextFont
-        budgeLabel.textColor = CustomProperties.shared.textColour
+        budgeLabel.textColor = CustomProperties.shared.blackTextColor
         budgeLabel.translatesAutoresizingMaskIntoConstraints = true
         self.addSubview(budgeLabel)
-        budgeLabel.topAnchor(categoryNameInput.bottomAnchor, 0)
+        budgeLabel.topAnchor(categoryNameInput.bottomAnchor, 10)
         budgeLabel.leftAnchor(self.layoutMarginsGuide.leftAnchor, 0)
         return budgeLabel
     }()
@@ -66,9 +67,9 @@ class AddCategory_baseCardView: UIView {
         budgetInput.borderStyle = .roundedRect
         budgetInput.leftViewMode = .always
         budgetInput.leftView = UIImageView(image: CustomProperties.shared.dollarSign)
-        budgetInput.placeholder = "Enter budget"
         budgetInput.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         budgetInput.backgroundColor = CustomProperties.shared.textColour
+        budgetInput.attributedPlaceholder = NSAttributedString(string: "Enter amount", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black])
         budgetInput.textColor = CustomProperties.shared.blackTextColor
         budgetInput.font = CustomProperties.shared.basicTexrFieldFont
         self.addSubview(budgetInput)

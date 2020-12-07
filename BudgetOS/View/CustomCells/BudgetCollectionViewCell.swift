@@ -76,6 +76,7 @@ class BudgetCollectionViewCell: UICollectionViewCell {
       }
     
     @objc func addObservertoTable(){
+        DatabaseManager.shared.performFetch()
         tableView.reloadData()
     }
     func setup(_ HomeViewContoller : UIViewController, color : UIColor) {
@@ -95,6 +96,8 @@ extension BudgetCollectionViewCell: UITableViewDelegate, UITableViewDataSource, 
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let sections = DatabaseManager.shared.fetchedResultsController.sections else { return 0   }
+        let data = sections[section].numberOfObjects
+        CustomProperties.shared.emptyDatasource(data: data, tableView: tableView, title: "You do not have any budget yet", message: "Your saved budget will appear here", textColor: CustomProperties.shared.blackTextColor)
         return sections[section].numberOfObjects
     }
 
@@ -105,6 +108,7 @@ extension BudgetCollectionViewCell: UITableViewDelegate, UITableViewDataSource, 
         self.tableView.deselectRow(at: indexPath, animated: true)
             let item =  DatabaseManager.shared.fetchedResultsController.object(at: indexPath).transactions
             let vc = AllTransactionsViewController()
+            vc.tempCatgeory = DatabaseManager.shared.fetchedResultsController.object(at: indexPath)
             vc.data = item?.array as? [OnTractTransaction]
             if let From = HomeViewContoller {
                 CustomProperties.shared.navigateToController(to: vc, from: From)
@@ -125,6 +129,7 @@ extension BudgetCollectionViewCell: UITableViewDelegate, UITableViewDataSource, 
     }
     func configureCell(_ cell: Budget_CustomTableViewCell?, at indexPath: IndexPath) {
         if let cell = cell, let HomeViewContoller = HomeViewContoller {
+            cell.selectedBackgroundView = CustomProperties.shared.cellBackgroundView
             cell.setUp(HomeViewContoller, textColor: CustomProperties.shared.blackTextColor)
             cell.data = DatabaseManager.shared.fetchedResultsController.object(at: indexPath)
         }

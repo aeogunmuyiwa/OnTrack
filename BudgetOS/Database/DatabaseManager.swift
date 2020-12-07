@@ -21,6 +21,7 @@ class DatabaseManager: NSObject {
          application to it. This property is optional since there are legitimate
          error conditions that could cause the creation of the store to fail.
         */
+        
         let container = NSPersistentContainer(name: "BudgetOS")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
@@ -55,18 +56,22 @@ class DatabaseManager: NSObject {
     // MARK: - Core Data Saving support
 
     func saveContext () {
-        
+        dataDog.shared.startSpanc(operationName: "saveContext")
         do {
             if self.viewContext.hasChanges {
                 try self.viewContext.save()
                 NotificationCenter.default.post(name: .reloadCategoryTable, object: nil)
+                NotificationCenter.default.post(name: .reloadAnalytics, object: nil)
                 determineHeight()
             }
            
         }catch{
             let nsError = error as NSError
+            dataDog.shared.logger?.critical(nsError.userInfo.description)
             print("Unresolved error \(nsError), \(nsError.userInfo)")
         }
+        
+        dataDog.shared.span?.finish()
         
     }
     func determineHeight(){
@@ -130,9 +135,9 @@ class DatabaseManager: NSObject {
     
     //MARK: DELETE TRANSACTION FORM CATEGORY AND UPDATE ACTUAL AND DIFFERENCE
     func deleteTransactionHelper(_ category : Category, transaction : OnTractTransaction){
-        category.actual =  category.actual?.subtracting(transaction.amount ?? 0)
-        category.difference = category.budget?.subtracting(category.actual ?? 0)
-        saveContext()
+        transaction.category?.actual =  category.actual?.subtracting(transaction.amount ?? 0)
+        transaction.category?.difference = category.budget?.subtracting(category.actual ?? 0)
+       // saveContext()
         viewContext.delete(transaction)
         saveContext()
         
@@ -173,8 +178,6 @@ class DatabaseManager: NSObject {
         transaction.amount = NSDecimalNumber(decimal: viewTransaction.transaction?.amount ?? 0)
         transaction.date = viewTransaction.transaction?.date ?? Date().timeIntervalSince1970
         transaction.transactionDescription = viewTransaction.transaction?.transactionDescription
-        
-    
         transaction.category?.actual = transaction.category?.actual?.subtracting(t_atPreviousIndex ?? 0)
         transaction.category?.actual = transaction.category?.actual?.adding(transaction.amount ?? 0)
         transaction.category?.difference = transaction.category?.budget?.subtracting(transaction.category?.actual ?? 0)
@@ -221,6 +224,7 @@ class DatabaseManager: NSObject {
                 completionHandler(categories)
                 
             }catch {
+                dataDog.shared.logger?.critical("error in loadDatabase")
                 completionHandler(nil)
             }
     }
@@ -233,24 +237,31 @@ class DatabaseManager: NSObject {
                 let transactions = try self.viewContext.fetch(TransactionFetchRequest)
                 return transactions
             }catch {
+                dataDog.shared.logger?.critical("error loadTransactions")
                 return nil
             }
     }
     
     func performFetch(){
+        dataDog.shared.startSpanc(operationName: "performFetch")
         do {
             try fetchedResultsController.performFetch()
         } catch  {
+            dataDog.shared.logger?.critical("error fetchedResultsController")
             print("error")
         }
+        dataDog.shared.span?.finish()
     }
     
     func performTransactionFetch(){
+        dataDog.shared.startSpanc(operationName: "performTransactionFetch")
         do {
             try fetchedTransactionResultsController.performFetch()
         }catch{
+            dataDog.shared.logger?.critical("error fetchedTransactionResultsController")
             print("error")
         }
+        dataDog.shared.span?.finish()
     }
     
     //func delete all categories from coredata
@@ -260,6 +271,7 @@ class DatabaseManager: NSObject {
         do {
             try viewContext.execute(deleteRequest)
         } catch {
+            dataDog.shared.logger?.critical("error deleteAllCategory")
             print("error performing batch delete")
         }
     }
@@ -272,6 +284,7 @@ class DatabaseManager: NSObject {
                 let categories = try self.viewContext.fetch(categoryFetchRequest)
                 promise(.success(categories))
             }catch {
+                dataDog.shared.logger?.critical("error LoadDatabase")
                 promise(.failure(.ErrorLoadingDatabase))
             }
 

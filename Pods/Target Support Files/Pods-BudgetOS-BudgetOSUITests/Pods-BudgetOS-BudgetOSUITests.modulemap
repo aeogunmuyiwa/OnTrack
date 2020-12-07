@@ -1,0 +1,6 @@
+framework module Pods_BudgetOS_BudgetOSUITests {
+  umbrella header "Pods-BudgetOS-BudgetOSUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -49,7 +49,7 @@ class HomeViewModelManager: NSObject {
         CustomProperties.shared.navigationControllerProperties(ViewController: HomeViewContoller, title: "OnTrack")
         navigationControllerProperties()
     }
-    
+   
 
     
     //Mark: set navigation controller title and right button
@@ -78,9 +78,13 @@ extension HomeViewModelManager : UICollectionViewDelegate, UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.section == 0 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: dashboardID, for: indexPath) as! HomeView_Dashboard_1_CollectionViewCell
+            if let controller = HomeViewContoller {
+                cell.setUp(controller)
+            }
+           
             return cell
         }
-        if indexPath.section == 1{
+        if indexPath.section == 2{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: transactionId, for: indexPath) as! TransactionCollectionViewCell
             cell.layer.cornerRadius = 20
             if let HomeViewContoller = HomeViewContoller {
@@ -90,7 +94,7 @@ extension HomeViewModelManager : UICollectionViewDelegate, UICollectionViewDataS
             cell.backgroundColor = CustomProperties.shared.whiteTextColor
             return cell
         }
-        if indexPath.section == 2  {
+        if indexPath.section == 1  {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryId, for: indexPath) as! BudgetCollectionViewCell
             cell.layer.cornerRadius = 20
             cell.backgroundColor = CustomProperties.shared.whiteTextColor

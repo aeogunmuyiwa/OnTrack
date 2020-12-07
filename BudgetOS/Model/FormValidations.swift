@@ -47,18 +47,12 @@ class FormValidations {
     func validateAmount( amount : Money?, errorMessage : ErrorMessages ) -> Future < Money , ErrorMessages>{
         return Future(){
             promise in
-//            print(amount)
-//            if amount == 0{
-//                promise(.failure(.InvalidAmount))
-//            }
-            
             if var amount = amount {
                 var result = Money()
                 NSDecimalRound(&result, &amount, CustomProperties.shared.decimalScale, .plain)
                 promise(.success(result))
                 
             }
-            //amount is nill
             promise(.failure(.InvalidAmount))
         }
     }

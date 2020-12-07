@@ -20,7 +20,7 @@ class Budget_CustomTableViewCell: UITableViewCell {
         budgetName.leftAnchor(contentView.leftAnchor, 0)
         return budgetName
     }()
-    
+        
     private lazy var difference : UILabel = {
         let difference = UILabel()
         difference.textColor = CustomProperties.shared.blackTextColor
@@ -43,7 +43,6 @@ class Budget_CustomTableViewCell: UITableViewCell {
         edit.centerYAnchor(contentView.centerYAnchor, 0)
         edit.rightAnchor(contentView.rightAnchor, 0)
         edit.widthAnchor(20)
-        
         return edit
     }()
     
@@ -73,6 +72,7 @@ class Budget_CustomTableViewCell: UITableViewCell {
         }
         return overtextDisplay
     }()
+    
     var data : Category? {
         didSet {
             //set data
@@ -83,15 +83,18 @@ class Budget_CustomTableViewCell: UITableViewCell {
                 })
             }
             overtextDisplay.text = "\(CustomProperties.shared.displayMoney(data?.actual ?? 0)) of \(CustomProperties.shared.displayMoney(data?.budget ?? 0))"
-            gradientHorizontalBar?.progress = normalize(data?.actual, data?.budget)
+            gradientHorizontalBar?.progress = CustomProperties.shared.normalize(data?.actual, data?.budget)
         }
     }
+    
     
     func setUp(_ viewController : UIViewController, textColor : UIColor ){
         self.ViewController = viewController
         difference.textColor = textColor
         BudgetName.textColor = textColor
     }
+    
+    
     @objc func editBudget(){
         var budgetField: UITextField?
         var AmountField: UITextField?
@@ -102,8 +105,6 @@ class Budget_CustomTableViewCell: UITableViewCell {
         let SaveAction = UIAlertAction(title: "Save", style: .default) { (login) in
             if let budgetName = budgetField?.text, let amount = AmountField?.text {
                 ///self.data?.categoryDescription = budgetName
-                print("budgetName is: \(budgetName)")
-                print("AmountField is: \(amount)")
                 if let data = self.data {
                     DatabaseManager.shared.updateBudget(data, budgetName, Money.init(string: amount) ?? 0)
                 }
@@ -138,12 +139,11 @@ class Budget_CustomTableViewCell: UITableViewCell {
                             SaveAction.isEnabled = true
                         })
                     }
-                    
                 }
             }
-            
         }
-
+        
+        
         
         alert.addTextField { (BudgetTextField) in
             budgetField = BudgetTextField
@@ -172,16 +172,6 @@ class Budget_CustomTableViewCell: UITableViewCell {
     }
     
     
-    func normalize( _ actual : NSDecimalNumber?, _ budget : NSDecimalNumber?) -> CGFloat{
-        if let actual = actual , let budget = budget {
-            if budget.doubleValue != 0 {
-                return  CGFloat(actual.doubleValue /  budget.doubleValue)
-            }
-        }
-        return 0
-    }
-    
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .clear
@@ -207,9 +197,6 @@ class Budget_CustomTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        // Initialization code
-        
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {

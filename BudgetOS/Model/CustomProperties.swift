@@ -33,6 +33,7 @@ class CustomProperties: NSObject {
     
     
     let tintedColorImage = UIImage(named: "plus")?.withRenderingMode(.automatic).withTintColor(#colorLiteral(red: 0.9882352941, green: 0.6392156863, blue: 0.06666666667, alpha: 1))
+    let trashImage = UIImage(systemName: "trash")?.withTintColor(#colorLiteral(red: 0.9882352941, green: 0.6392156863, blue: 0.06666666667, alpha: 1))
     
     let dollarSign = UIImage(named: "dollar")?.withRenderingMode(.automatic).withTintColor(#colorLiteral(red: 0.9882352941, green: 0.6392156863, blue: 0.06666666667, alpha: 1))
     
@@ -130,13 +131,35 @@ class CustomProperties: NSObject {
         }
     }
     
+    //Mark : normalizing to 0-1
+    func normalize( _ actual : NSDecimalNumber?, _ budget : NSDecimalNumber?) -> CGFloat{
+        if let actual = actual , let budget = budget {
+            if budget.doubleValue != 0 {
+                return  CGFloat(actual.doubleValue /  budget.doubleValue)
+            }
+        }
+        return 0
+    }
+    
+    //Mark : navigation controller title setter
     func navigationControllerProperties(ViewController : UIViewController?, title : String){
         ViewController?.view.backgroundColor = CustomProperties.shared.viewBackgroundColor
+        ViewController?.navigationController?.navigationBar.tintColor = CustomProperties.shared.animationColor
         ViewController?.navigationController?.navigationBar.prefersLargeTitles = true
         ViewController?.navigationItem.title = title
         ViewController?.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: CustomProperties.shared.textColour]
 
     }
+    
+    //Mark changecell selected BackgroundView
+    
+    lazy var cellBackgroundView: UIView = {
+        let cellBackgroundView = UIView()
+        cellBackgroundView.backgroundColor = CustomProperties.shared.animationColor
+        return cellBackgroundView
+    }()
+    
+    //Mark shared date formatter
     lazy var dateFormatter : DateFormatter = {
        let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
@@ -149,8 +172,73 @@ class CustomProperties: NSObject {
         from.navigationController?.pushViewController(to, animated: true)
     }
     
+    func checkdate(date : Date) -> Int? {
+        let calendar = Calendar(identifier: .gregorian)
+        let components = calendar.dateComponents([.weekday], from: date)
+        return components.weekday
+    }
+    
+    //Mark : convert components.weekday to sunday = 1
+    func convertDatetoDAY(day : Int) -> String {
+        if day == 1 {return "Sunday"}
+        if day == 2 {return "Monday"}
+        if day == 3 {return "Tueday"}
+        if day == 4 {return "Wednesday"}
+        if day == 5 {return "Thurday"}
+        if day == 6 {return "Friday"}
+        else {return "Saturday"}
+    }
    
+    func convertDatetoDAY(day : Int , sunday : @escaping() -> Void , monday : @escaping() -> Void,
+                          tueday : @escaping() -> Void, wedneday : @escaping() -> Void,thursday : @escaping() -> Void, friday : @escaping() -> Void,saturday : @escaping() -> Void)  {
+        if day == 1 {sunday()}
+        else if day == 2 {monday()}
+        else if day == 3 {tueday()}
+        else if day == 4 {wedneday()}
+        else if day == 5 {thursday()}
+        else if day == 6 {friday()}
+        else {saturday()}
+    }
+    
+    //Mark helper function for pageZero
+    func convertWeekdayNSdecimalToFloat(_ data : [weekdays : NSDecimalNumber]) -> [CGFloat]{
+        var dataPoint  : [CGFloat] = .init(repeating: 0, count: weekdays.allCases.count)
+        data.forEach({(key, value )in
+            switch key {
+            case .monday: dataPoint[1] = CGFloat(exactly: value) ?? 0
+            case .tuesday: dataPoint[2] = CGFloat(exactly: value) ?? 0
+            case .wednesday: dataPoint[3] = CGFloat(exactly: value) ?? 0
+            case .thursday: dataPoint[4] = CGFloat(exactly: value) ?? 0
+            case .friday: dataPoint[5] = CGFloat(exactly: value) ?? 0
+            case .saturday:dataPoint[6] = CGFloat(exactly: value) ?? 0
+            case .sunday:dataPoint[0] = CGFloat(exactly: value) ?? 0
+            }
+        })
+        return dataPoint
+    }
+    
+ 
+        func isDayInCurrentWeek(date: Date) -> Bool? {
+            let currentComponents = Calendar.current.dateComponents([.weekOfYear], from: Date())
+            let dateComponents = Calendar.current.dateComponents([.weekOfYear], from: date)
+            guard let currentWeekOfYear = currentComponents.weekOfYear, let dateWeekOfYear = dateComponents.weekOfYear else { return nil }
+            return currentWeekOfYear == dateWeekOfYear
+        }
+    
+    func emptyDatasource(data : Int, tableView : UITableView, title : String, message : String, textColor : UIColor){
+        if data == 0 {
+            tableView.setEmptyView(title: title, message: message, textColor: textColor)
+        }else{
+            tableView.restore()
+        }
+    }
+
+  
+    
+    //Mark placeholder attribute
 }
+
+
 enum TransactionStatus {
     case new
     case edit
@@ -182,6 +270,7 @@ enum ErrorMessages  :  LocalizedError{
         }
     }
 }
+
 
 enum dataBaseErrors : LocalizedError {
     case ErrorLoadingDatabase

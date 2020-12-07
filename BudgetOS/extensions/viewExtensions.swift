@@ -14,16 +14,18 @@ extension Notification.Name {
     static let saveEditedTransaction = Notification.Name("saveEditedTransaction")
     static let saveNewTransaction = Notification.Name("saveNewTransaction")
     static let select_subscriber = Notification.Name(rawValue: "select_subscriber")
+    static let reloadShowFullBudgetTableModel = Notification.Name("reloadShowFullBudgetTableModel")
+    static let reloadAnalytics = Notification.Name("reloadAnalytics")
 }
 
 extension UIView{
     func pin(to superView: UIView){
-           translatesAutoresizingMaskIntoConstraints = false
+        translatesAutoresizingMaskIntoConstraints = false
         topAnchor.constraint(equalTo: superView.layoutMarginsGuide.topAnchor).isActive = true
         leadingAnchor.constraint(equalTo: superView.layoutMarginsGuide.leadingAnchor).isActive = true
         bottomAnchor.constraint(equalTo: superView.layoutMarginsGuide.bottomAnchor).isActive = true
         trailingAnchor.constraint(equalTo: superView.layoutMarginsGuide.trailingAnchor).isActive = true
-       }
+    }
     func addToView( _ view : UIView ) {
         view.addSubview(self)
     }
@@ -80,6 +82,65 @@ extension UIView{
     func centerYAnchor (_ centerYanchor : NSLayoutYAxisAnchor, _ constant : CGFloat){
         self.centerYAnchor.constraint(equalTo: centerYanchor, constant: constant).isActive = true
     }
-
     
+    
+}
+
+extension Date {
+    
+    func isEqual(to date: Date, toGranularity component: Calendar.Component, in calendar: Calendar = .current) -> Bool {
+        calendar.isDate(self, equalTo: date, toGranularity: component)
+    }
+    
+    func isInSameYear(as date: Date) -> Bool { isEqual(to: date, toGranularity: .year) }
+    func isInSameMonth(as date: Date) -> Bool { isEqual(to: date, toGranularity: .month) }
+    func isInSameWeek(as date: Date) -> Bool { isEqual(to: date, toGranularity: .weekOfYear) }
+    
+    func isInSameDay(as date: Date) -> Bool { Calendar.current.isDate(self, inSameDayAs: date) }
+    
+    var isInThisYear:  Bool { isInSameYear(as: Date()) }
+    var isInThisMonth: Bool { isInSameMonth(as: Date()) }
+    var isInThisWeek:  Bool { isInSameWeek(as: Date()) }
+    
+    var isInYesterday: Bool { Calendar.current.isDateInYesterday(self) }
+    var isInToday:     Bool { Calendar.current.isDateInToday(self) }
+    var isInTomorrow:  Bool { Calendar.current.isDateInTomorrow(self) }
+    
+    var isInTheFuture: Bool { self > Date() }
+    var isInThePast:   Bool { self < Date() }
+}
+
+extension UITableView {
+    func setEmptyView(title: String, message: String, textColor : UIColor) {
+        let emptyView = UIView()
+            //UIView(frame: CGRect(x: self.center.x, y: self.center.y, width: self.bounds.size.width, height: self.bounds.size.height))
+        self.addSubview(emptyView)
+        emptyView.pin(to: self)
+        let titleLabel = UILabel()
+        let messageLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        messageLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.textColor = textColor
+        titleLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 18)
+        messageLabel.textColor = UIColor.lightGray
+        messageLabel.font = UIFont(name: "HelveticaNeue-Regular", size: 17)
+        emptyView.addSubview(titleLabel)
+        emptyView.addSubview(messageLabel)
+        titleLabel.centerYAnchor.constraint(equalTo: emptyView.centerYAnchor).isActive = true
+        titleLabel.centerXAnchor.constraint(equalTo: emptyView.centerXAnchor).isActive = true
+        messageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20).isActive = true
+        messageLabel.leftAnchor.constraint(equalTo: emptyView.leftAnchor, constant: 20).isActive = true
+        messageLabel.rightAnchor.constraint(equalTo: emptyView.rightAnchor, constant: -20).isActive = true
+        titleLabel.text = title
+        messageLabel.text = message
+        messageLabel.numberOfLines = 0
+        messageLabel.textAlignment = .center
+        // The only tricky part is here:
+        self.backgroundView = emptyView
+        self.separatorStyle = .none
+    }
+    func restore() {
+        self.backgroundView = nil
+        self.separatorStyle = .none
+    }
 }

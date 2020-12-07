@@ -94,11 +94,25 @@ class TransactionCollectionViewCell: UICollectionViewCell {
 extension TransactionCollectionViewCell : UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let sections = DatabaseManager.shared.fetchedTransactionResultsController.sections else { return 0   }
+        let data = sections[section].numberOfObjects
+        CustomProperties.shared.emptyDatasource(data: data, tableView: tableView, title: "You do not have any transactions yet", message: "Your saved transactions will appear here", textColor: CustomProperties.shared.blackTextColor)
         return sections[section].numberOfObjects
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.tableView.deselectRow(at: indexPath, animated: true)
+        if let transaction = DatabaseManager.shared.fetchedTransactionResultsController.fetchedObjects?[indexPath.row] {
+            EditTransaction(transaction: transaction, index: indexPath.row)
+
+        }
+    }
+    @objc func EditTransaction(transaction : OnTractTransaction , index : Int){
+        let vc = AddTransactionViewController()
+        vc.dataSource = .init(transactionStatus: .editSaved, index: index, transaction: nil)
+        vc.dataSource?.onTransaction = transaction
+        let navbar: UINavigationController = UINavigationController(rootViewController: vc)
+        navbar.navigationBar.backgroundColor = CustomProperties.shared.animationColor
+        viewController?.present(navbar, animated: true, completion: nil)
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 50
@@ -113,6 +127,7 @@ extension TransactionCollectionViewCell : UITableViewDelegate, UITableViewDataSo
 
     func configureCell(_ cell: AllTransactionsTableViewCell?, at indexPath: IndexPath) {
         cell?.setup(textColor: textcolor)
+        cell?.selectedBackgroundView = CustomProperties.shared.cellBackgroundView
         cell?.data = DatabaseManager.shared.fetchedTransactionResultsController.object(at: indexPath)
     }
         
