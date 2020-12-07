@@ -37,20 +37,20 @@ class AllBudgetTransactionModel: NSObject {
     }()
     
     lazy var budgetView: AllBudgetView = {
-        let budgetView = AllBudgetView()
+        let budgetView = AllBudgetView(ViewController: controller)
         budgetView.data = category
         stackView.addArrangedSubview(budgetView)
         budgetView.translatesAutoresizingMaskIntoConstraints = false
         if let controller = controller {
-            budgetView.heightAnchor(200)
+            budgetView.heightAnchor(220)
             budgetView.leftAnchor(scrollView.layoutMarginsGuide.leftAnchor, 10)
             budgetView.rightAnchor(scrollView.layoutMarginsGuide.rightAnchor, -10)
-          //  budgetView.widthAnchor(controller.view.frame.width - 100 )
         }
-       // budgetView.layer.cornerRadius = 10
         budgetView.backgroundColor = .clear
         return  budgetView
     }()
+    
+
     
     
     lazy var alltransactionView: UIView = {
@@ -64,6 +64,7 @@ class AllBudgetTransactionModel: NSObject {
             let vc = AllTransactionsViewController()
             vc.tableViewScrollEnable = false
             vc.tempCatgeory = category
+            vc.state = .showFullBudgetTableModel
             vc.data = category?.transactions?.array as? [OnTractTransaction]
             controller.addChild(vc)
             alltransactionView.addSubview(vc.view)

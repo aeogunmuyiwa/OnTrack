@@ -23,9 +23,9 @@ class selectCategory: UIView {
     
     lazy var category: UILabel = {
         let category = UILabel()
-        category.text = "Category"
+        category.text = "Select budget"
         category.font = CustomProperties.shared.basicTextFont
-        category.textColor = CustomProperties.shared.textColour
+        category.textColor = CustomProperties.shared.blackTextColor
         category.translatesAutoresizingMaskIntoConstraints = true
         self.addSubview(category)
         category.centerYAnchor(self.centerYAnchor, 0)
@@ -47,24 +47,13 @@ class selectCategory: UIView {
         return showFullTable
     }()
     
-    lazy var categoryData: UILabel = {
-        let categoryData = UILabel()
-        categoryData.text = "Select category"
-        categoryData.font = CustomProperties.shared.basicTextfontStandard
-        categoryData.textColor = CustomProperties.shared.textColour
-        categoryData.translatesAutoresizingMaskIntoConstraints = true
-        self.addSubview(categoryData)
-        self.bringSubviewToFront(categoryData)
-        categoryData.centerYAnchor(self.centerYAnchor, 0)
-        categoryData.rightAnchor(showFullTable.leftAnchor, -10)
-        return categoryData
-    }()
+  
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
         categoryImage.translatesAutoresizingMaskIntoConstraints = false
         category.translatesAutoresizingMaskIntoConstraints = false
-        categoryData.translatesAutoresizingMaskIntoConstraints = false
+       
         showFullTable.translatesAutoresizingMaskIntoConstraints = false
     }
     //Mark: transition to addTransaction controller

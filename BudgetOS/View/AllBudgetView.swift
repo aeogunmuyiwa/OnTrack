@@ -8,6 +8,7 @@
 import UIKit
 
 class AllBudgetView: UIView {
+    weak var ViewController : UIViewController?
     lazy var Description: UILabel = {
         let Description = UILabel()
         Description.text = "Budget"
@@ -76,7 +77,30 @@ class AllBudgetView: UIView {
         AmountInput.heightAnchor(CustomProperties.shared.textfieldHeight)
         return AmountInput
     }()
+    
+    lazy var addTransaction: UIButton = {
+        let addTransaction = UIButton()
+        addTransaction.setImage(CustomProperties.shared.tintedColorImage, for: .normal)
+        addTransaction.setTitle("Add transaction", for: .normal)
+        addTransaction.addTarget(self, action: #selector(Addtransaction), for: .touchUpInside)
+        addTransaction.setTitleColor(CustomProperties.shared.animationColor, for: .normal)
+        self.addSubview(addTransaction)
+        addTransaction.translatesAutoresizingMaskIntoConstraints = false
+        addTransaction.topAnchor(AmountInput.bottomAnchor, 10)
+        addTransaction.rightAnchor(self.rightAnchor, 0)
+        addTransaction.heightAnchor(30)
+        return addTransaction
+    }()
 
+    @objc func Addtransaction( ){
+        let vc = AddTransactionViewController()
+        vc.dataSource = .init(transactionStatus: .addTransaction, index: nil, transaction: nil)
+        vc.dataSource?.category = data
+        
+        let navbar: UINavigationController = UINavigationController(rootViewController: vc)
+        navbar.navigationBar.backgroundColor = CustomProperties.shared.animationColor
+        ViewController?.present(navbar, animated: true, completion: nil)
+    }
     
     var data : Category? {
         didSet {
@@ -88,7 +112,8 @@ class AllBudgetView: UIView {
         }
     }
     
-    init() {
+    init(ViewController : UIViewController?) {
+        self.ViewController = ViewController
         super.init(frame: .zero)
         activateView()
     }
@@ -102,6 +127,7 @@ class AllBudgetView: UIView {
         DescriptionInput.translatesAutoresizingMaskIntoConstraints = false
         AmountLabel.translatesAutoresizingMaskIntoConstraints = false
         AmountInput.translatesAutoresizingMaskIntoConstraints = false
+        addTransaction.translatesAutoresizingMaskIntoConstraints = false
        // gradientHorizontalBar?.translatesAutoresizingMaskIntoConstraints = false
         //difference.translatesAutoresizingMaskIntoConstraints = false
        // overtextDisplay.translatesAutoresizingMaskIntoConstraints = false

@@ -8,6 +8,10 @@
 import UIKit
 import CoreData
 import Combine
+enum AllTransactionsModelState {
+    case showFullBudgetTableModel
+    case base
+}
 class AllTransactionsModel: NSObject {
     private weak var ViewController : UIViewController?
     var data : [OnTractTransaction]?
@@ -17,6 +21,7 @@ class AllTransactionsModel: NSObject {
     private var select_subscriber : AnyCancellable?
     var tempCategory : Category?
     var compareCategory : Category?
+    var state : AllTransactionsModelState
     
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero)
@@ -39,11 +44,12 @@ class AllTransactionsModel: NSObject {
     }()
     
     
-    init(ViewController : UIViewController, data : [OnTractTransaction], tempCategory : Category?, tableViewEnable : Bool) {
+    init(ViewController : UIViewController, data : [OnTractTransaction], tempCategory : Category?, tableViewEnable : Bool, state : AllTransactionsModelState) {
         self.ViewController = ViewController
         self.data = data
         self.tempCategory = tempCategory
         self.compareCategory = tempCategory
+        self.state = state
         super.init()
         self.tableView.isScrollEnabled = tableViewEnable
         handleSaveEditedTransaction()
@@ -127,7 +133,10 @@ class AllTransactionsModel: NSObject {
 extension AllTransactionsModel : UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let dataValue = data?.count  else { return 0 }
-        CustomProperties.shared.emptyDatasource(data: dataValue, tableView: tableView, title: "You do not have any transactions yet", message: "Click the plus icon '+' to add a new transaction", textColor: CustomProperties.shared.whiteTextColor)
+        switch state {
+            case .base:  CustomProperties.shared.emptyDatasource(data: dataValue, tableView: tableView, title: "You do not have any transactions yet", message: "Click the plus icon '+' to add a new transaction", textColor: CustomProperties.shared.whiteTextColor)
+            case .showFullBudgetTableModel :  CustomProperties.shared.emptyDatasource(data: dataValue, tableView: tableView, title: "You do not have any transactions yet", message: "Your saved transactions will appear here", textColor: CustomProperties.shared.whiteTextColor)
+        }
         return dataValue
     }
     

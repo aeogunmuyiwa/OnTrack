@@ -84,7 +84,7 @@ extension HomeViewModelManager : UICollectionViewDelegate, UICollectionViewDataS
            
             return cell
         }
-        if indexPath.section == 1{
+        if indexPath.section == 2{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: transactionId, for: indexPath) as! TransactionCollectionViewCell
             cell.layer.cornerRadius = 20
             if let HomeViewContoller = HomeViewContoller {
@@ -94,7 +94,7 @@ extension HomeViewModelManager : UICollectionViewDelegate, UICollectionViewDataS
             cell.backgroundColor = CustomProperties.shared.whiteTextColor
             return cell
         }
-        if indexPath.section == 2  {
+        if indexPath.section == 1  {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryId, for: indexPath) as! BudgetCollectionViewCell
             cell.layer.cornerRadius = 20
             cell.backgroundColor = CustomProperties.shared.whiteTextColor
