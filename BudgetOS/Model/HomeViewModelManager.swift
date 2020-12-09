@@ -54,8 +54,10 @@ class HomeViewModelManager: NSObject {
     
     //Mark: set navigation controller title and right button
     func navigationControllerProperties(){
+       
         HomeViewContoller?.navigationItem.rightBarButtonItem = .init(image: CustomProperties.shared.tintedColorImage, style: .plain, target: self, action: #selector(naviagenext))
         HomeViewContoller?.navigationItem.rightBarButtonItem?.tintColor = CustomProperties.shared.animationColor
+        HomeViewContoller?.navigationItem.rightBarButtonItem?.accessibilityLabel = "HomeViewContoller-AddBudget"
     }
     
     //Mark : right button action

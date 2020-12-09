@@ -291,5 +291,62 @@ class DatabaseManager: NSObject {
 
         }
     }
+    
+    struct example {
+        let budget : String
+        let amount : Double
+        let transExample : [transExample]?
+    }
+    
+    
+    struct transExample {
+        let transaction : String
+        let amount : Double
+    }
+    lazy var exampleBudget: [example] = {
+        var example_task : [example] = .init()
+        var bill_transactions : [transExample] = .init()
+        bill_transactions.append(.init(transaction: "Internet", amount: 100))
+        bill_transactions.append(.init(transaction: "Mobile Phone", amount: 90))
+        bill_transactions.append(.init(transaction: "Television", amount: 120))
+        
+        var Entertainment_transactions : [transExample] = .init()
+        Entertainment_transactions.append(.init(transaction: "Arts", amount: 100))
+        Entertainment_transactions.append(.init(transaction: "Music", amount: 40))
+        Entertainment_transactions.append(.init(transaction: "Movies & DVDSs", amount: 60))
+        
+        
+        var food : [transExample] = .init()
+        food.append(.init(transaction: "Fast food", amount: 200))
+        food.append(.init(transaction: "Coffee", amount: 50))
+        food.append(.init(transaction: "Groceries", amount: 300))
+        
+        
+        var health : [transExample] = .init()
+        health.append(.init(transaction: "Dentist", amount: 200))
+        health.append(.init(transaction: "Doctor", amount: 1200))
+        health.append(.init(transaction: "Gym", amount: 60))
+        health.append(.init(transaction: "Pharmacy", amount: 150))
+        
+        example_task.append(.init(budget: "Health & Fitness", amount: 3000, transExample: health))
+        example_task.append(.init(budget: "Food & Dining", amount: 500, transExample: food))
+        example_task.append(.init(budget: "Entertainment", amount: 400, transExample: Entertainment_transactions ))
+        example_task.append(.init(budget: "Bills & Utilities", amount: 1000, transExample: bill_transactions ))
+        
+        return example_task
+    }()
+    
+    func loadExample(){
+        var count : Double = 1
+            self.exampleBudget.forEach({ item in
+                count = count / 0.2
+                self.CategorySave(.init(item.budget, Money(item.amount), item.transExample?.map({ trans in
+                    count = count + 23400.03455
+                    return .init(trans.transaction, Money(trans.amount), nil, Date.init().timeIntervalSince1970 + count - 100)
+                })))
+            })
+        
+  
+    }
 }
 

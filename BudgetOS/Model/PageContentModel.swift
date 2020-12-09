@@ -57,6 +57,14 @@ class PageContentModel: NSObject {
                     actual.append(0)
                     horizintalAxis.append("")
                 }
+                
+            
+                    horizintalAxis =  horizintalAxis.map({item in
+                    
+                       let firstCharacter = item.prefix(1)
+                            return String(firstCharacter)
+                    })
+                
                 chartView.graphView.horizontalAxisMarkers = horizintalAxis
                 chartView.headerView.titleLabel.text = page.name
                 chartView.graphView.dataSeries = [

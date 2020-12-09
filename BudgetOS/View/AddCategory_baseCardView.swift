@@ -32,6 +32,7 @@ class AddCategory_baseCardView: UIView {
         categoryNameInput.leftViewMode = .always
         //categoryNameInput.leftView = UIImageView(image: CustomProperties.shared.categoryImage)
         categoryNameInput.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        categoryNameInput.accessibilityLabel = CustomAssisbilityLabel.Label.AddCategory_baseCardView_categoryNameInput
         categoryNameInput.backgroundColor = CustomProperties.shared.textColour
         categoryNameInput.textColor = CustomProperties.shared.blackTextColor
         categoryNameInput.font = CustomProperties.shared.basicTexrFieldFont
@@ -69,6 +70,7 @@ class AddCategory_baseCardView: UIView {
         budgetInput.leftView = UIImageView(image: CustomProperties.shared.dollarSign)
         budgetInput.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         budgetInput.backgroundColor = CustomProperties.shared.textColour
+        budgetInput.accessibilityIdentifier = CustomAssisbilityLabel.Label.AddCategory_baseCardView_budgetInput
         budgetInput.attributedPlaceholder = NSAttributedString(string: "Enter amount", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black])
         budgetInput.textColor = CustomProperties.shared.blackTextColor
         budgetInput.font = CustomProperties.shared.basicTexrFieldFont

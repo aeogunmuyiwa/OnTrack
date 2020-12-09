@@ -113,6 +113,8 @@ class AllTransactionsModel: NSObject {
     //Mark: set navigation controller title and right button
     func navigationControllerProperties(){
         ViewController?.navigationItem.rightBarButtonItem = .init(image: CustomProperties.shared.tintedColorImage, style: .plain, target: self, action: #selector(Addtransaction))
+        ViewController?.navigationItem.rightBarButtonItem?.accessibilityLabel = CustomAssisbilityLabel.editTransaction.goBack
+        ViewController?.navigationItem.rightBarButtonItem?.accessibilityIdentifier =  CustomAssisbilityLabel.editTransaction.goBack
         ViewController?.navigationItem.rightBarButtonItem?.tintColor = CustomProperties.shared.animationColor
     }
     

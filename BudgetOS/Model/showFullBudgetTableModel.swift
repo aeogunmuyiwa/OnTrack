@@ -159,7 +159,7 @@ extension showFullBudgetTableModel: UITableViewDelegate, UITableViewDataSource, 
         if let amount = DatabaseManager.shared.fetchedResultsController.fetchedObjects?.reduce( NSDecimalNumber(integerLiteral: 0 ), {x,y in
             x.adding(y.budget ?? 0)
         }){
-            totalBuget.text = "Your budget add up to $\(amount)"
+            totalBuget.text = "Your budget adds up to $\(amount)"
         }
             switch type {
                 case .insert :

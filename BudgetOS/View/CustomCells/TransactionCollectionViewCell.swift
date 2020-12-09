@@ -36,6 +36,7 @@ class TransactionCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(showFullTable)
         showFullTable.titleLabel?.font = CustomProperties.shared.basicBoldTextFont
         showFullTable.titleLabel?.textColor = CustomProperties.shared.textColour
+        showFullTable.accessibilityIdentifier = CustomAssisbilityLabel.homepage.showfullTransactions
         showFullTable.topAnchor(contentView.layoutMarginsGuide.topAnchor, 0)
         showFullTable.rightAnchor(contentView.layoutMarginsGuide.rightAnchor, 20)
         showFullTable.widthAnchor(contentView.layoutMarginsGuide.widthAnchor, multiplier:0.2, 10)

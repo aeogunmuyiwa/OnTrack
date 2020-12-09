@@ -22,6 +22,7 @@ class AddCategory_TableViewCell: UITableViewCell {
         let newTransaction = UIButton()
         newTransaction.setImage(CustomProperties.shared.tintedColorImage, for: .normal)
         newTransaction.addTarget(self, action: #selector(Addtransaction), for: .touchUpInside)
+        newTransaction.accessibilityLabel = CustomAssisbilityLabel.Label.homeAddBugetAddTransaction
         newTransaction.translatesAutoresizingMaskIntoConstraints = true
         contentView.addSubview(newTransaction)
         newTransaction.titleLabel?.font = CustomProperties.shared.basicBoldTextFont

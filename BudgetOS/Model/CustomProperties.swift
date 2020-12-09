@@ -282,3 +282,12 @@ enum dataBaseErrors : LocalizedError {
     }
 }
 
+//struct CustomAssisbilityLabel {
+//    
+//    struct Label {
+//        static let homeAddBugetAddTransaction = "homeAddBugetAddTransaction"
+//        static let AddCategory_baseCardView_categoryNameInput = "AddCategory_baseCardView_categoryNameInput"
+//        static let AddCategory_baseCardView_budgetInput = "AddCategory_baseCardView_budgetInput"
+//    }
+//}
+

@@ -21,9 +21,12 @@ class showFullBudgetTableViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
+    
+    
     //Mark: set navigation controller title and right button
     func navigationControllerProperties(){
         self.navigationItem.rightBarButtonItem = .init(image: CustomProperties.shared.tintedColorImage, style: .plain, target: self, action: #selector(naviagenext))
+        self.navigationItem.rightBarButtonItem?.accessibilityIdentifier = CustomAssisbilityLabel.budgetList.goBack
         self.navigationItem.rightBarButtonItem?.tintColor = CustomProperties.shared.animationColor
     }
     

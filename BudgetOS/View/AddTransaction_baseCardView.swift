@@ -89,12 +89,20 @@ class AddTransaction_baseCardView: UIView {
         let datepicker = UIDatePicker()
         datepicker.timeZone = NSTimeZone.local
         datepicker.backgroundColor = .white
-        datepicker.preferredDatePickerStyle = .compact
+        if #available(iOS 13.4, *) {
+            datepicker.preferredDatePickerStyle = .compact
+        } else {
+            datepicker.backgroundColor = CustomProperties.shared.animationColor
+            // Fallback on earlier versions
+        }
         self.addSubview(datepicker)
         datepicker.translatesAutoresizingMaskIntoConstraints = true
         datepicker.topAnchor(AmountInput.bottomAnchor, 20)
         datepicker.leftAnchor(self.layoutMarginsGuide.leftAnchor, 0)
-        datepicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
+        if transaction?.transactionStatus == .some(.editSaved) {
+            datepicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
+        }
+       // datepicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
         return datepicker
     }()
     
@@ -118,13 +126,16 @@ class AddTransaction_baseCardView: UIView {
     //        let dateFormatter: DateFormatter = DateFormatter()
     //        dateFormatter.dateFormat = "MM/dd/yyyy hh:mm a"
             
-            _ =  FormValidations.shared.ValidateTransaction(Money.init(string: AmountInput.text ?? ""), DescriptionInput.text, invalidAmount: { errorMessage in
-                  self.AddTransactionModel.send(nil)
-              }, invalidText: { errorMessage in
-                  self.AddTransactionModel.send(nil)
-              }).sink(receiveValue: { [weak self] value in
-                  self?.preparedatasource(self?.transaction, value.1, amount: value.0, id: .zero, date: self?.datepicker.date.timeIntervalSince1970)
-              })
+            DispatchQueue.main.async {
+                _ =  FormValidations.shared.ValidateTransaction(Money.init(string: self.AmountInput.text ?? ""), self.DescriptionInput.text, invalidAmount: { errorMessage in
+                      self.AddTransactionModel.send(nil)
+                  }, invalidText: { errorMessage in
+                      self.AddTransactionModel.send(nil)
+                  }).sink(receiveValue: { [weak self] value in
+                      self?.preparedatasource(self?.transaction, value.1, amount: value.0, id: .zero, date: self?.datepicker.date.timeIntervalSince1970)
+                  })
+            }
+           
         }
     
 

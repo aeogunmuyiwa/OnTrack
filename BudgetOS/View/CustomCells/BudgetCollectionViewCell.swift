@@ -36,6 +36,7 @@ class BudgetCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(newCategory)
         newCategory.titleLabel?.font = CustomProperties.shared.basicBoldTextFont
         newCategory.titleLabel?.textColor = CustomProperties.shared.textColour
+        newCategory.accessibilityIdentifier =  CustomAssisbilityLabel.homepage.showfullBudegt
         newCategory.topAnchor(contentView.layoutMarginsGuide.topAnchor, 0)
         newCategory.rightAnchor(contentView.layoutMarginsGuide.rightAnchor, 20)
         newCategory.widthAnchor(contentView.widthAnchor, multiplier:0.2, 10)
